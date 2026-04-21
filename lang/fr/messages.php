@@ -1,0 +1,83 @@
+<?php
+
+return [
+    // Navigation Groups
+    'administration' => 'Administration',
+    'inventory' => 'Inventaire',
+    'sales_orders' => 'Ventes & Commandes',
+
+    // Common terms
+    'user' => 'Utilisateur',
+    'users' => 'Utilisateurs',
+    'supplier' => 'Fournisseur',
+    'suppliers' => 'Fournisseurs',
+    'sale' => 'Vente',
+    'sales' => 'Ventes',
+    'phone' => 'Téléphone',
+    'phones' => 'Téléphones',
+    'brand' => 'Marque',
+    'brands' => 'Marques',
+
+    // Status
+    'active' => 'Actif',
+    'inactive' => 'Inactif',
+    'in_stock' => 'En stock',
+    'out_of_stock' => 'Rupture de stock',
+    'discontinued' => 'Arrêté',
+    'enabled' => 'Activé',
+    'disabled' => 'Désactivé',
+    'verified' => 'Vérifié',
+    'unverified' => 'Non vérifié',
+
+    // Common labels
+    'status' => 'Statut',
+    'actions' => 'Actions',
+    'name' => 'Nom',
+    'email' => 'E-mail',
+    'phone' => 'Téléphone',
+    'created' => 'Créé',
+    'created_at' => 'Créé le',
+    'updated' => 'Mis à jour',
+    'updated_at' => 'Mis à jour le',
+    'margin' => 'Marge bénéficiaire',
+
+    // Messages
+    'success' => 'Succès',
+    'error' => 'Erreur',
+    'warning' => 'Avertissement',
+    'info' => 'Information',
+    'confirm' => 'Confirmer',
+
+    // General
+    'are_you_sure' => 'Êtes-vous sûr(e) ?',
+    'this_action_cannot_be_undone' => 'Cette action ne peut pas être annulée.',
+    'no_results_found' => 'Aucun résultat trouvé',
+    'loading' => 'Chargement...',
+    'please_wait' => 'Veuillez patienter...',
+    'general'=>"Genéral",
+    "pricing"=>"Tarification",
+    "specifications"=>"Spécifications",
+    "images"=>"Images",
+    "general_information"=>"Informations générales",
+    "pricing_information"=>"Informations de tarification",
+    "specifications_information"=>"Informations sur les spécifications",
+    "images_information"=>"Informations sur les images",
+    'upload_at_least_4_images'=>"Téléchargez au moins 4 images pour ce téléphone.",
+    "upload_phone_images"=>"Téléchargez des images de haute qualité du téléphone sous différents angles, y compris l'avant, l'arrière, les côtés et les ports. Assurez-vous que les images sont claires et montrent les détails du téléphone pour attirer les acheteurs potentiels.",
+    "phone_images"=>"Images du téléphone",
+    "phone_specs_details"=>"Fournissez des détails complets sur les spécifications du téléphone, y compris le processeur, la RAM, le stockage, la taille de l'écran, la résolution de l'appareil photo, la capacité de la batterie et les fonctionnalités supplémentaires. Plus les spécifications sont détaillées, plus les acheteurs potentiels seront informés et intéressés par votre téléphone.",
+    "specs"=>"Spécifications",
+    "additional_specs"=>"Spécifications supplémentaires (facultatif)",
+    "processor_battery_display"=>"Processeur, batterie, affichage, etc.",
+    "ram_memory"=>"RAM, mémoire, etc.",
+    "internal_storage"=>"Stockage interne, stockage extensible, etc.",
+    "cost_price_help"=>"Le prix d'achat du téléphone auprès du fournisseur. Ce champ est utilisé pour calculer la marge bénéficiaire et le profit de chaque vente.",
+    "retail_price_help"=>"Le prix de vente du téléphone aux clients. Assurez-vous que ce prix est compétitif tout en vous assurant une marge bénéficiaire suffisante.",
+    'current_stock_level'=>"Le nombre actuel de téléphones en stock. Mettez à jour ce champ chaque fois que vous recevez de nouveaux stocks ou que vous effectuez des ventes pour maintenir un inventaire précis.",
+    'manage_prices_stock'=>"Gérez les prix et le stock du téléphone pour assurer une tarification compétitive et un inventaire précis. Mettez à jour régulièrement les prix en fonction des tendances du marché et ajustez les niveaux de stock pour répondre à la demande des clients.",
+    'pricing_inventory'=>"Tarification & Inventaire",
+    'product_availability'=>"Disponibilité du produit",
+    'create_user'=>"Créer un utilisateur",
+    'regular_user'=>"Utilisateur régulier",
+    'admin_user'=>"Utilisateur administrateur",
+];
