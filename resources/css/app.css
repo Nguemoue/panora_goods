@@ -4,8 +4,29 @@
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
-
+@plugin "daisyui";
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-primary: #004b91; /* Glotelho Blue */
+    --color-primary-hover: #003668;
+    --color-secondary: #f58634; /* Glotelho Orange */
+    --color-secondary-hover: #d46d24;
+    --color-body-bg: #f4f4f4;
+}
+
+@layer base {
+    .btn {
+        @apply inline-block font-normal text-center align-middle cursor-pointer select-none border border-transparent py-1.5 px-3 text-sm rounded transition-colors duration-150 ease-in-out;
+    }
+    .btn-primary {
+        @apply bg-primary text-white hover:bg-primary-hover;
+    }
+    .btn-outline-primary {
+        @apply border-primary text-primary hover:bg-primary hover:text-white;
+    }
+    .card {
+        @apply relative flex flex-col min-w-0 break-words bg-white border border-gray-200 rounded;
+    }
 }

@@ -42,6 +42,14 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'seller' => [
+            'driver' => 'session',
+            'provider' => 'sellers',
+        ],
+        'client' => [
+            'driver' => 'session',
+            'provider' => 'clients',
+        ]
     ],
 
     /*
@@ -65,6 +73,14 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', User::class),
+        ],
+        'sellers'=>[
+            'driver' => 'eloquent',
+            'model' => env('AUTH_SELLER_MODEL', User::class),
+        ],
+        'clients'=>[
+            'driver' => 'eloquent',
+            'model' => env('AUTH_CLIENT_MODEL', User::class),
         ],
 
         // 'users' => [

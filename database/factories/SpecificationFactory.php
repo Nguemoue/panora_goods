@@ -2,23 +2,25 @@
 
 namespace Database\Factories;
 
-use App\Models\Specification;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Carbon;
 
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Specification>
+ */
 class SpecificationFactory extends Factory
 {
-    protected $model = Specification::class;
-
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'input_type' => $this->faker->word(),
-            'measure' => $this->faker->word(),
-            'description' => $this->faker->text(),
-            'created_at' => Carbon::now(),
-            'updated_at' => Carbon::now(),
+            'name' => fake()->word(),
+            'input_type' => fake()->randomElement(['text', 'number', 'select']),
+            'measure' => fake()->randomElement(['GB', 'TB', 'L', 'W', 'inch', null]),
+            'description' => fake()->sentence(),
         ];
     }
 }
