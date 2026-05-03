@@ -26,6 +26,7 @@ class SellerSalesTable
                     ->dateTime()
                     ->sortable(),
             ])
+            ->defaultCurrency(currency())
             ->filters([
                 //
             ]);

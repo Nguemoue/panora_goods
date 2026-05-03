@@ -56,6 +56,7 @@ class SellerProductsTable
                         default => 'success',
                     }),
             ])
+            ->defaultCurrency(currency: currency())
             ->filters([
                 SelectFilter::make('category')
                     ->relationship('category', 'name'),
@@ -72,50 +73,7 @@ class SellerProductsTable
                 ViewAction::make()
                     ->icon('heroicon-o-eye')
                     ->color('info'),
-                Action::make('sell')
-                    ->label('Sell')
-                    ->icon('heroicon-o-shopping-cart')
-                    ->color('success')
-                    ->hidden(fn (Product $record) => $record->stock_quantity <= 0)
-                    ->form([
-                        TextInput::make('quantity')
-                            ->numeric()
-                            ->default(1)
-                            ->required()
-                            ->maxValue(fn (Product $record) => $record->stock_quantity),
-                        TextInput::make('sale_price')
-                            ->numeric()
-                            ->prefix('$')
-                            ->default(fn (Product $record) => $record->selling_price)
-                            ->required(),
-                        TextInput::make('customer_name')
-                            ->placeholder('Enter customer name')
-                            ->maxLength(255),
-                        Select::make('client_id')
-                            ->relationship('client', 'name', fn ($query) => $query->where('role', UserRoleEnum::CLIENT))
-                            ->searchable()
-                            ->preload(),
-                        DateTimePicker::make('sold_at')
-                            ->default(now())
-                            ->required(),
-                    ])
-                    ->action(function (array $data, Product $record): void {
-                        $profit = ($data['sale_price'] - $record->supplier_price) * $data['quantity'];
 
-                        Sale::create([
-                            'product_id' => $record->id,
-                            'seller_id' => Auth::id(),
-                            'client_id' => $data['client_id'],
-                            'quantity' => $data['quantity'],
-                            'supplier_price_at_sale' => $record->supplier_price,
-                            'sale_price' => $data['sale_price'],
-                            'profit' => $profit,
-                            'customer_name' => $data['customer_name'],
-                            'sold_at' => $data['sold_at'],
-                        ]);
-
-                        $record->decrement('stock_quantity', $data['quantity']);
-                    }),
             ]);
     }
 }
