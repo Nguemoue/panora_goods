@@ -8,8 +8,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        $product= \App\Models\Product::first();
-
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');

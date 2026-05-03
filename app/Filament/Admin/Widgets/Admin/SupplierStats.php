@@ -18,7 +18,7 @@ class SupplierStats extends BaseWidget
 
     protected function getStats(): array
     {
-        if (!$this->record) {
+        if (! $this->record) {
             return [];
         }
 
@@ -34,7 +34,7 @@ class SupplierStats extends BaseWidget
                 ->description('Market performance')
                 ->descriptionIcon('heroicon-m-shopping-cart')
                 ->color('success'),
-            Stat::make('Total Profit Generated', '$' . number_format($totalProfitGenerated, 2))
+            Stat::make('Total Profit Generated', currency().number_format($totalProfitGenerated, 2))
                 ->description('Earnings from these products')
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('primary'),

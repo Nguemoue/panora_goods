@@ -1,17 +1,23 @@
 @import 'tailwindcss';
+@import "flowbite/src/themes/default.css";
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
+@source "../../node_modules/flowbite";
+
 @plugin "daisyui";
+@plugin "flowbite/plugin";
+
+
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 
-    --color-primary: #004b91; /* Glotelho Blue */
+    --color-primary: #004b91; /* Phone CRM Blue */
     --color-primary-hover: #003668;
-    --color-secondary: #f58634; /* Glotelho Orange */
+    --color-secondary: #f58634; /* Phone CRM Orange */
     --color-secondary-hover: #d46d24;
     --color-body-bg: #f4f4f4;
 }

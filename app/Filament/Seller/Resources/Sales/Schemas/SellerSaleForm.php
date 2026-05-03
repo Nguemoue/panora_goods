@@ -2,17 +2,17 @@
 
 namespace App\Filament\Seller\Resources\Sales\Schemas;
 
-use App\Models\Product;
+use App\Enums\SaleStatusEnum;
 use App\Enums\UserRoleEnum;
+use App\Models\Product;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
-use Filament\Support\Icons\Heroicon;
+use Filament\Schemas\Schema;
 
 class SellerSaleForm
 {
@@ -60,6 +60,10 @@ class SellerSaleForm
                         DateTimePicker::make('sold_at')
                             ->label('Transaction Date')
                             ->default(now())
+                            ->required(),
+                        Select::make('status')
+                            ->options(SaleStatusEnum::class)
+                            ->default(SaleStatusEnum::PENDING)
                             ->required(),
                     ])->columnSpanFull(),
 

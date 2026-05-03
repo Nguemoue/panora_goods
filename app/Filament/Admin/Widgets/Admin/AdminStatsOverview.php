@@ -2,13 +2,12 @@
 
 namespace App\Filament\Admin\Widgets\Admin;
 
+use App\Enums\UserRoleEnum;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\User;
-use App\Enums\UserRoleEnum;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Filament\Support\Colors\Color;
 
 class AdminStatsOverview extends BaseWidget
 {
@@ -20,11 +19,11 @@ class AdminStatsOverview extends BaseWidget
         $criticalStockCount = Product::where('stock_quantity', '<', 5)->count();
 
         return [
-            Stat::make('Total Revenue', '$' . number_format($totalRevenue, 2))
+            Stat::make('Total Revenue', '$'.number_format($totalRevenue, 2))
                 ->description('Overall sales income')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
-            Stat::make('Net Profit', '$' . number_format($totalProfit, 2))
+            Stat::make('Net Profit', currency().number_format($totalProfit, 2))
                 ->description('Total margin after costs')
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('primary'),
