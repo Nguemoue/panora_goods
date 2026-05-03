@@ -401,5 +401,3 @@
     </div>
 
     <!-- Gallery scripts moved to resources/js/product-gallery.js and imported in resources/js/app.js -->
-
-@endsection
