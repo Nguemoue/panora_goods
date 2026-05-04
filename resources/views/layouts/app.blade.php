@@ -178,8 +178,8 @@
             <div class="space-y-3">
                 <h4 class="text-sm font-semibold text-slate-950">{{ __('frontend.footer.legal') }}</h4>
                 <ul class="space-y-2.5 text-sm text-slate-600">
-                    <li><a href="#" class="hover:text-slate-950 hover:underline underline-offset-4 transition-colors">{{ __('frontend.footer.terms') }}</a></li>
-                    <li><a href="#" class="hover:text-slate-950 hover:underline underline-offset-4 transition-colors">{{ __('frontend.footer.privacy') }}</a></li>
+
+                    <li><a href="{{route('legal.mentions')}}" target="_blank" class="hover:text-slate-950 hover:underline underline-offset-4 transition-colors">{{ __('frontend.footer.legal') }}</a></li>
                 </ul>
             </div>
             <div class="space-y-3">

@@ -87,7 +87,7 @@ return [
         'help' => 'Aide',
         'faq' => 'FAQ',
         'delivery' => 'Livraison',
-        'legal' => 'Légal',
+        'legal' => 'Mentions légales',
         'terms' => "Conditions d'utilisation",
         'privacy' => 'Confidentialité',
         'contact' => 'Contact',

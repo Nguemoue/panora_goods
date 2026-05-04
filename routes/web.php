@@ -12,3 +12,4 @@ Route::get('/track-order', TrackOrder::class)->name('track.order');
 
 Route::get("/contact",[ContactController::class,'show'])->name('contact');
 Route::post("/contact",[ContactController::class,'store'])->name('contact.send');
+Route::view("/metions-legale","legal")->name('legal.mentions');
