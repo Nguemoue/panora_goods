@@ -11,12 +11,12 @@ class ProductPolicy
 {
     public function viewAny(User $user): bool
     {
-        return in_array($user->role, [UserRoleEnum::ADMIN, UserRoleEnum::SELLER, UserRoleEnum::CLIENT]);
+        return in_array($user->role, [UserRoleEnum::ADMIN, UserRoleEnum::SELLER]);
     }
 
     public function view(User $user, Product $product): bool
     {
-        return in_array($user->role, [UserRoleEnum::ADMIN, UserRoleEnum::SELLER, UserRoleEnum::CLIENT]);
+        return in_array($user->role, [UserRoleEnum::ADMIN, UserRoleEnum::SELLER]);
     }
 
     public function create(User $user): bool

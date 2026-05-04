@@ -12,13 +12,7 @@ enum SaleStatusEnum: string
 
     public function getLabel(): string
     {
-        return match ($this) {
-            self::PENDING => 'Pending',
-            self::PROCESSING => 'Processing',
-            self::SHIPPED => 'Shipped',
-            self::DELIVERED => 'Delivered',
-            self::CANCELLED => 'Cancelled',
-        };
+        return __("frontend.track.status.{$this->value}");
     }
 
     public function getColor(): string

@@ -7,6 +7,7 @@ use App\Filament\Admin\Resources\Users\Pages\EditUser;
 use App\Filament\Admin\Resources\Users\Pages\ListUsers;
 use App\Filament\Admin\Resources\Users\Schemas\UserForm;
 use App\Filament\Admin\Resources\Users\Tables\UsersTable;
+use App\Filament\Enums\AdminNavigationGroupEnum;
 use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -18,7 +19,9 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-users';
-    protected static string| \UnitEnum|null $navigationGroup = 'User Management';
+    protected static string| \UnitEnum|null $navigationGroup = AdminNavigationGroupEnum::PERSONNEL;
+    protected static ?string $modelLabel = 'Employee';
+    protected static ?string $pluralModelLabel = 'Employees';
 
     public static function form(Schema $schema): Schema
     {

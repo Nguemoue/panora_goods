@@ -14,9 +14,9 @@ class SellerSalesChart extends ChartWidget
     protected function getData(): array
     {
         $userId = Auth::id();
-        
+
         $data = Sale::where('seller_id', $userId)
-            ->selectRaw('strftime("%Y-%m", sold_at) as month, sum(sale_price) as total')
+            ->selectRaw('date_format("%Y-%m", sold_at) as month, sum(sale_price) as total')
             ->groupBy('month')
             ->orderBy('month')
             ->take(6)

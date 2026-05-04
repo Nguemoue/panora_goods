@@ -4,6 +4,7 @@ namespace App\Filament\Seller\Widgets\Seller;
 
 use App\Filament\Seller\Resources\Sales\SaleResource;
 use App\Models\Sale;
+use Filament\Facades\Filament;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
@@ -12,12 +13,11 @@ use Illuminate\Support\Facades\Auth;
 class LatestSales extends BaseWidget
 {
     protected int | string | array $columnSpan = 'full';
-
     public function table(Table $table): Table
     {
         return $table
             ->query(
-                Sale::query()->where('seller_id', Auth::id())->latest('sold_at')->limit(5)
+                Sale::query()->where('seller_id', Filament::auth()->id())->latest('sold_at')->limit(5)
             )
             ->columns([
                 Tables\Columns\TextColumn::make('product.name')

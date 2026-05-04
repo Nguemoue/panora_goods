@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use App\Enums\PaymentStatusEnum;
+use App\Enums\PaymentTypeEnum;
 use App\Enums\SaleStatusEnum;
 use Database\Factories\SaleFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Sale extends Model
@@ -14,23 +18,14 @@ class Sale extends Model
     /** @use HasFactory<SaleFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'product_id',
-        'seller_id',
-        'client_id',
-        'quantity',
-        'supplier_price_at_sale',
-        'sale_price',
-        'profit',
-        'customer_name',
-        'tracking_code',
-        'status',
-        'sold_at',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'sold_at' => 'datetime',
         'status' => SaleStatusEnum::class,
+        'payment_status' => PaymentStatusEnum::class,
+        'payment_type' => PaymentTypeEnum::class,
+        'payment_date_limit' => 'date',
     ];
 
     protected static function boot()
@@ -65,6 +60,22 @@ class Sale extends Model
 
     public function client(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'client_id');
+        return $this->belongsTo(Client::class, 'client_id');
     }
+
+    public function salePayments(): HasMany
+    {
+        return $this->hasMany(SalePayment::class);
+    }
+    public function approvedSalePayments(): HasMany
+    {
+        return $this->hasMany(SalePayment::class)
+                ->where('confirmation_status', \App\Enums\ConfirmationStatusEnum::APPROVED);
+    }
+
+    public function isOneTimePayment(): bool
+    {
+        return $this->payment_type === PaymentTypeEnum::ONE_TIME;
+    }
+
 }

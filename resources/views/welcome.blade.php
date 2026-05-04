@@ -9,10 +9,10 @@
                 <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
                     <div class="max-w-2xl">
                         <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">
-                            Notre Catalogue
+                            {{ __('frontend.home.title') }}
                         </h1>
                         <p class="mt-2 text-base text-slate-500">
-                            Explorez notre collection de produits. Filtrez par catégorie et trouvez exactement ce dont vous avez besoin.
+                            {{ __('frontend.home.subtitle') }}
                         </p>
                     </div>
 
@@ -26,11 +26,11 @@
                                 type="search"
                                 name="q"
                                 value="{{ request('q') }}"
-                                placeholder="Rechercher un produit..."
+                                placeholder="{{ __('frontend.home.search_placeholder') }}"
                                 class="flex h-11 w-full rounded-md border border-slate-200 bg-slate-50/50 px-3 py-2 pl-10 text-sm outline-none transition-all placeholder:text-slate-400 focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 shadow-sm"
                             >
                             <button type="submit" class="absolute inset-y-1.5 right-1.5 flex items-center justify-center rounded bg-slate-900 px-3 text-xs font-medium text-white transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-1">
-                                Chercher
+                                {{ __('frontend.home.search_button') }}
                             </button>
                         </div>
                     </form>
@@ -46,12 +46,12 @@
 
                     <!-- Bloc Catégories -->
                     <div>
-                        <h3 class="text-sm font-semibold text-slate-950 uppercase tracking-wider mb-4">Catégories</h3>
+                        <h3 class="text-sm font-semibold text-slate-950 uppercase tracking-wider mb-4">{{ __('frontend.nav.categories') }}</h3>
                         <div class="space-y-1">
                             <!-- Option "Toutes" -->
                             <a href="{{ route('home') }}"
                                class="flex items-center justify-between rounded-md px-3 py-2.5 text-sm font-medium transition-colors {{ !$selectedCategory ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900' }}">
-                                <span>Toutes les catégories</span>
+                                <span>{{ __('frontend.nav.all_categories') }}</span>
                                 <span class="inline-flex items-center justify-center rounded-full bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-500 border border-slate-200 shadow-sm">
                                     {{ $products->total() }}
                                 </span>
@@ -74,13 +74,13 @@
                     <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
                         <div class="flex items-center gap-3 mb-2 text-blue-600">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            <h3 class="font-semibold text-slate-900">Besoin d'aide ?</h3>
+                            <h3 class="font-semibold text-slate-900">{{ __('frontend.home.need_help') }}</h3>
                         </div>
                         <p class="text-sm text-slate-500 leading-relaxed">
-                            Vous ne trouvez pas ce que vous cherchez ? Contactez notre équipe commerciale.
+                            {{ __('frontend.home.help_text') }}
                         </p>
                         <a href="{{ route('contact') }}" class="mt-4 inline-flex w-full items-center justify-center rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-900 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-300">
-                            Nous contacter
+                            {{ __('frontend.top_bar.contact_us') }}
                         </a>
                     </div>
                 </aside>
@@ -91,9 +91,9 @@
                     <!-- Toolbar (Compteur & Vues) -->
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-4 border-b border-slate-200">
                         <div class="text-sm text-slate-500">
-                            Affichage de <span class="font-semibold text-slate-900">{{ $products->count() }}</span> sur <span class="font-semibold text-slate-900">{{ $products->total() }}</span> produit(s)
+                            {{ __('frontend.home.display_count', ['count' => $products->count(), 'total' => $products->total()]) }}
                             @if($selectedCategory)
-                                dans <span class="font-medium text-blue-600">{{ $selectedCategory->name }}</span>
+                                {{ __('messages.in') }} <span class="font-medium text-blue-600">{{ $selectedCategory->name }}</span>
                             @endif
                         </div>
 
@@ -101,11 +101,11 @@
                         <div class="inline-flex h-9 items-center justify-center rounded-lg bg-slate-100 p-1 text-slate-500 shadow-inner">
                             <a href="{{ route('home', array_merge(request()->query(), ['per_page' => 12])) }}"
                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 {{ request('per_page', 12) == 12 ? 'bg-white text-slate-950 shadow-sm' : 'hover:bg-slate-200/50 hover:text-slate-900' }}">
-                                12 par page
+                                {{ __('frontend.home.per_page', ['count' => 12]) }}
                             </a>
                             <a href="{{ route('home', array_merge(request()->query(), ['per_page' => 24])) }}"
                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-white transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 {{ request('per_page', 12) == 24 ? 'bg-white text-slate-950 shadow-sm' : 'hover:bg-slate-200/50 hover:text-slate-900' }}">
-                                24 par page
+                                {{ __('frontend.home.per_page', ['count' => 24]) }}
                             </a>
                         </div>
                     </div>
@@ -133,12 +133,12 @@
                                         @if($product->stock_quantity > 0)
                                             <span class="inline-flex items-center gap-1.5 rounded-md bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20 backdrop-blur-sm shadow-sm">
                                                 <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-                                                En stock
+                                                {{ __('frontend.product.in_stock') }}
                                             </span>
                                         @else
                                             <span class="inline-flex items-center gap-1.5 rounded-md bg-rose-50 px-2 py-1 text-xs font-medium text-rose-700 ring-1 ring-inset ring-rose-600/20 backdrop-blur-sm shadow-sm">
                                                 <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>
-                                                Rupture
+                                                {{ __('frontend.product.out_of_stock') }}
                                             </span>
                                         @endif
                                     </div>
@@ -195,10 +195,10 @@
                                 <div class="flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 mb-4">
                                     <svg class="w-8 h-8 text-slate-400" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"/></svg>
                                 </div>
-                                <h3 class="text-lg font-bold text-slate-900 mb-1">Aucun produit trouvé</h3>
-                                <p class="text-slate-500 max-w-sm mx-auto mb-6">Nous n'avons pas pu trouver de produits correspondant à votre recherche ou catégorie sélectionnée.</p>
+                                <h3 class="text-lg font-bold text-slate-900 mb-1">{{ __('frontend.home.no_products_found') }}</h3>
+                                <p class="text-slate-500 max-w-sm mx-auto mb-6">{{ __('frontend.home.no_products_found_text') }}</p>
                                 <a href="{{ route('home') }}" class="inline-flex items-center justify-center rounded-md bg-slate-900 px-6 py-2.5 text-sm font-medium text-white shadow transition-colors hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2">
-                                    Effacer les filtres
+                                    {{ __('frontend.home.clear_filters') }}
                                 </a>
                             </div>
                         @endforelse

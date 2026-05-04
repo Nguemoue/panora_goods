@@ -11,7 +11,7 @@ class Specification extends Model
     /** @use HasFactory<\Database\Factories\SpecificationFactory> */
     use HasFactory;
 
-    protected $fillable = ['name', 'input_type', 'measure', 'description'];
+    protected $guarded = [];
 
     public function categories(): BelongsToMany
     {

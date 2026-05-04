@@ -6,6 +6,7 @@ use App\Enums\UserRoleEnum;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\User;
+use Filament\Support\Icons\Heroicon;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Number;
@@ -24,10 +25,20 @@ class AdminStatsOverview extends BaseWidget
                 ->description('Overall sales income')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
+            //capital stat
+            Stat::make('Capital', Number::currency($totalRevenue - $totalProfit))
+                ->description('Total expenses on products')
+                ->descriptionIcon(Heroicon::CurrencyDollar)
+                ->color('danger'),
             Stat::make('Net Profit', Number::currency($totalProfit))
                 ->description('Total margin after costs')
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('primary'),
+            //number of sellers
+            Stat::make('Sellers', User::seller()->count())
+                ->description('Total sellers')
+                ->descriptionIcon('heroicon-m-user-group')
+                ->color('warning'),
             Stat::make('Active Clients', $clientCount)
                 ->description('Registered buyers')
                 ->descriptionIcon('heroicon-m-users')

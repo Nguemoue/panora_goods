@@ -25,6 +25,11 @@ class UserForm
                             ->placeholder('John Doe')
                             ->required()
                             ->maxLength(255),
+                        TextInput::make('phone_number')
+                            ->label('Phone Number')
+                            ->placeholder('+237...')
+                            ->tel()
+                            ->maxLength(20),
                         TextInput::make('email')
                             ->label('Email Address')
                             ->placeholder('john@example.com')
@@ -44,8 +49,14 @@ class UserForm
                 Section::make('Access & Status')
                     ->description('Control the user permissions and account state.')
                     ->icon('heroicon-o-shield-check')
-                    ->columns(2)
+                    ->columns(3)
                     ->schema([
+                        Select::make('zone_id')
+                            ->label('Operational Zone')
+                            ->relationship('zone', 'name')
+                            ->searchable()
+                            ->preload()
+                            ->placeholder('Select a zone...'),
                         Select::make('role')
                             ->label('Assigned Role')
                             ->options(UserRoleEnum::class)

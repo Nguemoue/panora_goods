@@ -15,10 +15,10 @@
             <!-- En-tête de la page -->
             <div class="text-center max-w-2xl mx-auto mb-16">
                 <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-4">
-                    Contactez-<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-400">nous</span>
+                    {{ __('frontend.contact.title') }}
                 </h1>
                 <p class="text-lg text-slate-500">
-                    Une question sur nos modèles de documents ? Un besoin spécifique ? Notre équipe vous répond rapidement.
+                    {{ __('frontend.contact.subtitle') }}
                 </p>
             </div>
 
@@ -35,8 +35,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-lg font-semibold text-slate-900">Notre bureau</h3>
-                            <p class="mt-1 text-slate-500">Yaoundé, Cameroun</p>
+                            <h3 class="text-lg font-semibold text-slate-900">{{ __('frontend.contact.our_office') }}</h3>
+                            <p class="mt-1 text-slate-500">{{ __('frontend.contact.office_address') }}</p>
                         </div>
                     </div>
 
@@ -48,8 +48,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-lg font-semibold text-slate-900">Téléphone</h3>
-                            <p class="mt-1 text-slate-500">+237 6XX XXX XXX</p>
+                            <h3 class="text-lg font-semibold text-slate-900">{{ __('frontend.contact.phone') }}</h3>
+                            <p class="mt-1 text-slate-500">{{config('project_configuration.phone_number')}}</p>
                         </div>
                     </div>
 
@@ -61,8 +61,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-lg font-semibold text-slate-900">Email</h3>
-                            <p class="mt-1 text-slate-500">contact@tonsite.com</p>
+                            <h3 class="text-lg font-semibold text-slate-900">{{ __('frontend.contact.email') }}</h3>
+                            <p class="mt-1 text-slate-500">{{config('project_configuration.contact_email')}}</p>
                         </div>
                     </div>
 
@@ -74,8 +74,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h3 class="text-lg font-semibold text-slate-900">Heures d'ouverture</h3>
-                            <p class="mt-1 text-slate-500">Lundi - Vendredi : 08h - 18h</p>
+                            <h3 class="text-lg font-semibold text-slate-900">{{ __('frontend.contact.opening_hours') }}</h3>
+                            <p class="mt-1 text-slate-500">{{ __('frontend.contact.hours_detail') }}</p>
                         </div>
                     </div>
                 </div>
@@ -89,41 +89,41 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Nom -->
                                 <div class="space-y-1.5">
-                                    <label for="name" class="block text-sm font-semibold text-slate-700">Nom complet</label>
+                                    <label for="name" class="block text-sm font-semibold text-slate-700">{{ __('frontend.contact.form_name') }}</label>
                                     <input type="text" id="name" name="name" required
                                            class="w-full px-4 py-3 rounded-xl bg-slate-50 border-transparent focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-slate-900 placeholder-slate-400"
-                                           placeholder="Jean Dupont">
+                                           placeholder="{{ __('frontend.contact.form_placeholder_name') }}">
                                 </div>
 
                                 <!-- Email -->
                                 <div class="space-y-1.5">
-                                    <label for="email" class="block text-sm font-semibold text-slate-700">Adresse email</label>
+                                    <label for="email" class="block text-sm font-semibold text-slate-700">{{ __('frontend.contact.form_email') }}</label>
                                     <input type="email" id="email" name="email" required
                                            class="w-full px-4 py-3 rounded-xl bg-slate-50 border-transparent focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-slate-900 placeholder-slate-400"
-                                           placeholder="jean@exemple.com">
+                                           placeholder="{{ __('frontend.contact.form_placeholder_email') }}">
                                 </div>
                             </div>
 
                             <!-- Sujet -->
                             <div class="space-y-1.5">
-                                <label for="subject" class="block text-sm font-semibold text-slate-700">Sujet</label>
+                                <label for="subject" class="block text-sm font-semibold text-slate-700">{{ __('frontend.contact.form_subject') }}</label>
                                 <input type="text" id="subject" name="subject" required
                                        class="w-full px-4 py-3 rounded-xl bg-slate-50 border-transparent focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-slate-900 placeholder-slate-400"
-                                       placeholder="Comment pouvons-nous vous aider ?">
+                                       placeholder="{{ __('frontend.contact.form_placeholder_subject') }}">
                             </div>
 
                             <!-- Message -->
                             <div class="space-y-1.5">
-                                <label for="message" class="block text-sm font-semibold text-slate-700">Votre message</label>
+                                <label for="message" class="block text-sm font-semibold text-slate-700">{{ __('frontend.contact.form_message') }}</label>
                                 <textarea id="message" name="message" rows="5" required
                                           class="w-full px-4 py-3 rounded-xl bg-slate-50 border-transparent focus:bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all text-slate-900 placeholder-slate-400 resize-none"
-                                          placeholder="Détaillez votre demande ici..."></textarea>
+                                          placeholder="{{ __('frontend.contact.form_placeholder_message') }}"></textarea>
                             </div>
 
                             <!-- Bouton Submit -->
                             <button type="submit"
                                     class="w-full py-4 px-6 text-white text-base font-semibold rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 focus:ring-4 focus:ring-blue-500/30 transform hover:-translate-y-0.5 transition-all duration-200 shadow-lg shadow-blue-600/30">
-                                Envoyer le message
+                                {{ __('frontend.contact.send_message') }}
                             </button>
                         </form>
                     </div>

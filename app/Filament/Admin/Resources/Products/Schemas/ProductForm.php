@@ -22,11 +22,13 @@ class ProductForm
         return $schema
             ->components([
                 Tabs::make('Product Wizard')
+                    ->columnSpanFull()
                     ->tabs([
                         Tabs\Tab::make('General')
                             ->icon('heroicon-o-information-circle')
                             ->schema([
                                 Section::make('Core Identification')
+                                    ->columnSpanFull()
                                     ->description('Enter the main details to identify the product.')
                                     ->columns(2)
                                     ->schema([
@@ -60,6 +62,7 @@ class ProductForm
                                 Section::make('Pricing & Inventory')
                                     ->description('Manage your margins and stock availability.')
                                     ->columns(3)
+                                    ->columnSpanFull()
                                     ->schema([
                                         TextInput::make('supplier_price')
                                             ->label('Purchase Price')
@@ -105,7 +108,7 @@ class ProductForm
                                                     ->label('Main Display Image'),
                                             ])
                                             ->columns(2)
-                                            ->minItems(4)
+                                            ->minItems(1)
                                             ->grid(2),
                                     ]),
                             ]),
@@ -116,7 +119,7 @@ class ProductForm
                                     ->description('Add detailed specifications based on category selection.')
                                     ->schema([
                                         Repeater::make('product_specifications')
-                                            ->relationship('specifications')
+                                            ->relationship('productSpecifications')
                                             ->schema([
                                                 Select::make('specification_id')
                                                     ->label('Spec Name')

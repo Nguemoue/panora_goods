@@ -6,27 +6,20 @@ namespace App\Models;
 use App\Enums\UserRoleEnum;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Attributes\Guarded;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+#[Guarded([])]
 class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'role',
-        'status',
-    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -52,6 +45,16 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
+    #[Scope]
+    protected function seller(Builder $query): Builder
+    {
+        return $query->where('role', UserRoleEnum::SELLER);
+    }
+
+    public function zone(): BelongsTo
+    {
+        return $this->belongsTo(Zone::class);
+    }
     public function canAccessPanel(Panel $panel): bool
     {
         if ($panel->getId() === 'admin') {
@@ -60,10 +63,6 @@ class User extends Authenticatable implements FilamentUser
 
         if ($panel->getId() === 'seller') {
             return $this->role === UserRoleEnum::SELLER && $this->status === 'active';
-        }
-
-        if ($panel->getId() === 'client') {
-            return $this->role === UserRoleEnum::CLIENT && $this->status === 'active';
         }
 
         return false;

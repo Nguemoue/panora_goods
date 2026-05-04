@@ -12,7 +12,7 @@
                     <li class="inline-flex items-center">
                         <a href="{{ route('home') }}" class="inline-flex items-center hover:text-slate-900 transition-colors">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                            Catalogue
+                            {{ __('frontend.nav.breadcrumb_catalog') }}
                         </a>
                     </li>
                     <li>
@@ -57,11 +57,11 @@
                             <div class="absolute top-4 left-4 z-10">
                                 @if($product->stock_quantity > 0)
                                     <span class="inline-flex items-center gap-1.5 rounded-md bg-emerald-100/80 px-2.5 py-1.5 text-xs font-semibold text-emerald-800 backdrop-blur-md ring-1 ring-inset ring-emerald-600/20">
-                                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> En stock ({{ $product->stock_quantity }})
+                                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> {{ __('frontend.product.in_stock') }} ({{ $product->stock_quantity }})
                                 </span>
                                 @else
                                     <span class="inline-flex items-center gap-1.5 rounded-md bg-rose-100/80 px-2.5 py-1.5 text-xs font-semibold text-rose-800 backdrop-blur-md ring-1 ring-inset ring-rose-600/20">
-                                    <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span> Rupture
+                                    <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span> {{ __('frontend.product.out_of_stock') }}
                                 </span>
                                 @endif
                             </div>
@@ -80,9 +80,9 @@
                             @if($product->brand)
                                 <span class="inline-flex items-center rounded-md bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-800">{{ $product->brand->name }}</span>
                             @endif
-                            <span class="inline-flex items-center rounded-md bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">{{ $product->category?->name ?? 'Catégorie' }}</span>
+                            <span class="inline-flex items-center rounded-md bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">{{ $product->category?->name ?? __('messages.category') }}</span>
                             @if($product->model_number)
-                                <span class="text-xs text-slate-400 font-mono ml-auto">Réf: {{ $product->model_number }}</span>
+                                <span class="text-xs text-slate-400 font-mono ml-auto">{{ __('frontend.product.ref') }}: {{ $product->model_number }}</span>
                             @endif
                         </div>
 
@@ -93,7 +93,7 @@
                     <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm mb-8">
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                             <div>
-                                <p class="text-sm font-medium text-slate-500 mb-1">Prix de référence</p>
+                                <p class="text-sm font-medium text-slate-500 mb-1">{{ __('frontend.product.reference_price') }}</p>
                                 <div class="flex items-end gap-3">
                                     <span class="text-4xl font-black text-slate-950 tracking-tight">{{ Number::currency($product->selling_price, 'XAF') }}</span>
                                     @if($product->supplier_price)
@@ -106,9 +106,9 @@
                                 <!-- Bouton Primaire façon shadcn -->
                                 <a href="{{ route('contact') }}?product={{ $product->id }}" class="inline-flex items-center justify-center rounded-md bg-slate-900 px-8 py-3.5 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 shadow-sm w-full sm:w-auto">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                                    Demander un devis
+                                    {{ __('frontend.product.request_quote') }}
                                 </a>
-                                <p class="text-[11px] text-slate-400 text-center">Catalogue uniquement. Pas d'achat direct.</p>
+                                <p class="text-[11px] text-slate-400 text-center">{{ __('frontend.product.catalog_only') }}</p>
                             </div>
                         </div>
                     </div>
@@ -119,10 +119,10 @@
                             <div class="border-b border-slate-200">
                                 <nav class="-mb-px flex space-x-6" aria-label="Tabs">
                                     <button type="button" onclick="switchTab('specs-key')" id="tab-specs-key" class="tab-btn whitespace-nowrap border-b-2 border-slate-900 py-4 px-1 text-sm font-semibold text-slate-900 transition-colors">
-                                        Caractéristiques clés
+                                        {{ __('frontend.product.key_features') }}
                                     </button>
                                     <button type="button" onclick="switchTab('specs-full')" id="tab-specs-full" class="tab-btn whitespace-nowrap border-b-2 border-transparent py-4 px-1 text-sm font-medium text-slate-500 hover:border-slate-300 hover:text-slate-700 transition-colors">
-                                        Fiche technique complète
+                                        {{ __('frontend.product.full_specs') }}
                                     </button>
                                 </nav>
                             </div>
@@ -160,9 +160,9 @@
             @if($similarProducts->count() > 0)
                 <div class="mt-16 pt-10 border-t border-slate-200">
                     <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-bold text-slate-950 tracking-tight">Produits similaires</h2>
+                        <h2 class="text-2xl font-bold text-slate-950 tracking-tight">{{ __('frontend.product.similar_products') }}</h2>
                         <a href="{{ route('home', ['category' => $product->category_id]) }}" class="hidden sm:inline-flex text-sm font-medium text-blue-600 hover:text-blue-500 transition-colors">
-                            Voir toute la catégorie →
+                            {{ __('frontend.product.view_category') }} →
                         </a>
                     </div>
 

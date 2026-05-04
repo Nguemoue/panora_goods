@@ -79,5 +79,7 @@ return [
     'product_availability'=>"Disponibilité du produit",
     'create_user'=>"Créer un utilisateur",
     'regular_user'=>"Utilisateur régulier",
-    'admin_user'=>"Utilisateur administrateur",
-];
+    'admin_user' => 'Utilisateur administrateur',
+    'in' => 'dans',
+    ];
+

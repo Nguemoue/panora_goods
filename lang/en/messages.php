@@ -61,4 +61,5 @@ return [
     'user_role' => 'role',
     'email_verification' => 'Email',
     'two_factor' => 'Two factor',
+    'in' => 'in',
 ];
