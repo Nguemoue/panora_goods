@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 class SupplierStats extends BaseWidget
 {
     public ?Model $record = null;
+    public ?string $pollingInterval = null;
+    protected int | string | array $columnSpan = 'full';
 
     public static function canView(): bool
     {

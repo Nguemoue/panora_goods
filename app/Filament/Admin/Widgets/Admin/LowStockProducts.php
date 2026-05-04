@@ -11,6 +11,7 @@ use Filament\Widgets\TableWidget as BaseWidget;
 class LowStockProducts extends BaseWidget
 {
     protected int | string | array $columnSpan = 'full';
+    public ?string $pollingInterval = null;
 
     public function table(Table $table): Table
     {

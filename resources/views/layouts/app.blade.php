@@ -73,7 +73,7 @@
                 </div>
 
                 <a href="{{ route('track.order') }}" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-slate-100 hover:text-slate-900 text-slate-600 h-9 px-4 py-2">
-                    Suivi
+                    Suivre ma commande
                 </a>
                 <a href="{{ url('/seller') }}" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-slate-100 hover:text-slate-900 text-slate-600 h-9 px-4 py-2">
                     Espace Employé

@@ -10,13 +10,14 @@ use Illuminate\Support\Carbon;
 
 class SalesChart extends ChartWidget
 {
+    public ?string $pollingInterval = null;
+    protected int | string | array $columnSpan = 'full';
     protected ?string $heading = 'Revenue Trend';
     protected string $color = 'success';
-
     protected function getData(): array
     {
         // Simple manual aggregation for compatibility (no flowframe/trend assumed)
-        $data = Sale::selectRaw('strftime("%Y-%m", sold_at) as month, sum(sale_price) as total')
+        $data = Sale::selectRaw('date_format("%Y-%m", sold_at) as month, sum(sale_price) as total')
             ->groupBy('month')
             ->orderBy('month')
             ->take(12)

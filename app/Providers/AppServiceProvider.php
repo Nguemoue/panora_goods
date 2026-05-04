@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +12,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+
     }
 
     /**
@@ -19,6 +20,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->configureCurrency();
+    }
 
+    private function configureCurrency(): void
+    {
+        Number::useCurrency(currency: currency());
     }
 }

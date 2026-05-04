@@ -10,6 +10,8 @@ class ProductSalesChart extends ChartWidget
 {
     public ?Model $record = null;
     protected ?string $heading = 'Product Monthly Sales';
+    public ?string $pollingInterval = null;
+    protected int | string | array $columnSpan = 'full';
 
     public static function canView(): bool
     {

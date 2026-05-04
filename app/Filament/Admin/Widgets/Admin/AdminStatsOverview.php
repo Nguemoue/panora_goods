@@ -8,6 +8,7 @@ use App\Models\Sale;
 use App\Models\User;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
+use Illuminate\Support\Number;
 
 class AdminStatsOverview extends BaseWidget
 {
@@ -19,11 +20,11 @@ class AdminStatsOverview extends BaseWidget
         $criticalStockCount = Product::where('stock_quantity', '<', 5)->count();
 
         return [
-            Stat::make('Total Revenue', '$'.number_format($totalRevenue, 2))
+            Stat::make('Total Revenue', Number::currency($totalRevenue))
                 ->description('Overall sales income')
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
-            Stat::make('Net Profit', currency().number_format($totalProfit, 2))
+            Stat::make('Net Profit', Number::currency($totalProfit))
                 ->description('Total margin after costs')
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('primary'),
