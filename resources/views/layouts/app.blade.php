@@ -124,7 +124,7 @@
                 <ul id="dropdown-categories" class="hidden py-1 pl-4 space-y-1 border-l border-slate-200 ml-3 mt-1">
                     @foreach(\App\Models\Category::query()->get() as $category)
                         <li>
-                            <a href="{{ request()->fullUrlWithQuery(['cat' => $category->id]) }}" class="flex items-center rounded-md px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
+                            <a href="{{ route('home',['category' => $category->id]) }}" class="flex items-center rounded-md px-3 py-2 text-sm text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors">
                                 {{ $category->name }}
                             </a>
                         </li>

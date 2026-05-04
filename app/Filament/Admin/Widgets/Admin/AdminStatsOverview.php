@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Widgets\Admin;
 
 use App\Enums\UserRoleEnum;
+use App\Models\Client;
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\User;
@@ -17,7 +18,7 @@ class AdminStatsOverview extends BaseWidget
     {
         $totalProfit = Sale::sum('profit');
         $totalRevenue = Sale::sum('sale_price');
-        $clientCount = User::where('role', UserRoleEnum::CLIENT)->count();
+        $clientCount = Client::query()->count();
         $criticalStockCount = Product::where('stock_quantity', '<', 5)->count();
 
         return [
