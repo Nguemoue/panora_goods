@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\SpecificationInputType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -12,6 +13,13 @@ class Specification extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    protected function casts(): array
+    {
+        return [
+            'input_type' => SpecificationInputType::class,
+        ];
+    }
 
     public function categories(): BelongsToMany
     {

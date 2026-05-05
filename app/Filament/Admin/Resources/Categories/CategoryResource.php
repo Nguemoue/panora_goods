@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources\Categories;
 use App\Filament\Admin\Resources\Categories\Pages\CreateCategory;
 use App\Filament\Admin\Resources\Categories\Pages\EditCategory;
 use App\Filament\Admin\Resources\Categories\Pages\ListCategories;
+use App\Filament\Admin\Resources\Categories\RelationManagers\SpecificationRelationManager;
 use App\Filament\Admin\Resources\Categories\Schemas\CategoryForm;
 use App\Filament\Admin\Resources\Categories\Tables\CategoriesTable;
 use App\Models\Category;
@@ -31,12 +32,20 @@ class CategoryResource extends Resource
         return CategoriesTable::configure($table);
     }
 
+
     public static function getPages(): array
     {
         return [
             'index' => ListCategories::route('/'),
             'create' => CreateCategory::route('/create'),
             'edit' => EditCategory::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            SpecificationRelationManager::class,
         ];
     }
 }

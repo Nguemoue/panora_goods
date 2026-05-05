@@ -172,11 +172,7 @@
                                     <!-- Prix & Action (Poussés vers le bas) -->
                                     <div class="mt-auto pt-6 flex items-end justify-between relative z-10">
                                         <div>
-                                            @if($product->supplier_price)
-                                                <div class="text-xs font-medium text-slate-400 line-through mb-0.5">
-                                                    {{ Number::currency($product->supplier_price, 'XAF') }}
-                                                </div>
-                                            @endif
+
                                             <div class="text-xl font-extrabold text-slate-900 tracking-tight">
                                                 {{ Number::currency($product->selling_price, 'XAF') }}
                                             </div>

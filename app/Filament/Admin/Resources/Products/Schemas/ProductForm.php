@@ -67,12 +67,13 @@ class ProductForm
                                         TextInput::make('supplier_price')
                                             ->label('Purchase Price')
                                             ->numeric()
-                                            ->prefix('$')
+                                            ->prefix(currency())
                                             ->required(),
                                         TextInput::make('selling_price')
                                             ->label('Retail Price')
+                                            ->gte('supplier_price')
                                             ->numeric()
-                                            ->prefix('$')
+                                            ->prefix(currency())
                                             ->required(),
                                         TextInput::make('stock_quantity')
                                             ->label('Quantity in Stock')
@@ -84,6 +85,7 @@ class ProductForm
                         Tabs\Tab::make('Images')
                             ->icon('heroicon-o-photo')
                             ->schema([
+                                //images sections
                                 Section::make('Visual Assets')
                                     ->description('Upload high-quality photos. Minimum 4 required.')
                                     ->schema([
@@ -91,6 +93,7 @@ class ProductForm
                                             ->relationship('images')
                                             ->schema([
                                                 FileUpload::make('path')
+                                                    ->disk('public')
                                                     ->image()
                                                     ->directory('products')
                                                     ->visibility('public')
@@ -128,8 +131,8 @@ class ProductForm
                                                         if (!$categoryId) {
                                                             return Specification::pluck('name', 'id');
                                                         }
-                                                        return Category::find($categoryId)
-                                                            ->specifications()
+                                                        return Category::query()->find($categoryId)
+                                                            ?->specifications()
                                                             ->pluck('name', 'specifications.id');
                                                     })
                                                     ->required()

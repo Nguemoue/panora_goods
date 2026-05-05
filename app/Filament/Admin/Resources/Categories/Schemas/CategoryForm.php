@@ -20,9 +20,11 @@ class CategoryForm
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
+                            ->columnSpanFull()
                             ->label('Category Name')
                             ->placeholder('e.g., Smartphones, Refrigerators')
                             ->required()
+                            ->columnSpanFull()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true)
                             ->columnSpan(1),

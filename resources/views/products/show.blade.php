@@ -96,9 +96,7 @@
                                 <p class="text-sm font-medium text-slate-500 mb-1">{{ __('frontend.product.reference_price') }}</p>
                                 <div class="flex items-end gap-3">
                                     <span class="text-4xl font-black text-slate-950 tracking-tight">{{ Number::currency($product->selling_price, 'XAF') }}</span>
-                                    @if($product->supplier_price)
-                                        <span class="text-lg text-slate-400 line-through mb-1">{{ Number::currency($product->supplier_price, 'XAF') }}</span>
-                                    @endif
+
                                 </div>
                             </div>
 
