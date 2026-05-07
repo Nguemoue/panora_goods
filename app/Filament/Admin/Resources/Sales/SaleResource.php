@@ -49,7 +49,7 @@ class SaleResource extends Resource
         return [
             'index' => ListSales::route('/'),
             'view' => ViewSale::route('/{record}'),
-            'create' => CreateSale::route('/create'),
+            //'create' => CreateSale::route('/create'),
             'edit' => EditSale::route('/{record}/edit'),
         ];
     }
