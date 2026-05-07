@@ -12,6 +12,7 @@ use App\Filament\Seller\Resources\Sales\Schemas\SellerSaleInfolist;
 use App\Filament\Seller\Resources\Sales\Tables\SellerSalesTable;
 use App\Models\Sale;
 use BackedEnum;
+use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
@@ -43,7 +44,7 @@ class SaleResource extends Resource
     {
         return parent::getEloquentQuery()
             ->withSum(['approvedSalePayments as paid_amount'], 'amount')
-            ->where('seller_id', auth()->id());
+            ->where('seller_id', Filament::auth()->id());
     }
 
     public static function getRelations(): array
@@ -57,8 +58,8 @@ class SaleResource extends Resource
     {
         return [
             'index' => ListSales::route('/'),
-            'view' => ViewSale::route('/{record}'),
             'create' => CreateSale::route('/create'),
+            'view' => ViewSale::route('/{record}'),
         ];
     }
 }

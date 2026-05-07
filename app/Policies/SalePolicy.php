@@ -25,6 +25,7 @@ class SalePolicy
 
     public function create(User $user): bool
     {
+
         return in_array($user->role, [UserRoleEnum::ADMIN, UserRoleEnum::SELLER]);
     }
 

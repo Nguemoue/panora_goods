@@ -6,6 +6,8 @@ use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentTypeEnum;
 use App\Enums\SaleStatusEnum;
 use Database\Factories\SaleFactory;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -28,17 +30,38 @@ class Sale extends Model
         'payment_date_limit' => 'date',
     ];
 
-    protected static function boot()
+    protected static function boot(): void
     {
         parent::boot();
 
-        static::creating(function ($sale) {
+        static::creating(static function ($sale) {
             if (empty($sale->tracking_code)) {
                 $sale->tracking_code = self::generateUniqueTrackingCode();
             }
         });
     }
 
+    #[Scope]
+    protected function delivered(Builder $query): Builder
+    {
+        return $query->where('status',SaleStatusEnum::DELIVERED);
+    }
+    #[Scope]
+    protected function notDelivered(Builder $query): Builder
+    {
+        return $query->whereNot('status',SaleStatusEnum::DELIVERED);
+    }
+    #[Scope]
+    protected function paymentFinished(Builder $query): Builder
+    {
+        return $query->where('payment_status',PaymentStatusEnum::PAID);
+    }
+
+    #[Scope]
+    protected function paymentPending(Builder $query): Builder
+    {
+        return $query->whereNot('payment_status',PaymentStatusEnum::PAID);
+    }
     public static function generateUniqueTrackingCode(): string
     {
         do {

@@ -38,7 +38,9 @@ class ApproveSalePaymentAction
                     $paymentFinished = true;
                 }
                 if ($paymentFinished) {
-                    $record->sale->update(['payment_status' => PaymentStatusEnum::PAID]);
+                    $record->sale()->update(['payment_status' => PaymentStatusEnum::PAID]);
+                }else{
+                    $record->sale()->update(['payment_status' => PaymentStatusEnum::PENDING]);
                 }
                 //approve the payment by updating the confirmation_status field to approved and
                 $record->update(['confirmation_status' => ConfirmationStatusEnum::APPROVED]);

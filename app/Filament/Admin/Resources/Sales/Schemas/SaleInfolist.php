@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\Sales\Schemas;
 
 use App\Enums\SaleStatusEnum;
+use App\Filament\Infolist\Shared\SaleInfolistProductDetailSection;
 use App\Filament\Infolist\Shared\SaleInfolistSection;
 use App\Models\Product;
 use App\Models\Sale;
@@ -22,6 +23,7 @@ class SaleInfolist
     {
         return $schema
             ->components([
+                SaleInfolistProductDetailSection::make(),
                 SaleInfolistSection::make()
             ]);
     }

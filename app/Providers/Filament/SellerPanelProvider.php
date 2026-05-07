@@ -49,7 +49,7 @@ class SellerPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->topNavigation()
+            ->topNavigation(false)
             ->authGuard('seller')
             ->authMiddleware([
                 Authenticate::class,

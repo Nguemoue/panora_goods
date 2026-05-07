@@ -2,7 +2,6 @@
 
 namespace App\Filament\Admin\Widgets\Admin;
 
-use App\Enums\UserRoleEnum;
 use App\Models\Client;
 use App\Models\Product;
 use App\Models\Sale;
@@ -48,6 +47,24 @@ class AdminStatsOverview extends BaseWidget
                 ->description('Products below 5 units')
                 ->descriptionIcon('heroicon-m-exclamation-triangle')
                 ->color($criticalStockCount > 0 ? 'danger' : 'success'),
+            // sales
+            Stat::make('Total sales', Sale::query()->count())
+                ->description("The numbers total of sales")
+                ->descriptionIcon(Heroicon::CurrencyDollar),
+
+            Stat::make('Total sales with finished payment', Sale::query()->paymentFinished()->count())
+                ->description("The numbers of sales where the payment is finished")
+                ->descriptionIcon(Heroicon::CurrencyDollar),
+            Stat::make('Total sales with finished pending', Sale::query()->paymentPending()->count())
+                ->description("The numbers of sales where the payment is still pending")
+                ->descriptionIcon(Heroicon::CurrencyDollar),
+            //order delivered or not
+
+            Stat::make('Sale delivered',Sale::delivered()->count())
+                ->description("Total sale delivered"),
+            Stat::make('Sale not delivered',Sale::notDelivered()->count())
+                ->description("Total sale not delivered"),
+
         ];
     }
 }

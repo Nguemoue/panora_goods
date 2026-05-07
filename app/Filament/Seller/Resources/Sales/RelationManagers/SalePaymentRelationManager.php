@@ -36,8 +36,15 @@ class SalePaymentRelationManager extends RelationManager
                         if ($this->getOwnerRecord()->isOneTimePayment()) {
                             return 'This payment type is one time payment, you must paid the full amount: ' . Number::currency((float)$this->getOwnerRecord()->sale_price);
                         }
-                        $remainingAmount = (float)$this->getOwnerRecord()->sale_price - (float)$this->getOwnerRecord()->paid_amount;
+                        $remainingAmount =( (float)$this->getOwnerRecord()->sale_price) - ((float)$this->getOwnerRecord()->approvedSalePayments()->sum('amount'));
                         return 'The remaining amount to be paid is: ' . Number::currency($remainingAmount) . ' Payable before: ' . $this->getOwnerRecord()->payment_date_limit;
+                    })
+                    ->maxValue(function (){
+                        if ($this->getOwnerRecord()->isOneTimePayment()) {
+                            return $this->getOwnerRecord()->sale_price;
+
+                        }
+                        return ( (float)$this->getOwnerRecord()->sale_price) - ((float)$this->getOwnerRecord()->approvedSalePayments()->sum('amount'));
                     })
                     ->minValue(function () {
                         //if the payment type was one time there is no need to calculate the remaining amount
@@ -99,9 +106,7 @@ class SalePaymentRelationManager extends RelationManager
                 //DeleteAction::make(),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+
             ]);
     }
 

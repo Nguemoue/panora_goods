@@ -2,8 +2,8 @@
 
 namespace App\Filament\Seller\Resources\Sales\Schemas;
 
+use App\Filament\Infolist\Shared\SaleInfolistProductDetailSection;
 use App\Filament\Infolist\Shared\SaleInfolistSection;
-use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
 class SellerSaleInfolist
@@ -12,8 +12,7 @@ class SellerSaleInfolist
     {
         return $schema
             ->components([
-                TextEntry::make('product.name')->label('Product Name'),
-
+                SaleInfolistProductDetailSection::make(),
                 //section for sale details
                 SaleInfolistSection::make()
             ]);

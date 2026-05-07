@@ -31,6 +31,7 @@ class SellerSaleForm
                     ->schema([
                         Select::make('product_id')
                             ->label('Select Product')
+                            ->searchable()
                             ->relationship('product', 'name')
                             ->required()
                             ->live()

@@ -40,7 +40,8 @@ class SaleResource extends Resource
 
     public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
     {
-        return parent::getEloquentQuery()->withSum(['approvedSalePayments as paid_amount'], 'amount');
+        return parent::getEloquentQuery()
+            ->withSum(['approvedSalePayments as paid_amount'], 'amount');
     }
 
     public static function getPages(): array
