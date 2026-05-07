@@ -87,6 +87,7 @@
                         </div>
 
                         <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight leading-tight">{{ $product->name }}</h1>
+                        {!! $product->long_description !!}
                     </div>
 
                     <!-- Bloc Prix et CTA -->

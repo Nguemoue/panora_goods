@@ -83,7 +83,7 @@ return [
         ],
     ],
     'footer' => [
-        'description' => 'La référence du catalogue produit au Cameroun. Simple, rapide et efficace.',
+        'description' => 'Un monde de produits, à portée de main',
         'help' => 'Aide',
         'faq' => 'FAQ',
         'delivery' => 'Livraison',

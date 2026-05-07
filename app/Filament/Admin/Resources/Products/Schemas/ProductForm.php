@@ -6,7 +6,9 @@ use App\Models\Category;
 use App\Models\Specification;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
@@ -58,6 +60,19 @@ class ProductForm
                                             ])
                                             ->default('active')
                                             ->required(),
+
+                                    ]),
+                                Section::make('Detailed Description')
+                                    ->description('Provide a comprehensive overview of the product features and benefits.')
+                                    ->columnSpanFull()
+                                    ->schema([
+                                        Textarea::make('short_description')
+                                            ->label('Short Description')
+                                            ->maxLength(255)
+                                            ->required(),
+                                        RichEditor::make('long_description')
+                                            ->label('Long Description')
+                                            ->maxLength(2000),
                                     ]),
                                 Section::make('Pricing & Inventory')
                                     ->description('Manage your margins and stock availability.')

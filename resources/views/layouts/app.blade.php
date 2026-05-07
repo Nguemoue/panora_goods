@@ -172,7 +172,7 @@
                 <h4 class="text-sm font-semibold text-slate-950">{{ __('frontend.footer.help') }}</h4>
                 <ul class="space-y-2.5 text-sm text-slate-600">
                     <li><a href="#" class="hover:text-slate-950 hover:underline underline-offset-4 transition-colors">{{ __('frontend.footer.faq') }}</a></li>
-                    <li><a href="#" class="hover:text-slate-950 hover:underline underline-offset-4 transition-colors">{{ __('frontend.footer.delivery') }}</a></li>
+                    
                 </ul>
             </div>
             <div class="space-y-3">
