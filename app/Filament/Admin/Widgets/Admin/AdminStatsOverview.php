@@ -7,18 +7,27 @@ use App\Models\Product;
 use App\Models\Sale;
 use App\Models\User;
 use Filament\Support\Icons\Heroicon;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Number;
 
 class AdminStatsOverview extends BaseWidget
 {
+    use InteractsWithPageFilters;
     protected function getStats(): array
     {
-        $totalProfit = Sale::sum('profit');
-        $totalRevenue = Sale::sum('sale_price');
-        $clientCount = Client::query()->count();
-        $criticalStockCount = Product::where('stock_quantity', '<', 5)->count();
+        $startDate = $this->filters['start_date'] ?? now()->startOfYear();
+        $endDate = $this->filters['end_date'] ?? now();
+
+        $totalProfit = Sale::query()->where('sold_at',[$startDate,$endDate])->sum('profit');
+        $totalRevenue = Sale::query()->where('sold_at',[$startDate,$endDate])->sum('sale_price');
+        $clientCount = Client::query()
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->count();
+        $criticalStockCount = Product::where('stock_quantity', '<', 5)
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->count();
 
         return [
             Stat::make('Total Revenue', Number::currency($totalRevenue))
@@ -35,7 +44,9 @@ class AdminStatsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('primary'),
             //number of sellers
-            Stat::make('Sellers', User::seller()->count())
+            Stat::make('Sellers', User::seller()
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->count())
                 ->description('Total sellers')
                 ->descriptionIcon('heroicon-m-user-group')
                 ->color('warning'),
@@ -48,21 +59,31 @@ class AdminStatsOverview extends BaseWidget
                 ->descriptionIcon('heroicon-m-exclamation-triangle')
                 ->color($criticalStockCount > 0 ? 'danger' : 'success'),
             // sales
-            Stat::make('Total sales', Sale::query()->count())
+            Stat::make('Total sales', Sale::query()
+                ->whereBetween('sold_at', [$startDate, $endDate])
+                ->count())
                 ->description("The numbers total of sales")
                 ->descriptionIcon(Heroicon::CurrencyDollar),
 
-            Stat::make('Total sales with finished payment', Sale::query()->paymentFinished()->count())
+            Stat::make('Total sales with finished payment', Sale::query()->paymentFinished()
+                ->whereBetween('sold_at', [$startDate, $endDate])
+                ->count())
                 ->description("The numbers of sales where the payment is finished")
                 ->descriptionIcon(Heroicon::CurrencyDollar),
-            Stat::make('Total sales with finished pending', Sale::query()->paymentPending()->count())
+            Stat::make('Total sales with finished pending', Sale::query()->paymentPending()
+                ->whereBetween('sold_at', [$startDate, $endDate])
+                ->count())
                 ->description("The numbers of sales where the payment is still pending")
                 ->descriptionIcon(Heroicon::CurrencyDollar),
             //order delivered or not
 
-            Stat::make('Sale delivered',Sale::delivered()->count())
+            Stat::make('Sale delivered',Sale::delivered()
+                ->whereBetween('sold_at', [$startDate, $endDate])
+                ->count())
                 ->description("Total sale delivered"),
-            Stat::make('Sale not delivered',Sale::notDelivered()->count())
+            Stat::make('Sale not delivered',Sale::notDelivered()
+                ->whereBetween('sold_at', [$startDate, $endDate])
+                ->count())
                 ->description("Total sale not delivered"),
 
         ];

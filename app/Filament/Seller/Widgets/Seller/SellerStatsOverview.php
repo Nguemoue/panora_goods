@@ -3,6 +3,8 @@
 namespace App\Filament\Seller\Widgets\Seller;
 
 use App\Models\Sale;
+use Filament\Facades\Filament;
+use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Facades\Auth;
@@ -10,14 +12,28 @@ use Illuminate\Support\Number;
 
 class SellerStatsOverview extends BaseWidget
 {
+    use InteractsWithPageFilters;
+
+
     protected function getStats(): array
     {
-        $userId = Auth::id();
+        $userId = Filament::auth()->id();
+        $startDate = $this->filters['start_date'] ?? now()->startOfYear();
+        $endDate = $this->filters['end_date'] ?? now();
 
-        $personalRevenue = Sale::where('seller_id', $userId)->sum('sale_price');
-        $personalProfit = Sale::where('seller_id', $userId)->sum('profit');
-        $salesCount = Sale::where('seller_id', $userId)->count();
-        $itemsSold = Sale::where('seller_id', $userId)->sum('quantity');
+        $personalRevenue = Sale::query()
+            ->whereBetween('sold_at', [$startDate, $endDate])
+            ->where('seller_id', $userId)
+            ->sum('sale_price');
+        $personalProfit = Sale::where('seller_id', $userId)
+            ->whereBetween('sold_at', [$startDate, $endDate])
+            ->sum('profit');
+        $salesCount = Sale::where('seller_id', $userId)
+            ->whereBetween('sold_at', [$startDate, $endDate])
+            ->count();
+        $itemsSold = Sale::where('seller_id', $userId)
+            ->whereBetween('sold_at', [$startDate, $endDate])
+            ->sum('quantity');
 
         return [
             Stat::make('My Total Revenue',   Number::currency($personalRevenue))

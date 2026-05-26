@@ -75,6 +75,9 @@
                 <a href="{{ route('track.order') }}" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-slate-100 hover:text-slate-900 text-slate-600 h-9 px-4 py-2">
                     {{ __('frontend.nav.track_order') }}
                 </a>
+                <a href="{{ route('employee-verification') }}" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-slate-100 hover:text-slate-900 text-slate-600 h-9 px-4 py-2">
+                    {{ __('frontend.nav.employee_verification') }}
+                </a>
                 <a href="{{ url('/seller') }}" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-slate-100 hover:text-slate-900 text-slate-600 h-9 px-4 py-2">
                     {{ __('frontend.nav.employee_space') }}
                 </a>
@@ -138,6 +141,11 @@
                 </a>
             </li>
             <li>
+                <a href="{{ route('employee-verification') }}" class="flex items-center rounded-md px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100 transition-colors">
+                    {{ __('frontend.nav.employee_verification') }}
+                </a>
+            </li>
+            <li>
                 <a href="{{ url('/seller') }}" class="flex items-center rounded-md px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-100 transition-colors">
                     {{ __('frontend.nav.employee_space') }}
                 </a>
@@ -172,13 +180,12 @@
                 <h4 class="text-sm font-semibold text-slate-950">{{ __('frontend.footer.help') }}</h4>
                 <ul class="space-y-2.5 text-sm text-slate-600">
                     <li><a href="#" class="hover:text-slate-950 hover:underline underline-offset-4 transition-colors">{{ __('frontend.footer.faq') }}</a></li>
-                    
+
                 </ul>
             </div>
             <div class="space-y-3">
                 <h4 class="text-sm font-semibold text-slate-950">{{ __('frontend.footer.legal') }}</h4>
                 <ul class="space-y-2.5 text-sm text-slate-600">
-
                     <li><a href="{{route('legal.mentions')}}" target="_blank" class="hover:text-slate-950 hover:underline underline-offset-4 transition-colors">{{ __('frontend.footer.legal') }}</a></li>
                 </ul>
             </div>

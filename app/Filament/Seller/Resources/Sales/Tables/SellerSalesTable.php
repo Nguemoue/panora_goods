@@ -2,6 +2,7 @@
 
 namespace App\Filament\Seller\Resources\Sales\Tables;
 
+use App\DownloadInvoicePdfAction;
 use App\Models\Sale;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\Action;
@@ -60,12 +61,8 @@ class SellerSalesTable
             ]);
     }
 
-    protected static function downloadInvoice(Sale $record)
+    protected static function downloadInvoice(Sale $record): \Symfony\Component\HttpFoundation\StreamedResponse|\Symfony\Component\HttpFoundation\Response
     {
-        $pdf = Pdf::loadView('pdf.invoice', ['sale' => $record]);
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->stream();
-        }, "invoice-{$record->tracking_code}.pdf");
+        return app(DownloadInvoicePdfAction::class)->handle(sale: $record);
     }
 }

@@ -1,3 +1,8 @@
 {
-    "Invoice": "Facture"
+    "Invoice": "Facture",
+    "Pending": "En attente",
+    "Approved": "Approuvé",
+    "Rejected": "Rejeté",
+    "not_initiated": "Non initié",
+    "paid": "Payé"
 }

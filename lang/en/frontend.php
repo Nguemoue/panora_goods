@@ -10,6 +10,7 @@ return [
         'categories' => 'Categories',
         'track_order' => 'Track Order',
         'employee_space' => 'Employee Space',
+        'employee_verification' => 'Employee Verification',
         'contact' => 'Contact',
         'open_menu' => 'Open menu',
         'close' => 'Close',

@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Filament\Seller\Pages;
+namespace App\Filament\Admin\Pages;
 
-use App\Filament\Seller\Widgets\Seller\LatestSales;
-use App\Filament\Seller\Widgets\Seller\SellerSalesChart;
-use App\Filament\Seller\Widgets\Seller\SellerStatsOverview;
+use App\Filament\Admin\Widgets\Admin\AdminStatsOverview;
+use App\Filament\Admin\Widgets\Admin\LowStockProducts;
+use App\Filament\Admin\Widgets\Admin\ProductSalesChart;
+use App\Filament\Admin\Widgets\Admin\SalesChart;
+use App\Filament\Admin\Widgets\Admin\SupplierStats;
 use Filament\Forms\Components\DatePicker;
 use Filament\Pages\Dashboard\Concerns\HasFiltersForm;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Livewire\Form;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
@@ -26,17 +27,19 @@ class Dashboard extends \Filament\Pages\Dashboard
                     ->schema([
                         DatePicker::make('start_date')->label("De"),
                         DatePicker::make('end_date')->label("A"),
-                        // ...
                     ])
                     ->columns(),
             ]);
     }
-        public function getWidgets(): array
-        {
-            return [
-                SellerStatsOverview::class,
-                LatestSales::class,
-                SellerSalesChart::class
-            ];
-        }
+    public function getWidgets(): array
+    {
+        return [
+            AdminStatsOverview::class,
+            SupplierStats::class,
+            LowStockProducts::class,
+//            SalesChart::class,
+//            ProductSalesChart::class
+        ];
+    }
+
 }

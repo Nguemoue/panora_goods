@@ -3,11 +3,13 @@
 namespace App\Filament\Admin\Resources\Users\Schemas;
 
 use App\Enums\UserRoleEnum;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 
 class UserForm
 {
@@ -25,6 +27,7 @@ class UserForm
                             ->placeholder('John Doe')
                             ->required()
                             ->maxLength(255),
+
                         TextInput::make('phone_number')
                             ->label('Phone Number')
                             ->placeholder('+237...')
@@ -40,10 +43,14 @@ class UserForm
                         TextInput::make('password')
                             ->label('Secure Password')
                             ->password()
-                            ->dehydrated(fn ($state) => filled($state))
-                            ->required(fn (string $operation): bool => $operation === 'create')
+                            ->dehydrated(fn($state) => filled($state))
+                            ->required(fn(string $operation): bool => $operation === 'create')
                             ->maxLength(255)
                             ->placeholder('••••••••'),
+                        TextInput::make('reference_number')
+                            ->label('Reference Number')
+                            ->unique(),
+                        FileUpload::make('photo')->image()->disk('public')
                     ])->columnSpanFull(),
 
                 Section::make('Access & Status')
@@ -51,12 +58,11 @@ class UserForm
                     ->icon('heroicon-o-shield-check')
                     ->columns(3)
                     ->schema([
-                        Select::make('zone_id')
+                        CheckboxList::make('zones')
                             ->label('Operational Zone')
-                            ->relationship('zone', 'name')
-                            ->searchable()
-                            ->preload()
-                            ->placeholder('Select a zone...'),
+                            ->relationship('zones', 'name')
+                            ->columnSpanFull()
+                            ->searchable(),
                         Select::make('role')
                             ->label('Assigned Role')
                             ->options(UserRoleEnum::class)

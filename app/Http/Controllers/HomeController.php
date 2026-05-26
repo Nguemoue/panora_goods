@@ -14,7 +14,7 @@ class HomeController extends Controller
         $categoryId = request()->query('category');
         $perPage = request()->query('per_page', 12);
 
-        $query = Product::with(['category', 'brand', 'images'])
+        $query = Product::with(['category', 'brand', 'images','primaryImage'])
             ->where('status', 'active');
 
         if ($request->has('q')) {

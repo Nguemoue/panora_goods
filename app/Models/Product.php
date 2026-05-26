@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -47,6 +49,19 @@ class Product extends Model
             ->withTimestamps();
     }
 
+    public function primaryImage(): HasOne
+    {
+        return $this->hasOne(ProductImage::class)
+            ->orderByDesc('is_primary');
+    }
+
+    public function getPrimaryImageUrlAttribute(): string
+    {
+        if ($this->relationLoaded('primaryImage')) {
+            return $this->primaryImage->url;
+        }
+        return asset('images/cart-placeholder.jpg');
+    }
     protected function profitPrice(): Attribute
     {
         return Attribute::make(
@@ -56,5 +71,41 @@ class Product extends Model
     public function sales(): HasMany
     {
         return $this->hasMany(Sale::class);
+    }
+    public function getWhatsAppLink(): string
+    {
+        $phone = config('project_configuration.whatsapp');
+
+
+        $productUrl = route('products.show', $this);
+
+        $specifications = $this->specifications
+            ->map(function ($specification) {
+                return "- {$specification->name} : {$specification->pivot->value}";
+            })
+            ->implode("\n");
+
+        // Construction du message
+        $message = <<<TEXT
+Lien du produit :
+{$productUrl}
+
+Nom du produit :
+{$this->name}
+
+Marque :
+{$this->brand?->name}
+
+Prix :
+{$this->selling_price} FCFA
+
+Référence :
+{$this->reference}
+
+Spécifications :
+{$specifications}
+TEXT;
+
+        return 'https://wa.me/' . $phone . '?text=' . urlencode($message);
     }
 }

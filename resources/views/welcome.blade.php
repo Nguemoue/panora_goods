@@ -151,12 +151,9 @@
                                     class="w-[38%] sm:w-full relative shrink-0 flex items-center justify-center bg-transparent sm:bg-slate-50">
                                     <a href="{{ route('products.show', $product) }}"
                                        class="block aspect-[3/4] sm:aspect-[4/3] w-full overflow-hidden bg-gray-50">
-                                        @php
-                                            $primaryImage = $product->images->where('is_primary', true)->first() ?? $product->images->first();
-                                        @endphp
 
                                         <img
-                                            src="{{ $primaryImage ? asset('storage/'.$primaryImage->path) : 'https://placehold.co/600x400/f8fafc/94a3b8?text=Image+Non+Disponible' }}"
+                                            src="{{ $product->primary_image_url}}"
                                             alt="{{ $product->name }}"
                                             class="h-full w-full object-contain p-2 sm:p-6 mix-blend-multiply transition-transform duration-500 group-hover:scale-105"
                                         >
@@ -195,8 +192,7 @@
 
                                     <div class="mt-1">
                                         @if($product->stock_quantity > 0)
-                                            <p class="text-[11px] sm:text-xs font-semibold text-emerald-700">En stock
-                                                : {{ $product->stock_quantity }} disponible(s)</p>
+                                            <p class="text-[11px] sm:text-xs font-semibold text-emerald-700">En stock</p>
                                         @else
                                             <p class="text-[11px] sm:text-xs font-semibold text-rose-700">Rupture de
                                                 stock</p>

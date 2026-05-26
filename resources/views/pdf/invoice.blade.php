@@ -137,6 +137,26 @@
             <td>Total: {{ number_format($sale->sale_price * $sale->quantity, 2) }}</td>
         </tr>
     </table>
+    {{--tableau de paiements--}}
+    <h1 style="text-align: center;">Historique de paiements:</h1>
+    <table cellpadding="0" cellspacing="0">
+        <tr class="heading">
+            <td>#</td>
+            <td>Montant</td>
+            <td>Statut</td>
+            <td>Emis le </td>
+        </tr>
+        @foreach($sale->salePayments as $item)
+            <tr class="item">
+                <td>{{  $loop->index+1}}</td>
+                <td>{{ number_format($item->amount, 2) }}</td>
+                <td>{{ $item->confirmation_status->getLabel() }}</td>
+                <td>{{ $item->created_at->isoFormat('ll') }}</td>
+            </tr>
+        @endforeach
+
+
+    </table>
 </div>
 <div class="" style="text-align: end; margin-top: 20px;">
     SOFITRAPAM SARL | NIU : M0126183474775 | RCCM : CM-BFX-01-2026-B13-00009

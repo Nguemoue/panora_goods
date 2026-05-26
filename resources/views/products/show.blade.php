@@ -57,8 +57,7 @@
                             <div class="absolute top-4 left-4 z-10">
                                 @if($product->stock_quantity > 0)
                                     <span class="inline-flex items-center gap-1.5 rounded-md bg-emerald-100/80 px-2.5 py-1.5 text-xs font-semibold text-emerald-800 backdrop-blur-md ring-1 ring-inset ring-emerald-600/20">
-                                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> {{ __('frontend.product.in_stock') }} ({{ $product->stock_quantity }})
-                                </span>
+                                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> {{ __('frontend.product.in_stock') }}</span>
                                 @else
                                     <span class="inline-flex items-center gap-1.5 rounded-md bg-rose-100/80 px-2.5 py-1.5 text-xs font-semibold text-rose-800 backdrop-blur-md ring-1 ring-inset ring-rose-600/20">
                                     <span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span> {{ __('frontend.product.out_of_stock') }}
@@ -103,9 +102,10 @@
 
                             <div class="flex flex-col gap-2 shrink-0">
                                 <!-- Bouton Primaire façon shadcn -->
-                                <a href="{{ route('contact') }}?product={{ $product->id }}" class="inline-flex items-center justify-center rounded-md bg-slate-900 px-8 py-3.5 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 shadow-sm w-full sm:w-auto">
+                                <a target="_blank" href="{{$product->getWhatsAppLink() }}" class="inline-flex items-center justify-center rounded-md bg-slate-900 px-8 py-3.5 text-sm font-medium text-white transition-colors hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-400 focus-visible:ring-offset-2 shadow-sm w-full sm:w-auto">
                                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
                                     {{ __('frontend.product.request_quote') }}
+
                                 </a>
                                 <p class="text-[11px] text-slate-400 text-center">{{ __('frontend.product.catalog_only') }}</p>
                             </div>

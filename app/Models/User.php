@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -31,6 +32,11 @@ class User extends Authenticatable implements FilamentUser
         'remember_token',
     ];
 
+    public function zones(): BelongsToMany
+    {
+        return $this->belongsToMany(Zone::class, 'user_zone', 'user_id', 'zone_id');
+    }
+
     /**
      * Get the attributes that should be cast.
      *
@@ -45,6 +51,13 @@ class User extends Authenticatable implements FilamentUser
         ];
     }
 
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar) {
+            return asset('storage/' . $this->avatar);
+        }
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name);
+    }
     #[Scope]
     protected function seller(Builder $query): Builder
     {

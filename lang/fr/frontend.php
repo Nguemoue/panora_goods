@@ -10,11 +10,13 @@ return [
         'categories' => 'Catégories',
         'track_order' => 'Suivre ma commande',
         'employee_space' => 'Espace Employé',
+        'employee_verification' => 'Vérification Employé',
         'contact' => 'Contact',
         'open_menu' => 'Ouvrir le menu',
         'close' => 'Fermer',
         'all_categories' => 'Toutes les catégories',
         'breadcrumb_catalog' => 'Catalogue',
+
     ],
     'home' => [
         'title' => 'Notre Catalogue',
@@ -34,7 +36,7 @@ return [
         'out_of_stock' => 'Rupture',
         'see_details' => 'Voir détails',
         'reference_price' => 'Prix de référence',
-        'request_quote' => 'Demander un devis',
+        'request_quote' => 'Passer une commande',
         'catalog_only' => "Catalogue uniquement. Pas d'achat direct.",
         'key_features' => 'Caractéristiques clés',
         'full_specs' => 'Fiche technique complète',
