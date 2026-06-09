@@ -21,6 +21,22 @@ class ClientResource extends Resource
 
     protected static string| \UnitEnum|null $navigationGroup = AdminNavigationGroupEnum::PERSONNEL;
     protected static string|BackedEnum|null $navigationIcon = Heroicon::UserGroup;
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('resources.clients.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resources.clients.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('resources.clients.navigation');
+    }
 
     public static function form(Schema $schema): Schema
     {

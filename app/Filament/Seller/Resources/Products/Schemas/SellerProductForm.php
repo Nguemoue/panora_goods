@@ -17,42 +17,42 @@ class SellerProductForm
     {
         return $schema
             ->components([
-                Tabs::make('Product Details Viewer')
+                Tabs::make(__('panels.product_details_viewer'))
                     ->tabs([
-                        Tabs\Tab::make('General')
+                        Tabs\Tab::make(__('panels.general'))
                             ->icon('heroicon-o-information-circle')
                             ->schema([
-                                Section::make('Catalog Information')
-                                    ->description('View core product details and pricing.')
+                                Section::make(__('panels.catalog_information'))
+                                    ->description(__('panels.catalog_information_description'))
                                     ->columns(2)
                                     ->schema([
                                         TextInput::make('name')
-                                            ->label('Product Name')
+                                            ->label(__('panels.product_name'))
                                             ->disabled(),
                                         TextInput::make('model_number')
-                                            ->label('Model Reference')
+                                            ->label(__('panels.model_reference'))
                                             ->disabled(),
                                         TextInput::make('category.name')
-                                            ->label('Category')
+                                            ->label(__('phones.category'))
                                             ->disabled(),
                                         TextInput::make('brand.name')
-                                            ->label('Brand')
+                                            ->label(__('phones.brand'))
                                             ->disabled(),
                                         TextInput::make('selling_price')
-                                            ->label('Current Selling Price')
+                                            ->label(__('panels.current_selling_price'))
                                             ->numeric()
                                             ->prefix('$')
                                             ->disabled(),
                                         TextInput::make('stock_quantity')
-                                            ->label('Available Units')
+                                            ->label(__('panels.available_units'))
                                             ->disabled(),
                                     ]),
                             ]),
-                        Tabs\Tab::make('Images')
+                        Tabs\Tab::make(__('panels.photos'))
                             ->icon('heroicon-o-photo')
                             ->schema([
-                                Section::make('Product Gallery')
-                                    ->description('Visual references for customers.')
+                                Section::make(__('panels.product_gallery'))
+                                    ->description(__('panels.product_gallery_description'))
                                     ->schema([
                                         Repeater::make('images')
                                             ->relationship('images')
@@ -66,11 +66,11 @@ class SellerProductForm
                                             ->grid(2),
                                     ]),
                             ]),
-                        Tabs\Tab::make('Specifications')
+                        Tabs\Tab::make(__('messages.specifications'))
                             ->icon('heroicon-o-adjustments-horizontal')
                             ->schema([
-                                Section::make('Technical Sheet')
-                                    ->description('Detailed characteristics to share with clients.')
+                                Section::make(__('panels.technical_sheet'))
+                                    ->description(__('panels.technical_sheet_seller_description'))
                                     ->schema([
                                         Repeater::make('product_specifications')
                                             ->relationship('specifications')

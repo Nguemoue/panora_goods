@@ -18,8 +18,24 @@ class SpecificationResource extends Resource
 {
     protected static ?string $model = Specification::class;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-adjustments-horizontal';
-    protected static string| \UnitEnum|null $navigationGroup = 'Inventory';
+    protected static string| \UnitEnum|null $navigationGroup = 'Inventaire';
     protected static ?int $navigationSort = 4;
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('resources.specifications.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resources.specifications.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('resources.specifications.navigation');
+    }
 
     public static function form(Schema $schema): Schema
     {

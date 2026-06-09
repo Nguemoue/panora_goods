@@ -12,9 +12,15 @@ class ZoneForm
     {
         return $schema
             ->components([
-                TextInput::make('name')->required(),
-                TextInput::make('city')->required(),
-                Select::make('user_id')->relationship('user', 'name')
+                TextInput::make('name')
+                    ->label(__('validation.attributes.name'))
+                    ->required(),
+                TextInput::make('city')
+                    ->label(__('panels.city'))
+                    ->required(),
+                Select::make('user_id')
+                    ->label(__('panels.assigned_user'))
+                    ->relationship('user', 'name')
                     ->required(),
             ]);
     }

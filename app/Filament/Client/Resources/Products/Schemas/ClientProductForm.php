@@ -16,39 +16,39 @@ class ClientProductForm
     {
         return $schema
             ->components([
-                Tabs::make('Product Details')
+                Tabs::make(__('panels.product_details'))
                     ->tabs([
-                        Tabs\Tab::make('Overview')
+                        Tabs\Tab::make(__('panels.overview'))
                             ->icon('heroicon-o-information-circle')
                             ->schema([
-                                Section::make('Product Info')
-                                    ->description('General specifications and current price.')
+                                Section::make(__('panels.product_info'))
+                                    ->description(__('panels.product_info_description'))
                                     ->columns(2)
                                     ->schema([
                                         TextInput::make('name')
-                                            ->label('Product Name')
+                                            ->label(__('panels.product_name'))
                                             ->disabled(),
                                         TextInput::make('model_number')
-                                            ->label('Model Reference')
+                                            ->label(__('panels.model_reference'))
                                             ->disabled(),
                                         TextInput::make('category.name')
-                                            ->label('Category')
+                                            ->label(__('phones.category'))
                                             ->disabled(),
                                         TextInput::make('brand.name')
-                                            ->label('Brand')
+                                            ->label(__('phones.brand'))
                                             ->disabled(),
                                         TextInput::make('selling_price')
-                                            ->label('Price')
+                                            ->label(__('phones.selling_price'))
                                             ->numeric()
                                             ->prefix('$')
                                             ->disabled(),
                                     ])->columnSpanFull(),
                             ]),
-                        Tabs\Tab::make('Photos')
+                        Tabs\Tab::make(__('panels.photos'))
                             ->icon('heroicon-o-photo')
                             ->schema([
-                                Section::make('Gallery')
-                                    ->description('Visual showcase of the product.')
+                                Section::make(__('panels.gallery'))
+                                    ->description(__('panels.product_gallery_description'))
                                     ->schema([
                                         Repeater::make('images')
                                             ->relationship('images')
@@ -62,11 +62,11 @@ class ClientProductForm
                                             ->grid(3),
                                     ])->columnSpanFull(),
                             ]),
-                        Tabs\Tab::make('Technical Sheet')
+                        Tabs\Tab::make(__('panels.technical_sheet'))
                             ->icon('heroicon-o-document-text')
                             ->schema([
-                                Section::make('Specifications')
-                                    ->description('Full list of technical characteristics.')
+                                Section::make(__('messages.specifications'))
+                                    ->description(__('panels.technical_sheet_description'))
                                     ->schema([
                                         Repeater::make('product_specifications')
                                             ->relationship('specifications')

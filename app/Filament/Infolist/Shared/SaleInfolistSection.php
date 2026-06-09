@@ -11,25 +11,25 @@ class SaleInfolistSection
 {
     public static function make(): Section
     {
-        return Section::make('Payments')
+        return Section::make(__('panels.payments'))
             ->columnSpanFull()
             ->columns(3)
             ->schema([
-                TextEntry::make('payment_type')->placeholder('-')->label('Payment Type')->badge(),
-                TextEntry::make('payment_status')->placeholder("-")->label('Payment Status')->badge(),
-                TextEntry::make('payment_date_limit')->placeholder('-')->label('Payment Limit Date')->date(),
-                TextEntry::make('total_amount')->weight(FontWeight::Bold)->label('Total Amount')
-                    ->state(fn(Sale $record)=>$record->sale_price)
+                TextEntry::make('payment_type')->placeholder('-')->label(__('sales.payment_type'))->badge(),
+                TextEntry::make('payment_status')->placeholder('-')->label(__('sales.payment_status'))->badge(),
+                TextEntry::make('payment_date_limit')->placeholder('-')->label(__('panels.payment_limit_date'))->date(),
+                TextEntry::make('total_amount')->weight(FontWeight::Bold)->label(__('panels.total_amount'))
+                    ->state(fn (Sale $record) => $record->sale_price)
                     ->placeholder('-')
                     ->money(currency: currency()),
                 TextEntry::make('paid_amount')
                     ->weight(FontWeight::Bold)
                     ->default(0)
                     ->state(fn(Sale $record) => $record->paid_amount)
-                    ->label('Paid Amount')->money(currency: currency()),
+                    ->label(__('sales.paid_amount'))->money(currency: currency()),
                 TextEntry::make('remaining_amount')->weight(FontWeight::Bold)
-                    ->state(fn(Sale $record)=>$record->sale_price - (int) $record->paid_amount)
-                    ->label('Remaining Amount')->money(currency: currency()),
+                    ->state(fn (Sale $record) => $record->getRemainingAmount())
+                    ->label(__('sales.remaining_amount'))->money(currency: currency()),
             ]);
     }
 }

@@ -15,14 +15,18 @@ class SpecificationsTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('panels.characteristic_name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('input_type')
+                    ->label(__('panels.input_method'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('measure')
+                    ->label(__('panels.unit_of_measure'))
                     ->searchable(),
                 TextColumn::make('created_at')
+                    ->label(__('panels.created_date'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

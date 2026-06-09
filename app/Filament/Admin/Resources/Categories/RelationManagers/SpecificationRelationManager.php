@@ -15,31 +15,38 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class SpecificationRelationManager extends RelationManager
 {
     protected static string $relationship = 'specifications';
+
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('resources.relation_managers.specifications');
+    }
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label(__('panels.characteristic_name'))
                     ->maxLength(255)
                     ->required(),
 
-                Select::make('input_type')->options(SpecificationInputType::class)->required(),
+                Select::make('input_type')->label(__('panels.input_method'))->options(SpecificationInputType::class)->required(),
 
-                TextInput::make('measure')->maxLength(20),
+                TextInput::make('measure')->label(__('panels.unit_of_measure'))->maxLength(20),
 
-                TextInput::make('description')->maxLength(255),
+                TextInput::make('description')->label(__('validation.attributes.description'))->maxLength(255),
 
                 TextEntry::make('created_at')
-                    ->label('Created Date')
+                    ->label(__('panels.created_date'))
                     ->dateTime(),
 
                 TextEntry::make('updated_at')
-                    ->label('Last Modified Date')
+                    ->label(__('messages.updated_at'))
                     ->dateTime(),
             ]);
     }
@@ -48,20 +55,20 @@ class SpecificationRelationManager extends RelationManager
     {
         return $schema
             ->components([
-                TextEntry::make('name'),
+                TextEntry::make('name')->label(__('panels.characteristic_name')),
 
-                TextEntry::make('input_type'),
+                TextEntry::make('input_type')->label(__('panels.input_method')),
 
-                TextEntry::make('measure'),
+                TextEntry::make('measure')->label(__('panels.unit_of_measure')),
 
-                TextEntry::make('description'),
+                TextEntry::make('description')->label(__('validation.attributes.description')),
 
                 TextEntry::make('created_at')
-                    ->label('Created Date')
+                    ->label(__('panels.created_date'))
                     ->dateTime(),
 
                 TextEntry::make('updated_at')
-                    ->label('Last Modified Date')
+                    ->label(__('messages.updated_at'))
                     ->dateTime(),
             ]);
     }
@@ -72,14 +79,15 @@ class SpecificationRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('panels.characteristic_name'))
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('input_type'),
+                TextColumn::make('input_type')->label(__('panels.input_method')),
 
-                TextColumn::make('measure'),
+                TextColumn::make('measure')->label(__('panels.unit_of_measure')),
 
-                TextColumn::make('description'),
+                TextColumn::make('description')->label(__('validation.attributes.description')),
             ])
             ->filters([
                 //
@@ -89,7 +97,7 @@ class SpecificationRelationManager extends RelationManager
             ])
             ->recordActions([
                 EditAction::make(),
-                DeleteAction::make()->disabled(fn($record) => $record->products()->exists()),
+                DeleteAction::make()->disabled(fn ($record) => $record->products()->exists()),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

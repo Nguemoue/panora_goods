@@ -21,17 +21,20 @@ class LowStockProducts extends BaseWidget
             )
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label(__('validation.attributes.name'))
                     ->searchable(),
-                Tables\Columns\TextColumn::make('category.name'),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label(__('phones.category')),
                 Tables\Columns\TextColumn::make('stock_quantity')
-                    ->label('Quantity Left')
+                    ->label(__('panels.quantity_left'))
                     ->badge()
                     ->color(fn (int $state): string => match (true) {
                         $state <= 2 => 'danger',
                         $state <= 5 => 'warning',
                         default => 'gray',
                     }),
-                Tables\Columns\TextColumn::make('supplier.name'),
+                Tables\Columns\TextColumn::make('supplier.name')
+                    ->label(__('messages.supplier')),
             ])
             ->recordUrl(
                 fn (Product $record): string => ProductResource::getUrl('edit', ['record' => $record]),

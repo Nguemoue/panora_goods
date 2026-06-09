@@ -4,16 +4,17 @@ namespace App\Filament\Admin\Widgets\Admin;
 
 use App\Models\Sale;
 use Filament\Widgets\ChartWidget;
-use Flowframe\Trend\Trend;
-use Flowframe\Trend\TrendValue;
-use Illuminate\Support\Carbon;
-
 class SalesChart extends ChartWidget
 {
     public ?string $pollingInterval = null;
     protected int | string | array $columnSpan = 'full';
-    protected ?string $heading = 'Revenue Trend';
     protected string $color = 'success';
+
+    public function getHeading(): string
+    {
+        return __('panels.revenue_trend');
+    }
+
     protected function getData(): array
     {
         // Simple manual aggregation for compatibility (no flowframe/trend assumed)
@@ -26,7 +27,7 @@ class SalesChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Monthly Revenue',
+                    'label' => __('panels.monthly_revenue'),
                     'data' => $data->pluck('total')->toArray(),
                 ],
             ],

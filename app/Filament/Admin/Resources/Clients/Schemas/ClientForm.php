@@ -12,15 +12,15 @@ class ClientForm
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Name')
+                    ->label(__('validation.attributes.name'))
                     ->required(),
                 TextInput::make('email')
-                    ->label('Email')
+                    ->label(__('validation.attributes.email'))
                     ->unique()
                     ->email(),
                 TextInput::make('phone_number')
-                    ->label('Phone Number')
-                    ->tel()
+                    ->label(__('panels.phone_number'))
+                    ->tel(),
             ]);
     }
 }

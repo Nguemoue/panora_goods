@@ -11,43 +11,48 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\TableWidget as BaseWidget;
-use Illuminate\Support\Facades\Auth;
 
 class LatestSales extends BaseWidget
 {
     use InteractsWithPageFilters;
 
-    protected int | string | array $columnSpan = 'full';
+    protected int|string|array $columnSpan = 'full';
+
     public function table(Table $table): Table
     {
         $startDate = $this->filters['start_date'] ?? now()->startOfYear();
         $endDate = $this->filters['end_date'] ?? now();
+
         return $table
             ->query(
                 Sale::query()->where('seller_id', Filament::auth()->id())
                     ->whereBetween('sold_at', [$startDate, $endDate])
                     ->latest('sold_at')->limit(5)
             )
-            ->heading("Les 10 dernières ventes de ".$startDate . ' a '.$endDate)
+            ->heading(__('sales.latest_sales_heading', [
+                'start' => $startDate,
+                'end' => $endDate,
+            ]))
             ->columns([
                 Tables\Columns\TextColumn::make('product.name')
                     ->icon(Heroicon::ShoppingBag)
-                    ->url(fn (Sale $record) => $record->product ? ProductResource::getUrl('view', ['record'=>$record->product]) : null)
-                    ->label('Produit'),
+                    ->url(fn (Sale $record) => $record->product ? ProductResource::getUrl('view', ['record' => $record->product]) : null)
+                    ->label(__('sales.product')),
                 Tables\Columns\TextColumn::make('client.name')
-                    ->placeholder("N/A")
-                    ->description(fn(Sale $record) => $record->client?->email .' / '. $record->client->phone_number)
-                    ->label('Client'),
-                Tables\Columns\TextColumn::make('quantité')
+                    ->placeholder('-')
+                    ->description(fn (Sale $record) => $record->client?->email.' / '.$record->client?->phone_number)
+                    ->label(__('sales.client')),
+                Tables\Columns\TextColumn::make('quantity')
+                    ->label(__('sales.quantity'))
                     ->prefix('x')
                     ->numeric(),
                 Tables\Columns\TextColumn::make('sale_price')
-                    ->label('Prix')
+                    ->label(__('sales.total_price'))
                     ->money(currency: currency()),
                 Tables\Columns\TextColumn::make('sold_at')
                     ->dateTime()
                     ->sinceTooltip()
-                    ->label('Date vente'),
+                    ->label(__('sales.sold_at')),
             ])
             ->recordUrl(
                 fn (Sale $record): string => SaleResource::getUrl('index', ['record' => $record]), // Seller normally only has index/create

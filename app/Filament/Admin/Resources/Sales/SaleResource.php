@@ -23,6 +23,22 @@ class SaleResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-banknotes';
     protected static string| \UnitEnum|null $navigationGroup = 'Commercial';
     protected static ?int $navigationSort = 1;
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('resources.sales.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resources.sales.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('resources.sales.navigation');
+    }
 
     public static function form(Schema $schema): Schema
     {

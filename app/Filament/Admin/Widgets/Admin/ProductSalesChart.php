@@ -9,9 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 class ProductSalesChart extends ChartWidget
 {
     public ?Model $record = null;
-    protected ?string $heading = 'Product Monthly Sales';
     public ?string $pollingInterval = null;
     protected int | string | array $columnSpan = 'full';
+
+    public function getHeading(): string
+    {
+        return __('panels.product_monthly_sales');
+    }
 
     public static function canView(): bool
     {
@@ -20,7 +24,7 @@ class ProductSalesChart extends ChartWidget
 
     protected function getData(): array
     {
-        if (!$this->record) {
+        if (! $this->record) {
             return ['datasets' => [], 'labels' => []];
         }
 
@@ -33,7 +37,7 @@ class ProductSalesChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Units Sold',
+                    'label' => __('panels.units_sold'),
                     'data' => $data->pluck('count')->toArray(),
                     'fill' => 'start',
                 ],

@@ -10,15 +10,15 @@ class SaleInfolistProductDetailSection
 {
     public static function make(): Section
     {
-        return Section::make('Informations du produit')->description("List of details")
+        return Section::make(__('panels.product_details'))->description(__('panels.product_details_list'))
             ->columnSpanFull()
             ->columns()
             ->schema([
-                TextEntry::make('product.name')->label('Product Name'),
-                TextEntry::make('product.short_description')->label("Description")->placeholder("N/A"),
-                TextEntry::make('sold_at')->dateTime()->label("Sold at"),
-                TextEntry::make('quantity')->label("Quantity")->prefix("x"),
-                TextEntry::make('tracking_code')->columnSpanFull()->label("Tracking code")->badge()
+                TextEntry::make('product.name')->label(__('panels.product_name')),
+                TextEntry::make('product.short_description')->label(__('validation.attributes.description'))->placeholder('-'),
+                TextEntry::make('sold_at')->dateTime()->label(__('sales.sold_at')),
+                TextEntry::make('quantity')->label(__('sales.quantity'))->prefix('x'),
+                TextEntry::make('tracking_code')->columnSpanFull()->label(__('sales.tracking_code'))->badge()
                     ->weight(FontWeight::Bold)
 
             ]);

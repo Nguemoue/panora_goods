@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use App\Enums\ConfirmationStatusEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentTypeEnum;
 use App\Enums\SaleStatusEnum;
 use Database\Factories\SaleFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -44,24 +44,36 @@ class Sale extends Model
     #[Scope]
     protected function delivered(Builder $query): Builder
     {
-        return $query->where('status',SaleStatusEnum::DELIVERED);
+        return $query->where('status', SaleStatusEnum::DELIVERED);
     }
+
     #[Scope]
     protected function notDelivered(Builder $query): Builder
     {
-        return $query->whereNot('status',SaleStatusEnum::DELIVERED);
+        return $query->whereNot('status', SaleStatusEnum::DELIVERED);
     }
+
     #[Scope]
     protected function paymentFinished(Builder $query): Builder
     {
-        return $query->where('payment_status',PaymentStatusEnum::PAID);
+        return $query->where('payment_status', PaymentStatusEnum::PAID);
     }
 
     #[Scope]
     protected function paymentPending(Builder $query): Builder
     {
-        return $query->whereNot('payment_status',PaymentStatusEnum::PAID);
+        return $query->whereNot('payment_status', PaymentStatusEnum::PAID);
     }
+
+    #[Scope]
+    protected function overduePayment(Builder $query): Builder
+    {
+        return $query
+            ->whereNot('payment_status', PaymentStatusEnum::PAID)
+            ->whereNotNull('payment_date_limit')
+            ->whereDate('payment_date_limit', '<', today());
+    }
+
     public static function generateUniqueTrackingCode(): string
     {
         do {
@@ -90,10 +102,11 @@ class Sale extends Model
     {
         return $this->hasMany(SalePayment::class);
     }
+
     public function approvedSalePayments(): HasMany
     {
         return $this->hasMany(SalePayment::class)
-                ->where('confirmation_status', \App\Enums\ConfirmationStatusEnum::APPROVED);
+            ->where('confirmation_status', ConfirmationStatusEnum::APPROVED);
     }
 
     public function isOneTimePayment(): bool
@@ -101,4 +114,17 @@ class Sale extends Model
         return $this->payment_type === PaymentTypeEnum::ONE_TIME;
     }
 
+    public function getApprovedPaidAmount(): float
+    {
+        if (array_key_exists('paid_amount', $this->attributes)) {
+            return (float) $this->attributes['paid_amount'];
+        }
+
+        return (float) $this->approvedSalePayments()->sum('amount');
+    }
+
+    public function getRemainingAmount(): float
+    {
+        return max(0, (float) $this->sale_price - $this->getApprovedPaidAmount());
+    }
 }

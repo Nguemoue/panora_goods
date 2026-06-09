@@ -15,15 +15,20 @@ class SuppliersTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('validation.attributes.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
+                    ->label(__('validation.attributes.email'))
                     ->searchable(),
                 TextColumn::make('phone')
+                    ->label(__('validation.attributes.phone'))
                     ->searchable(),
                 TextColumn::make('contact_person')
+                    ->label(__('validation.attributes.contact_person'))
                     ->searchable(),
                 TextColumn::make('created_at')
+                    ->label(__('messages.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

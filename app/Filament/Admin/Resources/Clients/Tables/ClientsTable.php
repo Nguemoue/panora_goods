@@ -16,9 +16,9 @@ class ClientsTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Name')->searchable()->sortable(),
-                TextColumn::make('email')->label('Email')->searchable()->sortable(),
-                TextColumn::make('phone_number')->label('Phone')->searchable()->sortable(),
+                TextColumn::make('name')->label(__('validation.attributes.name'))->searchable()->sortable(),
+                TextColumn::make('email')->label(__('validation.attributes.email'))->searchable()->sortable(),
+                TextColumn::make('phone_number')->label(__('panels.phone_number'))->searchable()->sortable(),
             ])
             ->filters([
                 //
@@ -32,7 +32,7 @@ class ClientsTable
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    //DeleteBulkAction::make(),
+                    // DeleteBulkAction::make(),
                 ]),
             ]);
     }

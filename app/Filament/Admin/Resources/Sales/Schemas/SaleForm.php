@@ -4,16 +4,14 @@ namespace App\Filament\Admin\Resources\Sales\Schemas;
 
 use App\Enums\SaleStatusEnum;
 use App\Models\Product;
-use App\Enums\UserRoleEnum;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
-use Filament\Support\Icons\Heroicon;
+use Filament\Schemas\Schema;
 
 class SaleForm
 {
@@ -21,15 +19,16 @@ class SaleForm
     {
         return $schema
             ->components([
-                //section for status
+                // section for status
                 Select::make('status')->options(SaleStatusEnum::class),
-                Section::make('Transaction Header')
-                    ->description('Core details for this sales record.')
+                Section::make(__('panels.transaction_header'))
+                    ->description(__('panels.transaction_header_description'))
                     ->icon('heroicon-o-shopping-bag')
                     ->columns(2)
                     ->disabled()
                     ->schema([
                         Select::make('product_id')
+                            ->label(__('sales.product'))
                             ->relationship('product', 'name')
                             ->required()
                             ->live()
@@ -41,35 +40,36 @@ class SaleForm
                                 }
                             }),
                         Select::make('seller_id')
-                            ->label('Responsible Seller')
+                            ->label(__('panels.responsible_seller'))
                             ->relationship('seller', 'name')
                             ->required()
                             ->searchable()
                             ->preload(),
                     ])->columnSpanFull(),
 
-                Section::make('Customer & Timing')
+                Section::make(__('sales.customer_timing'))
                     ->disabled()
                     ->icon('heroicon-o-user-group')
                     ->columns(2)
                     ->schema([
-                        TextEntry::make('client.name')->label('Client'),
-                        TextEntry::make('client.email')->label('Client Email'),
-                        TextEntry::make('client.phone_number')->label('Client Phone number'),
+                        TextEntry::make('client.name')->label(__('sales.client')),
+                        TextEntry::make('client.email')->label(__('panels.client_email')),
+                        TextEntry::make('client.phone_number')->label(__('panels.client_phone_number')),
 
                         DateTimePicker::make('sold_at')
-                            ->label('Date of Sale')
+                            ->label(__('sales.sold_at'))
                             ->default(now())
                             ->required(),
                     ])->columnSpanFull(),
 
-                Section::make('Financial Details')
-                    ->description('Prices and calculated margins.')
+                Section::make(__('panels.financial_details'))
+                    ->description(__('panels.financial_details_description'))
                     ->icon('heroicon-o-currency-dollar')
                     ->columns(3)
                     ->disabled()
                     ->schema([
                         TextInput::make('quantity')
+                            ->label(__('sales.quantity'))
                             ->numeric()
                             ->default(1)
                             ->required()
@@ -78,7 +78,7 @@ class SaleForm
                                 self::calculateProfit($get, $set);
                             }),
                         TextInput::make('sale_price')
-                            ->label('Final Sale Price')
+                            ->label(__('sales.total_price'))
                             ->numeric()
                             ->readOnly()
                             ->disabled()
@@ -89,7 +89,7 @@ class SaleForm
                                 self::calculateProfit($get, $set);
                             }),
                         TextInput::make('supplier_price_at_sale')
-                            ->label('Acquisition Cost')
+                            ->label(__('panels.acquisition_cost'))
                             ->numeric()
                             ->prefix(currency())
                             ->disabled()

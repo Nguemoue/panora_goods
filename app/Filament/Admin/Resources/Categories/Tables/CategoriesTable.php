@@ -15,15 +15,19 @@ class CategoriesTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('validation.attributes.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('description')
+                    ->label(__('validation.attributes.description'))
                     ->limit(50)
                     ->searchable(),
                 TextColumn::make('products_count')
+                    ->label(__('panels.products_count'))
                     ->counts('products')
                     ->sortable(),
                 TextColumn::make('created_at')
+                    ->label(__('messages.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

@@ -10,6 +10,7 @@ use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\FontWeight;
 
 class SellerProductInfolist
 {
@@ -17,7 +18,7 @@ class SellerProductInfolist
     {
         return $schema
             ->components([
-                Section::make('Product Presentation')
+                Section::make(__('panels.product_presentation'))
                     ->schema([
                         Grid::make(3)
                             ->schema([
@@ -26,7 +27,7 @@ class SellerProductInfolist
                                         ->size(TextEntry\TextEntrySize::Large)
                                         ->weight(FontWeight::Bold),
                                     TextEntry::make('model_number')
-                                        ->label('Model #')
+                                        ->label(__('panels.model_number_short'))
                                         ->copyable(),
                                     TextEntry::make('category.name')
                                         ->badge()
@@ -43,7 +44,7 @@ class SellerProductInfolist
                                         ->color('success')
                                         ->weight(FontWeight::Bold),
                                     TextEntry::make('stock_quantity')
-                                        ->label('In Stock')
+                                        ->label(__('panels.in_stock'))
                                         ->badge()
                                         ->color(fn ($state) => $state > 5 ? 'success' : 'danger'),
                                     TextEntry::make('status')
@@ -51,18 +52,18 @@ class SellerProductInfolist
                                 ])->columnSpan(1),
 
                                 ImageEntry::make('images.path')
-                                    ->label('Primary Preview')
+                                    ->label(__('panels.primary_preview'))
                                     ->circular()
                                     ->limit(1)
                                     ->columnSpan(1),
                             ]),
                     ]),
 
-                Section::make('Gallery & Details')
+                Section::make(__('panels.gallery_details'))
                     ->columns(2)
                     ->schema([
                         RepeatableEntry::make('images')
-                            ->label('Product Photos')
+                            ->label(__('panels.product_photos'))
                             ->schema([
                                 ImageEntry::make('path')
                                     ->hiddenLabel()
@@ -75,7 +76,7 @@ class SellerProductInfolist
                             ->columnSpan(1),
 
                         RepeatableEntry::make('product_specifications')
-                            ->label('Technical Specifications')
+                            ->label(__('panels.technical_specifications'))
                             ->schema([
                                 TextEntry::make('specification.name')
                                     ->weight(FontWeight::Bold),

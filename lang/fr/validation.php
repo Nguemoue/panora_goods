@@ -17,6 +17,7 @@ return [
         'phone' => 'Numéro de téléphone',
         'contact_person' => 'Personne de contact',
         'address' => 'Adresse',
+        'description' => 'Description',
 
         // Phone attributes
         'brand' => 'Marque',

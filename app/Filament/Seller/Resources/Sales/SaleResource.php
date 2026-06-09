@@ -23,7 +23,22 @@ class SaleResource extends Resource
     protected static ?string $model = Sale::class;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-shopping-cart';
     protected static string|\UnitEnum|null $navigationGroup = 'Transactions';
+    protected static bool $hasTitleCaseModelLabel = false;
 
+    public static function getModelLabel(): string
+    {
+        return __('resources.sales.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resources.sales.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('resources.sales.navigation');
+    }
 
     public static function infolist(Schema $schema): Schema
     {

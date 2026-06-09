@@ -15,76 +15,78 @@ use Illuminate\Support\Number;
 class AdminStatsOverview extends BaseWidget
 {
     use InteractsWithPageFilters;
+
     protected function getStats(): array
     {
         $startDate = $this->filters['start_date'] ?? now()->startOfYear();
         $endDate = $this->filters['end_date'] ?? now();
 
-        $totalProfit = Sale::query()->where('sold_at',[$startDate,$endDate])->sum('profit');
-        $totalRevenue = Sale::query()->where('sold_at',[$startDate,$endDate])->sum('sale_price');
+        $totalProfit = Sale::query()->whereBetween('sold_at', [$startDate, $endDate])->sum('profit');
+        $totalRevenue = Sale::query()->whereBetween('sold_at', [$startDate, $endDate])->sum('sale_price');
         $clientCount = Client::query()
             ->whereBetween('created_at', [$startDate, $endDate])
             ->count();
         $criticalStockCount = Product::where('stock_quantity', '<', 5)
             ->whereBetween('created_at', [$startDate, $endDate])
             ->count();
+        $overduePaymentCount = Sale::query()->overduePayment()->count();
 
         return [
-            Stat::make('Total Revenue', Number::currency($totalRevenue))
-                ->description('Overall sales income')
+            Stat::make(__('sales.total_revenue'), Number::currency($totalRevenue))
+                ->description(__('sales.dashboard_revenue_description'))
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
-            //capital stat
-            Stat::make('Capital', Number::currency($totalRevenue - $totalProfit))
-                ->description('Total expenses on products')
+            Stat::make(__('sales.capital'), Number::currency($totalRevenue - $totalProfit))
+                ->description(__('sales.capital_description'))
                 ->descriptionIcon(Heroicon::CurrencyDollar)
                 ->color('danger'),
-            Stat::make('Net Profit', Number::currency($totalProfit))
-                ->description('Total margin after costs')
+            Stat::make(__('sales.net_profit'), Number::currency($totalProfit))
+                ->description(__('sales.net_profit_description'))
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('primary'),
-            //number of sellers
-            Stat::make('Sellers', User::seller()
+            Stat::make(__('users.sellers'), User::seller()
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->count())
-                ->description('Total sellers')
+                ->description(__('sales.total_sellers_description'))
                 ->descriptionIcon('heroicon-m-user-group')
                 ->color('warning'),
-            Stat::make('Active Clients', $clientCount)
-                ->description('Registered buyers')
+            Stat::make(__('sales.active_clients'), $clientCount)
+                ->description(__('sales.active_clients_description'))
                 ->descriptionIcon('heroicon-m-users')
                 ->color('info'),
-            Stat::make('Low Stock Alerts', $criticalStockCount)
-                ->description('Products below 5 units')
+            Stat::make(__('sales.low_stock_alerts'), $criticalStockCount)
+                ->description(__('sales.low_stock_alerts_description'))
                 ->descriptionIcon('heroicon-m-exclamation-triangle')
                 ->color($criticalStockCount > 0 ? 'danger' : 'success'),
-            // sales
-            Stat::make('Total sales', Sale::query()
+            Stat::make(__('sales.total_sales'), Sale::query()
                 ->whereBetween('sold_at', [$startDate, $endDate])
                 ->count())
-                ->description("The numbers total of sales")
+                ->description(__('sales.total_sales_description'))
                 ->descriptionIcon(Heroicon::CurrencyDollar),
 
-            Stat::make('Total sales with finished payment', Sale::query()->paymentFinished()
+            Stat::make(__('sales.total_paid_sales'), Sale::query()->paymentFinished()
                 ->whereBetween('sold_at', [$startDate, $endDate])
                 ->count())
-                ->description("The numbers of sales where the payment is finished")
+                ->description(__('sales.total_paid_sales_description'))
                 ->descriptionIcon(Heroicon::CurrencyDollar),
-            Stat::make('Total sales with finished pending', Sale::query()->paymentPending()
+            Stat::make(__('sales.total_pending_payment_sales'), Sale::query()->paymentPending()
                 ->whereBetween('sold_at', [$startDate, $endDate])
                 ->count())
-                ->description("The numbers of sales where the payment is still pending")
+                ->description(__('sales.total_pending_payment_sales_description'))
                 ->descriptionIcon(Heroicon::CurrencyDollar),
-            //order delivered or not
 
-            Stat::make('Sale delivered',Sale::delivered()
+            Stat::make(__('sales.sale_delivered'), Sale::delivered()
                 ->whereBetween('sold_at', [$startDate, $endDate])
                 ->count())
-                ->description("Total sale delivered"),
-            Stat::make('Sale not delivered',Sale::notDelivered()
+                ->description(__('sales.sale_delivered_description')),
+            Stat::make(__('sales.sale_not_delivered'), Sale::notDelivered()
                 ->whereBetween('sold_at', [$startDate, $endDate])
                 ->count())
-                ->description("Total sale not delivered"),
+                ->description(__('sales.sale_not_delivered_description')),
+            Stat::make(__('sales.dashboard_overdue_payments'), $overduePaymentCount)
+                ->description(__('sales.dashboard_overdue_payments_description'))
+                ->descriptionIcon('heroicon-m-clock')
+                ->color($overduePaymentCount > 0 ? 'danger' : 'success'),
 
         ];
     }

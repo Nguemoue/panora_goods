@@ -13,17 +13,17 @@ class BrandForm
     {
         return $schema
             ->components([
-                Section::make('Brand Identity')
-                    ->description('Manage manufacturer names for your catalog.')
+                Section::make(__('panels.brand_identity'))
+                    ->description(__('panels.brand_identity_description'))
                     ->icon('heroicon-o-bookmark')
                     ->schema([
                         TextInput::make('name')
-                            ->label('Brand Name')
-                            ->placeholder('e.g., Apple, Samsung, LG')
+                            ->label(__('panels.brand_name'))
+                            ->placeholder('ex: Apple, Samsung, LG')
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true)
-                            ->helperText('This name will be visible to sellers and clients.'),
+                            ->helperText(__('panels.brand_visible_helper')),
                     ])->columnSpanFull(),
             ]);
     }

@@ -41,6 +41,7 @@ return [
     'editor' => 'Éditeur',
     'user' => 'Utilisateur',
     'regular_user' => 'Utilisateur standard',
+    'sellers' => 'Vendeurs',
 
     // Verification Tab
     'email_verification' => 'Vérification d\'e-mail',
@@ -71,6 +72,7 @@ return [
     'joined' => 'Inscrit',
     'last_updated' => 'Dernière mise à jour',
     'name' => 'Nom',
+    'profile_photo' => 'Photo de profil',
 
     // Buttons
     'delete' => 'Supprimer',

@@ -20,6 +20,22 @@ class SupplierResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-truck';
     protected static string| \UnitEnum|null $navigationGroup = 'Commercial';
     protected static ?int $navigationSort = 2;
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('resources.suppliers.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resources.suppliers.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('resources.suppliers.navigation');
+    }
 
     public static function form(Schema $schema): Schema
     {

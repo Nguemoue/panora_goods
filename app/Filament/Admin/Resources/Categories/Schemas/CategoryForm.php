@@ -14,23 +14,23 @@ class CategoryForm
     {
         return $schema
             ->components([
-                Section::make('Category Information')
-                    ->description('Organize your products by defining clear categories.')
+                Section::make(__('panels.category_information'))
+                    ->description(__('panels.category_information_description'))
                     ->icon('heroicon-o-tag')
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
                             ->columnSpanFull()
-                            ->label('Category Name')
-                            ->placeholder('e.g., Smartphones, Refrigerators')
+                            ->label(__('panels.category_name'))
+                            ->placeholder('ex: Smartphones, Réfrigérateurs')
                             ->required()
                             ->columnSpanFull()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true)
                             ->columnSpan(1),
                         Textarea::make('description')
-                            ->label('Brief Description')
-                            ->placeholder('Provide a small description of what this category includes...')
+                            ->label(__('panels.brief_description'))
+                            ->placeholder(__('panels.category_description_placeholder'))
                             ->rows(3)
                             ->maxLength(1000)
                             ->columnSpanFull(),

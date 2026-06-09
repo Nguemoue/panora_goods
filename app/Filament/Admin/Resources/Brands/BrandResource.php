@@ -18,8 +18,24 @@ class BrandResource extends Resource
 {
     protected static ?string $model = Brand::class;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-bookmark';
-    protected static string| \UnitEnum|null $navigationGroup = 'Inventory';
+    protected static string| \UnitEnum|null $navigationGroup = 'Inventaire';
     protected static ?int $navigationSort = 3;
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('resources.brands.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resources.brands.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('resources.brands.navigation');
+    }
 
     public static function form(Schema $schema): Schema
     {

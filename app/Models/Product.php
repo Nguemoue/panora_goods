@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,11 +10,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProductFactory> */
+    /** @use HasFactory<ProductFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -42,10 +42,11 @@ class Product extends Model
     {
         return $this->hasMany(ProductSpecification::class);
     }
+
     public function specifications(): BelongsToMany
     {
         return $this->belongsToMany(Specification::class, 'product_specification')
-            ->withPivot(['value','specification_id','product_id'])
+            ->withPivot(['value', 'specification_id', 'product_id'])
             ->withTimestamps();
     }
 
@@ -60,22 +61,25 @@ class Product extends Model
         if ($this->relationLoaded('primaryImage')) {
             return $this->primaryImage->url;
         }
+
         return asset('images/cart-placeholder.jpg');
     }
+
     protected function profitPrice(): Attribute
     {
         return Attribute::make(
-            get: fn($value, array $attributes) => ($attributes['selling_price'] - $attributes['supplier_price']),
+            get: fn ($value, array $attributes) => ($attributes['selling_price'] - $attributes['supplier_price']),
         );
     }
+
     public function sales(): HasMany
     {
         return $this->hasMany(Sale::class);
     }
+
     public function getWhatsAppLink(): string
     {
         $phone = config('project_configuration.whatsapp');
-
 
         $productUrl = route('products.show', $this);
 
@@ -100,12 +104,12 @@ Prix :
 {$this->selling_price} FCFA
 
 Référence :
-{$this->reference}
+{$this->reference_number}
 
 Spécifications :
 {$specifications}
 TEXT;
 
-        return 'https://wa.me/' . $phone . '?text=' . urlencode($message);
+        return 'https://wa.me/'.$phone.'?text='.urlencode($message);
     }
 }

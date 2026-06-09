@@ -29,15 +29,15 @@ class SupplierStats extends BaseWidget
         $totalProfitGenerated = Sale::whereIn('product_id', $this->record->products()->pluck('id'))->sum('profit');
 
         return [
-            Stat::make('Products Catalog', $productCount)
-                ->description('Total items from this supplier')
+            Stat::make(__('panels.products_catalog'), $productCount)
+                ->description(__('panels.supplier_products_description'))
                 ->descriptionIcon('heroicon-m-rectangle-stack'),
-            Stat::make('Total Units Sold', $totalSoldVolume)
-                ->description('Market performance')
+            Stat::make(__('panels.total_units_sold'), $totalSoldVolume)
+                ->description(__('panels.supplier_units_description'))
                 ->descriptionIcon('heroicon-m-shopping-cart')
                 ->color('success'),
-            Stat::make('Total Profit Generated', currency().number_format($totalProfitGenerated, 2))
-                ->description('Earnings from these products')
+            Stat::make(__('panels.total_profit_generated'), currency() . number_format($totalProfitGenerated, 2))
+                ->description(__('panels.supplier_profit_description'))
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('primary'),
         ];

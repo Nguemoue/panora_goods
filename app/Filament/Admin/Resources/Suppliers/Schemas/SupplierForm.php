@@ -14,39 +14,39 @@ class SupplierForm
     {
         return $schema
             ->components([
-                Section::make('Supplier Contact')
-                    ->description('Primary details and contact person for this supplier.')
+                Section::make(__('panels.supplier_contact'))
+                    ->description(__('panels.supplier_contact_description'))
                     ->icon('heroicon-o-truck')
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
-                            ->label('Company Name')
-                            ->placeholder('Enter supplier business name')
+                            ->label(__('panels.company_name'))
+                            ->placeholder(__('panels.supplier_name_placeholder'))
                             ->required()
                             ->maxLength(255),
                         TextInput::make('contact_person')
-                            ->label('Contact Person')
-                            ->placeholder('Full name of your main contact')
+                            ->label(__('validation.attributes.contact_person'))
+                            ->placeholder(__('panels.contact_person_placeholder'))
                             ->maxLength(255),
                         TextInput::make('email')
-                            ->label('Email Address')
+                            ->label(__('panels.email_address'))
                             ->placeholder('contact@supplier.com')
                             ->email()
                             ->maxLength(255),
                         TextInput::make('phone')
-                            ->label('Phone Number')
-                            ->placeholder('+1 (555) 000-0000')
+                            ->label(__('panels.phone_number'))
+                            ->placeholder('+237...')
                             ->tel()
                             ->maxLength(255),
                     ])->columnSpanFull(),
 
-                Section::make('Location Details')
-                    ->description('Physical address for logistics and deliveries.')
+                Section::make(__('panels.location_details'))
+                    ->description(__('panels.location_details_description'))
                     ->icon('heroicon-o-map-pin')
                     ->schema([
                         Textarea::make('address')
-                            ->label('Office/Warehouse Address')
-                            ->placeholder('Street name, City, Country...')
+                            ->label(__('panels.office_warehouse_address'))
+                            ->placeholder(__('panels.office_warehouse_placeholder'))
                             ->rows(2)
                             ->columnSpanFull(),
                     ])->columnSpanFull(),

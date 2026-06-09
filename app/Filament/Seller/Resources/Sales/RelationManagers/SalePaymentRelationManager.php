@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Filament\Seller\Resources\Sales\RelationManagers;
@@ -6,9 +7,7 @@ namespace App\Filament\Seller\Resources\Sales\RelationManagers;
 use App\Enums\ConfirmationStatusEnum;
 use App\Models\Sale;
 use App\Models\SalePayment;
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\CreateAction;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -17,6 +16,7 @@ use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Number;
 
 /**
@@ -26,36 +26,48 @@ class SalePaymentRelationManager extends RelationManager
 {
     protected static string $relationship = 'salePayments';
 
+    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    {
+        return __('resources.relation_managers.sale_payments');
+    }
+
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('amount')
+                    ->label(__('sales.paid_amount'))
                     ->columnSpanFull()
                     ->belowContent(function ($set) {
                         if ($this->getOwnerRecord()->isOneTimePayment()) {
-                            return 'This payment type is one time payment, you must paid the full amount: ' . Number::currency((float)$this->getOwnerRecord()->sale_price);
+                            return __('sales.one_time_payment_requires_full_amount', [
+                                'amount' => Number::currency((float) $this->getOwnerRecord()->sale_price),
+                            ]);
                         }
-                        $remainingAmount =( (float)$this->getOwnerRecord()->sale_price) - ((float)$this->getOwnerRecord()->approvedSalePayments()->sum('amount'));
-                        return 'The remaining amount to be paid is: ' . Number::currency($remainingAmount) . ' Payable before: ' . $this->getOwnerRecord()->payment_date_limit;
+
+                        return __('sales.remaining_payment_hint', [
+                            'amount' => Number::currency($this->getOwnerRecord()->getRemainingAmount()),
+                            'date' => $this->getOwnerRecord()->payment_date_limit?->format('d/m/Y') ?? '-',
+                        ]);
                     })
-                    ->maxValue(function (){
+                    ->maxValue(function () {
                         if ($this->getOwnerRecord()->isOneTimePayment()) {
                             return $this->getOwnerRecord()->sale_price;
 
                         }
-                        return ( (float)$this->getOwnerRecord()->sale_price) - ((float)$this->getOwnerRecord()->approvedSalePayments()->sum('amount'));
+
+                        return $this->getOwnerRecord()->getRemainingAmount();
                     })
                     ->minValue(function () {
-                        //if the payment type was one time there is no need to calculate the remaining amount
                         if ($this->getOwnerRecord()->isOneTimePayment()) {
                             return $this->getOwnerRecord()->sale_price;
                         }
+
                         return 100;
                     })
                     ->required()
                     ->numeric(),
-                Textarea::make('notes')->columnSpanFull()->disabled()->label("Notes")
+                Textarea::make('notes')->columnSpanFull()->disabled()->label(__('sales.additional_notes')),
             ]);
     }
 
@@ -65,17 +77,16 @@ class SalePaymentRelationManager extends RelationManager
             ->components([
                 TextEntry::make('id'),
 
-                TextEntry::make('amount')
-                ,
+                TextEntry::make('amount'),
 
                 TextEntry::make('confirmation_status'),
 
                 TextEntry::make('created_at')
-                    ->label('Created Date')
+                    ->label(__('messages.created_at'))
                     ->dateTime(),
 
                 TextEntry::make('updated_at')
-                    ->label('Last Modified Date')
+                    ->label(__('messages.updated_at'))
                     ->dateTime(),
             ]);
     }
@@ -87,23 +98,23 @@ class SalePaymentRelationManager extends RelationManager
             ->defaultCurrency(currency: currency())
             ->columns([
                 TextColumn::make('#')->rowIndex(),
-                TextColumn::make('amount')->money(),
-                TextColumn::make('confirmation_status')->badge(),
-                TextColumn::make('created_at')->label('Date')->dateTime(),
+                TextColumn::make('amount')->label(__('sales.paid_amount'))->money(),
+                TextColumn::make('confirmation_status')->label(__('messages.status'))->badge(),
+                TextColumn::make('created_at')->label(__('sales.date'))->dateTime(),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
-                CreateAction::make()->label('Add Payment')
+                CreateAction::make()->label(__('sales.add_payment'))
                     ->mutateDataUsing(function (array $data) {
                         return $data;
                     })
                     ->createAnother(false),
             ])
             ->recordActions([
-                EditAction::make()->disabled(fn(SalePayment $record) => $record->confirmation_status === ConfirmationStatusEnum::APPROVED),
-                //DeleteAction::make(),
+                EditAction::make()->disabled(fn (SalePayment $record) => $record->confirmation_status === ConfirmationStatusEnum::APPROVED),
+                // DeleteAction::make(),
             ])
             ->toolbarActions([
 

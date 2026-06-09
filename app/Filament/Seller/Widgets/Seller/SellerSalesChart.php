@@ -3,17 +3,21 @@
 namespace App\Filament\Seller\Widgets\Seller;
 
 use App\Models\Sale;
+use Filament\Facades\Filament;
 use Filament\Widgets\ChartWidget;
-use Illuminate\Support\Facades\Auth;
 
 class SellerSalesChart extends ChartWidget
 {
-    protected ?string $heading = 'My Monthly Performance';
     protected string $color = 'info';
+
+    public function getHeading(): string
+    {
+        return __('panels.my_monthly_performance');
+    }
 
     protected function getData(): array
     {
-        $userId = Auth::id();
+        $userId = Filament::auth()->id();
 
         $data = Sale::where('seller_id', $userId)
             ->selectRaw('date_format("%Y-%m", sold_at) as month, sum(sale_price) as total')
@@ -25,7 +29,7 @@ class SellerSalesChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Personal Revenue',
+                    'label' => __('panels.personal_revenue'),
                     'data' => $data->pluck('total')->toArray(),
                 ],
             ],

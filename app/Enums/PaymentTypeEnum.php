@@ -13,10 +13,6 @@ enum PaymentTypeEnum: string implements HasLabel
 
     public function getLabel(): string|Htmlable|null
     {
-        return match ($this) {
-          self::ONE_TIME => 'One Time',
-          self::MANY_TIME_WITH_DEBT_ACKNOWLEDGE => 'Many Time With Debt Acknowledge',
-          self::MANY_TIME_WITHOUT_DEBT_ACKNOWLEDGE => 'Many Time Without Debt Acknowledge',
-        };
+        return __("sales.payment_types.{$this->value}");
     }
 }

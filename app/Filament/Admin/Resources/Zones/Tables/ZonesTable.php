@@ -15,8 +15,8 @@ class ZonesTable
     {
         return $table
             ->columns([
-                TextColumn::make('name')->label('Name')->searchable()->sortable(),
-                TextColumn::make('city')->label('City')->searchable()->sortable(),
+                TextColumn::make('name')->label(__('validation.attributes.name'))->searchable()->sortable(),
+                TextColumn::make('city')->label(__('panels.city'))->searchable()->sortable(),
             ])
             ->filters([
                 //

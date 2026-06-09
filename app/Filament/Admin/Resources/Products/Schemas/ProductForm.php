@@ -23,86 +23,92 @@ class ProductForm
     {
         return $schema
             ->components([
-                Tabs::make('Product Wizard')
+                Tabs::make(__('panels.product_wizard'))
                     ->columnSpanFull()
                     ->tabs([
-                        Tabs\Tab::make('General')
+                        Tabs\Tab::make(__('panels.general'))
                             ->icon('heroicon-o-information-circle')
                             ->schema([
-                                Section::make('Core Identification')
+                                Section::make(__('panels.core_identification'))
                                     ->columnSpanFull()
-                                    ->description('Enter the main details to identify the product.')
+                                    ->description(__('panels.core_identification_description'))
                                     ->columns(2)
                                     ->schema([
                                         TextInput::make('name')
-                                            ->placeholder('e.g., iPhone 15 Pro')
+                                            ->label(__('panels.product_name'))
+                                            ->placeholder('ex: iPhone 15 Pro')
                                             ->required()
                                             ->maxLength(255),
                                         TextInput::make('model_number')
-                                            ->placeholder('e.g., A3102')
+                                            ->label(__('panels.model_reference'))
+                                            ->placeholder('ex: A3102')
                                             ->maxLength(255),
                                         Select::make('category_id')
+                                            ->label(__('phones.category'))
                                             ->relationship('category', 'name')
                                             ->required()
                                             ->live()
                                             ->preload(),
                                         Select::make('brand_id')
+                                            ->label(__('phones.brand'))
                                             ->relationship('brand', 'name')
                                             ->preload(),
                                         Select::make('supplier_id')
+                                            ->label(__('messages.supplier'))
                                             ->relationship('supplier', 'name')
                                             ->required()
                                             ->preload(),
                                         Select::make('status')
+                                            ->label(__('messages.status'))
                                             ->options([
-                                                'active' => 'Active (Ready to sell)',
-                                                'inactive' => 'Inactive (Hidden)',
+                                                'active' => __('panels.active_access_granted'),
+                                                'inactive' => __('messages.inactive'),
                                             ])
                                             ->default('active')
                                             ->required(),
 
                                     ]),
-                                Section::make('Detailed Description')
-                                    ->description('Provide a comprehensive overview of the product features and benefits.')
+                                Section::make(__('panels.detailed_description'))
+                                    ->description(__('panels.detailed_description_description'))
                                     ->columnSpanFull()
                                     ->schema([
                                         Textarea::make('short_description')
-                                            ->label('Short Description')
+                                            ->label(__('panels.short_description'))
                                             ->maxLength(255)
                                             ->required(),
                                         RichEditor::make('long_description')
-                                            ->label('Long Description')
+                                            ->label(__('panels.long_description'))
                                             ->maxLength(2000),
                                     ]),
-                                Section::make('Pricing & Inventory')
-                                    ->description('Manage your margins and stock availability.')
+                                Section::make(__('messages.pricing_inventory'))
+                                    ->description(__('panels.pricing_inventory_description'))
                                     ->columns(3)
                                     ->columnSpanFull()
                                     ->schema([
                                         TextInput::make('supplier_price')
-                                            ->label('Purchase Price')
+                                            ->label(__('panels.purchase_price'))
                                             ->numeric()
                                             ->prefix(currency())
                                             ->required(),
                                         TextInput::make('selling_price')
-                                            ->label('Retail Price')
+                                            ->label(__('panels.retail_price'))
                                             ->gte('supplier_price')
                                             ->numeric()
                                             ->prefix(currency())
                                             ->required(),
                                         TextInput::make('stock_quantity')
-                                            ->label('Quantity in Stock')
+                                            ->label(__('panels.quantity_in_stock'))
                                             ->numeric()
                                             ->default(0)
                                             ->required(),
                                     ]),
                             ]),
-                        Tabs\Tab::make('Images')
+                        Tabs\Tab::make(__('panels.photos'))
                             ->icon('heroicon-o-photo')
                             ->schema([
-                                //images sections
-                                Section::make('Visual Assets')
-                                    ->description('Upload high-quality photos. Minimum 4 required.')
+                                // images sections
+                                Section::make(__('panels.visual_assets'))
+                                    ->description(__('panels.visual_assets_description'))
                                     ->schema([
                                         Repeater::make('images')
                                             ->relationship('images')
@@ -114,33 +120,34 @@ class ProductForm
                                                     ->visibility('public')
                                                     ->required(),
                                                 Select::make('type')
+                                                    ->label(__('messages.type'))
                                                     ->options([
-                                                        'face_1' => 'Front View 1',
-                                                        'face_2' => 'Front View 2',
-                                                        'front' => 'Front Detail',
-                                                        'back' => 'Back View',
-                                                        'other' => 'Additional Detail',
+                                                        'face_1' => __('panels.front_view_1'),
+                                                        'face_2' => __('panels.front_view_2'),
+                                                        'front' => __('panels.front_detail'),
+                                                        'back' => __('panels.back_view'),
+                                                        'other' => __('panels.additional_detail'),
                                                     ])
                                                     ->required(),
                                                 Toggle::make('is_primary')
-                                                    ->label('Main Display Image'),
+                                                    ->label(__('panels.main_display_image')),
                                             ])
                                             ->columns(2)
                                             ->minItems(1)
                                             ->grid(2),
                                     ]),
                             ]),
-                        Tabs\Tab::make('Technical Specs')
+                        Tabs\Tab::make(__('panels.technical_specs'))
                             ->icon('heroicon-o-cpu-chip')
                             ->schema([
-                                Section::make('Custom Attributes')
-                                    ->description('Add detailed specifications based on category selection.')
+                                Section::make(__('panels.custom_attributes'))
+                                    ->description(__('panels.custom_attributes_description'))
                                     ->schema([
                                         Repeater::make('product_specifications')
                                             ->relationship('productSpecifications')
                                             ->schema([
                                                 Select::make('specification_id')
-                                                    ->label('Spec Name')
+                                                    ->label(__('panels.spec_name'))
                                                     ->options(function (Get $get) {
                                                         $categoryId = $get('../../category_id');
                                                         if (!$categoryId) {
@@ -153,8 +160,8 @@ class ProductForm
                                                     ->required()
                                                     ->reactive(),
                                                 TextInput::make('value')
-                                                    ->label('Attribute Value')
-                                                    ->placeholder('e.g., 256GB, 400W')
+                                                    ->label(__('panels.attribute_value'))
+                                                    ->placeholder('ex: 256GB, 400W')
                                                     ->required(),
                                             ])
                                             ->columns(2)

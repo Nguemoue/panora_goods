@@ -21,25 +21,25 @@ class Dashboard extends \Filament\Pages\Dashboard
         return $schema
             ->schema([
                 Section::make()
-                    ->heading("Filtres")
+                    ->heading(__('panels.filters'))
                     ->collapsible()
                     ->columnSpanFull()
                     ->schema([
-                        DatePicker::make('start_date')->label("De"),
-                        DatePicker::make('end_date')->label("A"),
+                        DatePicker::make('start_date')->label(__('panels.from')),
+                        DatePicker::make('end_date')->label(__('panels.to')),
                     ])
                     ->columns(),
             ]);
     }
+
     public function getWidgets(): array
     {
         return [
             AdminStatsOverview::class,
             SupplierStats::class,
             LowStockProducts::class,
-//            SalesChart::class,
-//            ProductSalesChart::class
+            // SalesChart::class,
+            // ProductSalesChart::class
         ];
     }
-
 }

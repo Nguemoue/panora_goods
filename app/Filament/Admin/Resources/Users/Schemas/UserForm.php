@@ -3,7 +3,6 @@
 namespace App\Filament\Admin\Resources\Users\Schemas;
 
 use App\Enums\UserRoleEnum;
-use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
@@ -17,62 +16,62 @@ class UserForm
     {
         return $schema
             ->components([
-                Section::make('Profile Information')
-                    ->description('Manage user credentials and identification.')
+                Section::make(__('panels.profile_information'))
+                    ->description(__('panels.profile_information_description'))
                     ->icon('heroicon-o-user-circle')
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
-                            ->label('Full Name')
-                            ->placeholder('John Doe')
+                            ->label(__('panels.full_name'))
+                            ->placeholder('Jean Dupont')
                             ->required()
                             ->maxLength(255),
 
                         TextInput::make('phone_number')
-                            ->label('Phone Number')
+                            ->label(__('panels.phone_number'))
                             ->placeholder('+237...')
                             ->tel()
                             ->maxLength(20),
                         TextInput::make('email')
-                            ->label('Email Address')
+                            ->label(__('panels.email_address'))
                             ->placeholder('john@example.com')
                             ->email()
                             ->required()
                             ->maxLength(255)
                             ->unique(ignoreRecord: true),
                         TextInput::make('password')
-                            ->label('Secure Password')
+                            ->label(__('panels.secure_password'))
                             ->password()
                             ->dehydrated(fn($state) => filled($state))
                             ->required(fn(string $operation): bool => $operation === 'create')
                             ->maxLength(255)
                             ->placeholder('••••••••'),
                         TextInput::make('reference_number')
-                            ->label('Reference Number')
+                            ->label(__('panels.reference_number'))
                             ->unique(),
                         FileUpload::make('photo')->image()->disk('public')
                     ])->columnSpanFull(),
 
-                Section::make('Access & Status')
-                    ->description('Control the user permissions and account state.')
+                Section::make(__('panels.access_status'))
+                    ->description(__('panels.access_status_description'))
                     ->icon('heroicon-o-shield-check')
                     ->columns(3)
                     ->schema([
                         CheckboxList::make('zones')
-                            ->label('Operational Zone')
+                            ->label(__('panels.operational_zone'))
                             ->relationship('zones', 'name')
                             ->columnSpanFull()
                             ->searchable(),
                         Select::make('role')
-                            ->label('Assigned Role')
+                            ->label(__('panels.assigned_role'))
                             ->options(UserRoleEnum::class)
                             ->required()
-                            ->helperText('Determines which panel the user can access.'),
+                            ->helperText(__('panels.panel_access_helper')),
                         Select::make('status')
-                            ->label('Account Status')
+                            ->label(__('panels.account_status'))
                             ->options([
-                                'active' => 'Active (Access Granted)',
-                                'inactive' => 'Inactive (Locked)',
+                                'active' => __('panels.active_access_granted'),
+                                'inactive' => __('panels.inactive_locked'),
                             ])
                             ->default('active')
                             ->required(),

@@ -15,15 +15,19 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('validation.attributes.name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
+                    ->label(__('validation.attributes.email'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('role')
+                    ->label(__('messages.role'))
                     ->badge()
                     ->sortable(),
                 TextColumn::make('status')
+                    ->label(__('messages.status'))
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'active' => 'success',
@@ -31,6 +35,7 @@ class UsersTable
                         default => 'gray',
                     }),
                 TextColumn::make('created_at')
+                    ->label(__('messages.created_at'))
                     ->dateTime()
                     ->sortable(),
             ])

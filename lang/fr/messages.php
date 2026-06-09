@@ -81,5 +81,5 @@ return [
     'regular_user'=>"Utilisateur régulier",
     'admin_user' => 'Utilisateur administrateur',
     'in' => 'dans',
+    'type' => 'Type',
     ];
-

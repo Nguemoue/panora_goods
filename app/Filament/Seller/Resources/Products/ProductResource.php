@@ -19,7 +19,23 @@ class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static string| \UnitEnum|null $navigationGroup = 'Catalog';
+    protected static string| \UnitEnum|null $navigationGroup = 'Catalogue';
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('resources.products.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resources.products.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('resources.products.navigation');
+    }
 
     public static function form(Schema $schema): Schema
     {

@@ -14,32 +14,32 @@ class SpecificationForm
     {
         return $schema
             ->components([
-                Section::make('Specification Definition')
-                    ->description('Define a technical characteristic that can be linked to categories.')
+                Section::make(__('panels.specification_definition'))
+                    ->description(__('panels.specification_definition_description'))
                     ->icon('heroicon-o-variable')
                     ->columns(2)
                     ->schema([
                         TextInput::make('name')
-                            ->label('Characteristic Name')
+                            ->label(__('panels.characteristic_name'))
                             ->required()
                             ->maxLength(255)
-                            ->placeholder('e.g., RAM, Storage, Volume'),
+                            ->placeholder('ex: RAM, Stockage, Volume'),
                         Select::make('input_type')
-                            ->label('Input Method')
+                            ->label(__('panels.input_method'))
                             ->options([
-                                'text' => 'Free Text',
-                                'number' => 'Numeric Value',
-                                'select' => 'Dropdown Selection',
+                                'text' => __('panels.free_text'),
+                                'number' => __('panels.numeric_value'),
+                                'select' => __('panels.dropdown_selection'),
                             ])
                             ->default('text')
                             ->required(),
                         TextInput::make('measure')
-                            ->label('Unit of Measure')
-                            ->placeholder('e.g., GB, L, TB, Watts')
-                            ->helperText('Leave empty if no unit is applicable.'),
+                            ->label(__('panels.unit_of_measure'))
+                            ->placeholder('ex: GB, L, TB, Watts')
+                            ->helperText(__('panels.unit_optional_helper')),
                         TextInput::make('description')
-                            ->label('Internal Note')
-                            ->placeholder('Describe what this spec is for...')
+                            ->label(__('panels.internal_note'))
+                            ->placeholder(__('panels.category_description_placeholder'))
                             ->maxLength(255),
                     ])->columnSpanFull(),
             ]);

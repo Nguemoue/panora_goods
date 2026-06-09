@@ -19,6 +19,22 @@ class ZoneResource extends Resource
     protected static ?string $slug = 'zones';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static bool $hasTitleCaseModelLabel = false;
+
+    public static function getModelLabel(): string
+    {
+        return __('resources.zones.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resources.zones.plural');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('resources.zones.navigation');
+    }
 
     public static function form(Schema $schema): Schema
     {
