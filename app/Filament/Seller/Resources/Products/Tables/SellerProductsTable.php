@@ -25,6 +25,7 @@ class SellerProductsTable
                     ->stacked()
                     ->limit(1),
                 TextColumn::make('name')
+                    ->description(fn($record)=>$record->product_code)
                     ->label(__('validation.attributes.name'))
                     ->searchable()
                     ->sortable()

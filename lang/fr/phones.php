@@ -29,6 +29,7 @@ return [
 
     // General tab fields
     'brand' => 'Marque',
+    'product_code'=>'Code',
     'category' => 'Catégorie',
     'select_brand' => 'Sélectionner une marque',
     'supplier' => 'Fournisseur',

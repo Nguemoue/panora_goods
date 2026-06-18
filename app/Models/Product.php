@@ -18,6 +18,12 @@ class Product extends Model
 
     protected $guarded = [];
 
+    public static function booted()
+    {
+        static::creating(function (Product $product) {
+            $product->product_code = resolve(\App\Services\ProductCodeGenerator::class)->generate($product->name);
+        });
+    }
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);

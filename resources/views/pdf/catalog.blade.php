@@ -152,11 +152,13 @@
 
                                             <div class="product-name">{{ $product->name }}</div>
                                             <div class="brand">{{ __('phones.brand') }} : {{ $product->brand?->name ?? '-' }}</div>
+                                            <div class="brand">Ref: <i>{{ $product->product_code ?? '-' }}</i> </div>
 
                                             @if ($product->model_number)
                                                 <div class="model">{{ __('panels.model_reference') }} : {{ $product->model_number }}</div>
                                             @endif
 
+                                            <div class="product-name">Prix: {{ Number::currency($product->selling_price) }}</div>
                                             <div class="spec-title">{{ __('panels.technical_specifications') }}</div>
 
                                             @if ($product->specifications->isEmpty())

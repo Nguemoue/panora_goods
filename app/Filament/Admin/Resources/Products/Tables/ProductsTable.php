@@ -16,6 +16,7 @@ class ProductsTable
             ->columns([
                 TextColumn::make('name')
                     ->label(__('validation.attributes.name'))
+                    ->description(fn($record)=>$record->product_code)
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('category.name')
