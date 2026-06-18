@@ -16,4 +16,8 @@ du produit, derniere lignes les specifications du produit
 [x] dans le panel admin ajouter une zone de filtre sur le dashboard (par mois, annees)
 [x] dans le panel admin au niveau de la resource employes, voir la sommes qu'il a raporter (ventes). 
 
-
+---
+[x] dans le panel admin, ajouter un boutton telecharger pres du boutton creer, qui vas telecharger 
+tout le catalogue pdf. qui sera constitue de : en entete nom de la categories. puis les produits avec 
+son image principale, son nom , sa marque et ses caracteristique bien aligne. dans le formulaire de telechargement
+on pourra selectionner les categories par defaut toutes seront selectionner
