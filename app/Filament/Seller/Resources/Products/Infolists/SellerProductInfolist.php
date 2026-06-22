@@ -2,15 +2,17 @@
 
 namespace App\Filament\Seller\Resources\Products\Infolists;
 
-use Filament\Infolists\Components\Grid;
-use Filament\Infolists\Components\Group;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Components\Section;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\Size;
+use Filament\Support\Enums\TextSize;
 
 class SellerProductInfolist
 {
@@ -24,7 +26,7 @@ class SellerProductInfolist
                             ->schema([
                                 Group::make([
                                     TextEntry::make('name')
-                                        ->size(TextEntry\TextEntrySize::Large)
+                                        ->size(TextSize::Large)
                                         ->weight(FontWeight::Bold),
                                     TextEntry::make('model_number')
                                         ->label(__('panels.model_number_short'))
@@ -36,11 +38,11 @@ class SellerProductInfolist
                                         ->badge()
                                         ->color('gray'),
                                 ])->columnSpan(1),
-                                
+
                                 Group::make([
                                     TextEntry::make('selling_price')
                                         ->money()
-                                        ->size(TextEntry\TextEntrySize::Large)
+                                        ->size(TextSize::Large)
                                         ->color('success')
                                         ->weight(FontWeight::Bold),
                                     TextEntry::make('stock_quantity')
@@ -67,8 +69,8 @@ class SellerProductInfolist
                             ->schema([
                                 ImageEntry::make('path')
                                     ->hiddenLabel()
-                                    ->width(200)
-                                    ->height(200),
+                                    ->imageWidth(200)
+                                    ->imageHeight(200),
                                 TextEntry::make('type')
                                     ->badge(),
                             ])
