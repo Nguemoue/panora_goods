@@ -41,7 +41,7 @@ class SellerProductInfolist
 
                                 Group::make([
                                     TextEntry::make('selling_price')
-                                        ->money()
+                                        ->money(currency: currency())
                                         ->size(TextSize::Large)
                                         ->color('success')
                                         ->weight(FontWeight::Bold),
