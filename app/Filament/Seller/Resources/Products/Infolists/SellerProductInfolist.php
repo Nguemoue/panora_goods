@@ -21,6 +21,7 @@ class SellerProductInfolist
         return $schema
             ->components([
                 Section::make(__('panels.product_presentation'))
+                    ->columnSpanFull()
                     ->schema([
                         Grid::make(3)
                             ->schema([
@@ -62,10 +63,12 @@ class SellerProductInfolist
                     ]),
 
                 Section::make(__('panels.gallery_details'))
-                    ->columns(2)
+                    ->columns(1)
+                    ->columnSpanFull()
                     ->schema([
                         RepeatableEntry::make('images')
                             ->label(__('panels.product_photos'))
+
                             ->schema([
                                 ImageEntry::make('path')
                                     ->hiddenLabel()
@@ -75,7 +78,7 @@ class SellerProductInfolist
                                     ->badge(),
                             ])
                             ->grid(2)
-                            ->columnSpan(1),
+                            ,
 
                         RepeatableEntry::make('product_specifications')
                             ->label(__('panels.technical_specifications'))

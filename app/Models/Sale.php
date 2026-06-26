@@ -6,9 +6,11 @@ use App\Enums\ConfirmationStatusEnum;
 use App\Enums\PaymentStatusEnum;
 use App\Enums\PaymentTypeEnum;
 use App\Enums\SaleStatusEnum;
+use App\Settings\PaymentSetting;
 use Database\Factories\SaleFactory;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -126,5 +128,12 @@ class Sale extends Model
     public function getRemainingAmount(): float
     {
         return max(0, (float) $this->sale_price - $this->getApprovedPaidAmount());
+    }
+
+    protected function sellerProfit(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, array $attributes) => app(PaymentSetting::class)->seller_rate * $attributes['profit'],
+        );
     }
 }

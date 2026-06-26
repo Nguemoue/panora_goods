@@ -3,6 +3,7 @@
 namespace App\Filament\Seller\Widgets\Seller;
 
 use App\Models\Sale;
+use App\Settings\PaymentSetting;
 use Filament\Facades\Filament;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
@@ -23,7 +24,7 @@ class SellerStatsOverview extends BaseWidget
             ->whereBetween('sold_at', [$startDate, $endDate])
             ->where('seller_id', $userId)
             ->sum('sale_price');
-        $personalProfit = Sale::where('seller_id', $userId)
+        $profit = Sale::where('seller_id', $userId)
             ->whereBetween('sold_at', [$startDate, $endDate])
             ->sum('profit');
         $salesCount = Sale::where('seller_id', $userId)
@@ -42,7 +43,11 @@ class SellerStatsOverview extends BaseWidget
                 ->description(__('sales.dashboard_revenue_description'))
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color('success'),
-            Stat::make(__('sales.dashboard_profit'), Number::currency($personalProfit))
+            Stat::make(__('sales.dashboard_profit'), Number::currency($profit))
+                ->description(__('sales.dashboard_profit_description'))
+                ->descriptionIcon('heroicon-m-banknotes')
+                ->color('primary'),
+            Stat::make(__('sales.dashboard_my_profit'), Number::currency( app(PaymentSetting::class)->seller_rate * $profit ))
                 ->description(__('sales.dashboard_profit_description'))
                 ->descriptionIcon('heroicon-m-banknotes')
                 ->color('primary'),

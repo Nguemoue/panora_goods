@@ -49,6 +49,7 @@ class LatestSales extends BaseWidget
                 Tables\Columns\TextColumn::make('sale_price')
                     ->label(__('sales.total_price'))
                     ->money(currency: currency()),
+                Tables\Columns\TextColumn::make("seller_profit")->label("Mon benefice")->money(currency: currency()),
                 Tables\Columns\TextColumn::make('sold_at')
                     ->dateTime()
                     ->sinceTooltip()
