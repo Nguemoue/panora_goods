@@ -39,6 +39,26 @@
             padding-bottom: 20px;
         }
 
+        .tracking-barcode {
+            border: 1px solid #eee;
+            margin-bottom: 12px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .tracking-barcode img {
+            height: 58px;
+            max-width: 100%;
+        }
+
+        .tracking-barcode .caption {
+            color: #555;
+            font-size: 11px;
+            line-height: 15px;
+            margin-top: 4px;
+            word-break: break-all;
+        }
+
         .invoice-box table tr.top table td.title {
             font-size: 40px;
             line-height: 45px;
@@ -100,6 +120,10 @@
                             </p>
                         </td>
                         <td>
+                            <div class="tracking-barcode">
+                                <img src="{{ $trackingBarcode }}" alt="Code-barres de suivi">
+                                <div class="caption">{{ $trackingCode }}</div>
+                            </div>
                             Facture #: {{ $sale->id }}<br>
                             Code de suivi: <b>{{ $sale->tracking_code }}</b><br>
                             Généré le: {{ $sale->created_at->format('M d, Y') }}
@@ -117,7 +141,10 @@
                             {{ $sale->seller->email }}
                         </td>
                         <td>
-                            Client: {{ $sale->customer_name }}<br>
+                            Client: {{ $sale->client?->name }}<br>
+                            Email: {{ $sale->client?->email }}<br>
+                            Téléphone: {{ $sale->client?->phone_number }}<br>
+                            Adresse: {{ $sale->client?->address }}<br>
                             Statut: {{ $sale->status->getLabel() }}
                         </td>
                     </tr>
@@ -157,6 +184,18 @@
 
 
     </table>
+</div>
+<br>
+<div>
+    Scannez ici pour suivre votre commande en ligne: <br>
+
+    {{-- QR CODE SECTION   --}}
+    {{-- END QR CODE SECTION    --}}
+
+    <br>
+    <div>
+        Ou allez sur ce lien: <a href="{{ $trackingUrl }}">{{ $trackingUrl }}</a>
+    </div>
 </div>
 <div class="" style="text-align: end; margin-top: 20px;">
     SOFITRAPAM SARL | NIU : M0126183474775 | RCCM : CM-BFX-01-2026-B13-00009

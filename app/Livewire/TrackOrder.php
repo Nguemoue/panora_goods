@@ -17,7 +17,12 @@ class TrackOrder extends Component
         'tracking_code' => 'required|string|min:8',
     ];
 
-    public function track()
+    public function mount(): void
+    {
+        $this->tracking_code = strtoupper((string) request()->query('tracking_code', ''));
+    }
+
+    public function track(): void
     {
         $this->validate();
 

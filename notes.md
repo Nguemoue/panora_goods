@@ -21,3 +21,6 @@ du produit, derniere lignes les specifications du produit
 tout le catalogue pdf. qui sera constitue de : en entete nom de la categories. puis les produits avec 
 son image principale, son nom , sa marque et ses caracteristique bien aligne. dans le formulaire de telechargement
 on pourra selectionner les categories par defaut toutes seront selectionner
+
+
+[ ]

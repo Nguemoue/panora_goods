@@ -2,13 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Models\Product;
-use App\Models\User;
+use App\Enums\PaymentStatusEnum;
+use App\Enums\PaymentTypeEnum;
+use App\Enums\SaleStatusEnum;
 use App\Enums\UserRoleEnum;
+use App\Models\Client;
+use App\Models\Product;
+use App\Models\Sale;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Sale>
+ * @extends Factory<Sale>
  */
 class SaleFactory extends Factory
 {
@@ -28,12 +33,15 @@ class SaleFactory extends Factory
         return [
             'product_id' => $product->id,
             'seller_id' => User::factory()->state(['role' => UserRoleEnum::SELLER]),
-            'client_id' => User::factory()->state(['role' => UserRoleEnum::CLIENT]),
+            'client_id' => Client::factory(),
             'quantity' => $quantity,
             'supplier_price_at_sale' => $supplierPrice,
             'sale_price' => $salePrice,
             'profit' => $profit,
             'customer_name' => fake()->name(),
+            'status' => SaleStatusEnum::PENDING->value,
+            'payment_status' => PaymentStatusEnum::NOT_INITIATED->value,
+            'payment_type' => PaymentTypeEnum::ONE_TIME->value,
             'sold_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
     }
