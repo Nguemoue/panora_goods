@@ -15,8 +15,8 @@
             padding: 30px;
             border: 1px solid #eee;
             box-shadow: 0 0 10px rgba(0, 0, 0, .15);
-            font-size: 16px;
-            line-height: 24px;
+            font-size: 14px;
+            line-height: 18px;
             color: #555;
         }
 
@@ -36,12 +36,12 @@
         }
 
         .invoice-box table tr.top table td {
-            padding-bottom: 20px;
+            padding-bottom: 10px;
         }
 
         .tracking-barcode {
             border: 1px solid #eee;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             padding: 8px;
             text-align: center;
         }
@@ -53,15 +53,37 @@
 
         .tracking-barcode .caption {
             color: #555;
-            font-size: 11px;
+            font-size: 10px;
             line-height: 15px;
             margin-top: 4px;
             word-break: break-all;
         }
 
+        .tracking-qr-footer {
+            border-top: 1px solid #eee;
+            color: #555;
+            font-size: 13px;
+            margin: 8px auto 0;
+            max-width: 800px;
+            padding-top: 14px;
+            text-align: center;
+        }
+
+        .tracking-qr-footer img {
+            height: 120px;
+            margin: 8px auto;
+            width: 120px;
+        }
+
+        .tracking-qr-footer .tracking-link {
+            font-size: 11px;
+            line-height: 12px;
+            word-break: break-all;
+        }
+
         .invoice-box table tr.top table td.title {
-            font-size: 40px;
-            line-height: 45px;
+            font-size: 30px;
+            line-height: 40px;
             color: #333;
         }
 
@@ -186,15 +208,12 @@
     </table>
 </div>
 <br>
-<div>
-    Scannez ici pour suivre votre commande en ligne: <br>
-
-    {{-- QR CODE SECTION   --}}
-    {{-- END QR CODE SECTION    --}}
-
-    <br>
+<div class="tracking-qr-footer">
+    Scannez ce QR code pour suivre votre commande en ligne :<br>
+    <img src="{{ $trackingQrCode }}" alt="QR code de suivi">
     <div>
-        Ou allez sur ce lien: <a href="{{ $trackingUrl }}">{{ $trackingUrl }}</a>
+        Ou allez sur ce lien :
+        <span class="tracking-link">{{ $trackingUrl }}</span>
     </div>
 </div>
 <div class="" style="text-align: end; margin-top: 20px;">
