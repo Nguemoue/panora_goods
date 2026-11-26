@@ -2,24 +2,26 @@
 
 namespace App\Filament\Seller\Resources\Products;
 
+use App\Filament\Seller\Resources\Products\Infolists\SellerProductInfolist;
 use App\Filament\Seller\Resources\Products\Pages\ListProducts;
 use App\Filament\Seller\Resources\Products\Pages\ViewProduct;
 use App\Filament\Seller\Resources\Products\Schemas\SellerProductForm;
 use App\Filament\Seller\Resources\Products\Tables\SellerProductsTable;
-use App\Filament\Seller\Resources\Products\Infolists\SellerProductInfolist;
 use App\Models\Product;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Infolists\Infolist;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static string| \UnitEnum|null $navigationGroup = 'Catalogue';
+
+    protected static string|\UnitEnum|null $navigationGroup = 'Catalogue';
+
     protected static bool $hasTitleCaseModelLabel = false;
 
     public static function getModelLabel(): string
@@ -57,6 +59,13 @@ class ProductResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['images', 'category', 'brand'])
+            ->where('status', 'active');
     }
 
     public static function getPages(): array

@@ -16,8 +16,13 @@ class EditUserProfile extends BaseEditProfile
                 FileUpload::make('photo')
                     ->label(__('users.profile_photo'))
                     ->disk('public')
+                    ->directory('avatars')
+                    ->visibility('public')
                     ->columnSpanFull()
-                    ->image(),
+                    ->image()
+                    ->imageEditor()
+                    ->imageEditorAspectRatios(['1:1', null])
+                    ->circleCropper(),
                 TextInput::make('reference_number')
                     ->label(__('panels.reference_number'))
                     ->disabled()

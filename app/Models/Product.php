@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Facades\DB;
 
 class Product extends Model
 {
@@ -104,6 +105,42 @@ class Product extends Model
     public function sales(): HasMany
     {
         return $this->hasMany(Sale::class);
+    }
+
+    public function canBeDeleted(): bool
+    {
+        return ! $this->sales()->exists();
+    }
+
+    public function duplicateWithRelations(): self
+    {
+        return DB::transaction(function (): self {
+            $this->loadMissing(['images', 'productSpecifications']);
+
+            $copy = $this->replicate(['product_code']);
+            $copy->name = "{$this->name} (Copie)";
+            $copy->status = 'inactive';
+            $copy->stock_quantity = 0;
+            $copy->save();
+
+            foreach ($this->images as $image) {
+                $copy->images()->create([
+                    'path' => $image->path,
+                    'thumb_path' => $image->thumb_path,
+                    'type' => $image->type,
+                    'is_primary' => $image->is_primary,
+                ]);
+            }
+
+            foreach ($this->productSpecifications as $spec) {
+                $copy->productSpecifications()->create([
+                    'specification_id' => $spec->specification_id,
+                    'value' => $spec->value,
+                ]);
+            }
+
+            return $copy;
+        });
     }
 
     public function getWhatsAppLink(?string $phone = null, ?string $zoneName = null): string

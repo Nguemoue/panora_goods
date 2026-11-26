@@ -25,11 +25,11 @@ class SellerProductsTable
                     ->stacked()
                     ->limit(1),
                 TextColumn::make('name')
-                    ->description(fn($record)=>$record->product_code)
                     ->label(__('validation.attributes.name'))
+                    ->description(fn (Product $record): ?string => collect([$record->product_code, $record->model_number])->filter()->implode(' · ') ?: null)
                     ->searchable()
                     ->sortable()
-                    ->description(fn (Product $record) => $record->model_number),
+                    ->weight('bold'),
                 TextColumn::make('category.name')
                     ->label(__('phones.category'))
                     ->badge()
@@ -56,6 +56,7 @@ class SellerProductsTable
                     }),
             ])
             ->defaultCurrency(currency: currency())
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('category')
                     ->label(__('phones.category'))

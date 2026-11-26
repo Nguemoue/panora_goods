@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Admin\Resources\Sales\Schemas;
 
 use App\Enums\SaleStatusEnum;
-use App\Models\Product;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 
 class SaleForm
@@ -19,8 +18,12 @@ class SaleForm
     {
         return $schema
             ->components([
-                // section for status
-                Select::make('status')->options(SaleStatusEnum::class),
+                Select::make('status')
+                    ->label(__('messages.status'))
+                    ->options(SaleStatusEnum::class)
+                    ->required()
+                    ->helperText('Passer une commande au statut « Annulée » restitue automatiquement la quantité au stock produit.'),
+
                 Section::make(__('panels.transaction_header'))
                     ->description(__('panels.transaction_header_description'))
                     ->icon('heroicon-o-shopping-bag')
@@ -31,14 +34,7 @@ class SaleForm
                             ->label(__('sales.product'))
                             ->relationship('product', 'name')
                             ->required()
-                            ->live()
-                            ->preload()
-                            ->afterStateUpdated(function (Get $get, Set $set, $state) {
-                                if ($product = Product::find($state)) {
-                                    $set('sale_price', $product->selling_price);
-                                    $set('supplier_price_at_sale', $product->supplier_price);
-                                }
-                            }),
+                            ->preload(),
                         Select::make('seller_id')
                             ->label(__('panels.responsible_seller'))
                             ->relationship('seller', 'name')
@@ -72,37 +68,20 @@ class SaleForm
                             ->label(__('sales.quantity'))
                             ->numeric()
                             ->default(1)
-                            ->required()
-                            ->live()
-                            ->afterStateUpdated(function (Get $get, Set $set) {
-                                self::calculateProfit($get, $set);
-                            }),
+                            ->required(),
                         TextInput::make('sale_price')
                             ->label(__('sales.total_price'))
                             ->numeric()
                             ->readOnly()
                             ->disabled()
                             ->prefix(currency())
-                            ->required()
-                            ->live()
-                            ->afterStateUpdated(function (Get $get, Set $set) {
-                                self::calculateProfit($get, $set);
-                            }),
+                            ->required(),
                         TextInput::make('supplier_price_at_sale')
                             ->label(__('panels.acquisition_cost'))
                             ->numeric()
                             ->prefix(currency())
-                            ->disabled()
-                            ->dehydrated(),
+                            ->disabled(),
                     ])->columnSpanFull(),
             ]);
-    }
-
-    protected static function calculateProfit(Get $get, Set $set): void
-    {
-        $price = $get('sale_price') ?? 0;
-        $supplierPrice = $get('supplier_price_at_sale') ?? 0;
-        $qty = $get('quantity') ?? 1;
-        $set('profit', ($price - $supplierPrice) * $qty);
     }
 }

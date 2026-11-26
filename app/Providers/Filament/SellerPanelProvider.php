@@ -29,8 +29,14 @@ class SellerPanelProvider extends PanelProvider
             ->path('seller')
             ->login()
             ->profile(page: EditUserProfile::class, isSimple: false)
+            ->brandName('PanoraGoods Vendeur')
+            ->brandLogo(asset('images/logo-mark.svg'))
+            ->brandLogoHeight('2rem')
+            ->favicon(asset('icons/favicon-32x32.png'))
+            ->databaseNotifications()
+            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::hex('#004b91'),
             ])
             ->discoverResources(in: app_path('Filament/Seller/Resources'), for: 'App\Filament\Seller\Resources')
             ->discoverPages(in: app_path('Filament/Seller/Pages'), for: 'App\Filament\Seller\Pages')

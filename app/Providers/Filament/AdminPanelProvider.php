@@ -29,10 +29,15 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->profile(page: EditUserProfile::class, isSimple: false)
-            ->brandName('Administration')
+            ->brandName('PanoraGoods Admin')
+            ->brandLogo(asset('images/logo-mark.svg'))
+            ->brandLogoHeight('2rem')
+            ->favicon(asset('icons/favicon-32x32.png'))
             ->login()
+            ->databaseNotifications()
+            ->globalSearchKeyBindings(['command+k', 'ctrl+k'])
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::hex('#004b91'),
             ])
             ->discoverResources(in: app_path('Filament/Admin/Resources'), for: 'App\Filament\Admin\Resources')
             ->discoverPages(in: app_path('Filament/Admin/Pages'), for: 'App\Filament\Admin\Pages')

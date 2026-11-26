@@ -1,12 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Admin\Resources\Sales\RelationManagers;
 
 use App\Filament\Admin\Resources\Sales\Actions\ApproveSalePaymentAction;
 use App\Filament\Admin\Resources\Sales\Actions\RejectSalePaymentAction;
 use Filament\Actions\ActionGroup;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Schemas\Schema;
@@ -28,9 +28,10 @@ class SalePaymentRelationManager extends RelationManager
         return $schema
             ->components([
                 TextEntry::make('id'),
-                TextEntry::make('amount')->label(__('sales.paid_amount')),
-                TextEntry::make('confirmation_status')->label(__('messages.status')),
-                TextEntry::make('created_at')->label(__('panels.created_date'))->dateTime(),
+                TextEntry::make('amount')->label(__('sales.paid_amount'))->money(currency()),
+                TextEntry::make('confirmation_status')->label(__('messages.status'))->badge(),
+                TextEntry::make('notes')->label('Réf. / Note')->placeholder('—'),
+                TextEntry::make('created_at')->label(__('panels.created_date'))->dateTime('d/m/Y H:i'),
             ]);
     }
 
@@ -39,10 +40,24 @@ class SalePaymentRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('id')
             ->defaultCurrency(currency())
+            ->defaultSort('created_at', 'desc')
             ->columns([
-                TextColumn::make('amount')->label(__('sales.paid_amount'))->money(),
-                TextColumn::make('confirmation_status')->label(__('messages.status')),
-                TextColumn::make('created_at')->label(__('panels.emitted_at'))->dateTime(),
+                TextColumn::make('amount')
+                    ->label(__('sales.paid_amount'))
+                    ->money()
+                    ->weight('bold'),
+                TextColumn::make('confirmation_status')
+                    ->label(__('messages.status'))
+                    ->badge(),
+                TextColumn::make('notes')
+                    ->label('Réf. / Note')
+                    ->placeholder('—')
+                    ->wrap()
+                    ->limit(60),
+                TextColumn::make('created_at')
+                    ->label(__('panels.emitted_at'))
+                    ->dateTime('d/m/Y H:i')
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -54,12 +69,6 @@ class SalePaymentRelationManager extends RelationManager
                 ActionGroup::make([
                     ApproveSalePaymentAction::make(),
                     RejectSalePaymentAction::make(),
-                ])
-
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
                 ]),
             ]);
     }

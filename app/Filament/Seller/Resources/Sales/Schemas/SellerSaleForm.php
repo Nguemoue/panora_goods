@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Seller\Resources\Sales\Schemas;
 
 use App\Enums\PaymentTypeEnum;
-use App\Enums\SaleStatusEnum;
 use App\Models\Product;
+use App\Models\User;
+use App\Settings\PaymentSetting;
 use Filament\Facades\Filament;
 use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -43,54 +45,55 @@ class SellerSaleForm
                             ->preload()
                             ->placeholder(__('sales.choose_product_from_stock'))
                             ->helperText(fn (Get $get): ?string => self::getProductStockMessage((int) $get('product_id')))
-                            ->afterStateUpdated(function (Get $get, Set $set, $state) {
-                                if ($product = Product::find($state)) {
+                            ->afterStateUpdated(function (Get $get, Set $set, mixed $state): void {
+                                if ($product = Product::query()->where('status', 'active')->find($state)) {
                                     $set('sale_price', $product->selling_price);
-                                    $set('supplier_price_at_sale', $product->supplier_price);
                                 }
-                                self::calculateProfit($get, $set);
+                                self::recalculateTotals($get, $set);
                             }),
                         TextInput::make('quantity')
                             ->label(__('sales.units_sold'))
                             ->numeric()
                             ->default(1)
                             ->minValue(1)
-                            ->maxValue(fn (Get $get): ?int => Product::find((int) $get('product_id'))?->stock_quantity)
+                            ->maxValue(fn (Get $get): ?int => Product::query()->whereKey((int) $get('product_id'))->value('stock_quantity'))
                             ->required()
                             ->live()
                             ->placeholder('1')
-                            ->afterStateUpdated(function (Get $get, Set $set) {
-                                self::calculateProfit($get, $set);
-
+                            ->afterStateUpdated(function (Get $get, Set $set): void {
+                                self::recalculateTotals($get, $set);
                             }),
                         TextInput::make('sale_price')
                             ->label(__('sales.sale_price'))
                             ->numeric()
                             ->readOnly()
                             ->disabled()
+                            ->dehydrated(false)
                             ->suffix(currency()),
                         TextInput::make('total_price')
                             ->disabled()
                             ->dehydrated(false)
                             ->label(__('sales.total_price'))
+                            ->prefix(currency()),
+                        TextInput::make('estimated_commission')
+                            ->label('Ma commission estimée')
+                            ->disabled()
+                            ->dehydrated(false)
                             ->prefix(currency())
-                            ->required(),
-                        Select::make('status')
-                            ->visibleOn(['edit'])
-                            ->options(SaleStatusEnum::class)
-                            ->default(SaleStatusEnum::PENDING)
-                            ->required(),
+                            ->helperText('Calculée selon votre taux vendeur actif.')
+                            ->columnSpanFull(),
                     ])->columnSpanFull(),
 
                 Section::make(__('sales.client_information'))
                     ->description(__('sales.client_information_description'))
                     ->icon('heroicon-o-user-group')
-                    ->columns(2)
+                    ->columns(1)
                     ->schema([
                         Select::make('client_id')
                             ->label(__('sales.existing_client'))
                             ->relationship('client', 'name')
-                            ->searchable()
+                            ->searchable(['name', 'phone_number'])
+                            ->required()
                             ->createOptionForm([
                                 Section::make(__('sales.new_client_details'))
                                     ->schema([
@@ -113,9 +116,7 @@ class SellerSaleForm
                                             ->placeholder(__('sales.optional_client_address')),
                                     ]),
                             ])
-                            ->preload()
                             ->placeholder(__('sales.search_registered_client')),
-
                     ])->columnSpanFull(),
 
                 Section::make(__('sales.delivery_section'))
@@ -124,13 +125,21 @@ class SellerSaleForm
                     ->columnSpanFull()
                     ->columns(2)
                     ->schema([
-                        TextInput::make('delivery_city'),
+                        TextInput::make('delivery_city')
+                            ->label(__('panels.city'))
+                            ->datalist(function (): array {
+                                /** @var User|null $seller */
+                                $seller = Filament::auth()->user();
+
+                                return $seller?->zones()->pluck('city')->unique()->values()->all() ?? [];
+                            })
+                            ->maxLength(120),
                         TextInput::make('delivery_address')
                             ->label(__('sales.delivery_address'))
                             ->placeholder(__('sales.delivery_address_placeholder'))
                             ->maxLength(500),
-
                     ])->columnSpanFull(),
+
                 Section::make(__('sales.payment_profit'))
                     ->description(__('sales.payment_profit_description'))
                     ->icon('heroicon-o-currency-dollar')
@@ -140,14 +149,23 @@ class SellerSaleForm
                             ->label(__('sales.payment_type'))
                             ->required()
                             ->default(PaymentTypeEnum::ONE_TIME)
-                            ->reactive()
-                            ->partiallyRenderComponentsAfterStateUpdated(['payment_date_limit'])
+                            ->live()
                             ->options(PaymentTypeEnum::class),
                         DatePicker::make('payment_date_limit')
                             ->label(__('sales.payment_due_date'))
-                            ->minDate(now())
-                            ->visible(fn (Get $get): bool => filled($get('payment_type')) && $get('payment_type') !== PaymentTypeEnum::ONE_TIME->value),
-
+                            ->minDate(today())
+                            ->required(fn (Get $get): bool => self::isInstallment($get('payment_type')))
+                            ->visible(fn (Get $get): bool => self::isInstallment($get('payment_type'))),
+                        TextInput::make('initial_payment_amount')
+                            ->label('Premier versement encaissé (optionnel)')
+                            ->numeric()
+                            ->minValue(0)
+                            ->suffix(currency())
+                            ->helperText('Laissez vide si aucun acompte n\'a encore été perçu. Soumis à validation Admin.'),
+                        TextInput::make('initial_payment_notes')
+                            ->label('Note / Réf. paiement (Orange Money, MTN MoMo…)')
+                            ->maxLength(255)
+                            ->placeholder('Ex : OM-894512'),
                     ])->columnSpanFull(),
 
                 Textarea::make('more_details')
@@ -155,20 +173,36 @@ class SellerSaleForm
                     ->columnSpanFull()
                     ->placeholder(__('sales.additional_notes_placeholder'))
                     ->maxLength(1000),
-                Hidden::make('seller_id')
-                    ->default(fn (): ?int => Filament::auth()->id()),
-                Hidden::make('supplier_price_at_sale'),
-                Hidden::make('profit'),
             ]);
     }
 
-    protected static function calculateProfit(Get $get, Set $set): void
+    protected static function isInstallment(mixed $paymentType): bool
     {
-        $price = $get('sale_price') ?? 0;
-        $supplierPrice = $get('supplier_price_at_sale') ?? 0;
-        $qty = $get('quantity') ?? 1;
-        $set('total_price', $price * $qty);
-        $set('profit', ($price - $supplierPrice) * $qty);
+        if ($paymentType instanceof PaymentTypeEnum) {
+            return $paymentType !== PaymentTypeEnum::ONE_TIME;
+        }
+
+        return filled($paymentType) && $paymentType !== PaymentTypeEnum::ONE_TIME->value;
+    }
+
+    protected static function recalculateTotals(Get $get, Set $set): void
+    {
+        $productId = (int) $get('product_id');
+        $qty = max(1, (int) ($get('quantity') ?? 1));
+        $product = $productId > 0 ? Product::query()->find($productId) : null;
+
+        if (! $product) {
+            $set('total_price', 0);
+            $set('estimated_commission', 0);
+
+            return;
+        }
+
+        $totalPrice = (float) $product->selling_price * $qty;
+        $commission = (float) $product->profit_price * $qty * app(PaymentSetting::class)->seller_rate;
+
+        $set('total_price', $totalPrice);
+        $set('estimated_commission', round($commission, 2));
     }
 
     protected static function getProductStockMessage(int $productId): ?string

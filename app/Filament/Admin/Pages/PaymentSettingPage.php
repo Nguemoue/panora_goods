@@ -1,77 +1,78 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Admin\Pages;
 
 use App\Settings\PaymentSetting;
-use Filament\Actions\Action;
-use Filament\Actions\Concerns\InteractsWithActions;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Concerns\InteractsWithForms;
-use Filament\Forms\Contracts\HasForms;
-use Filament\Notifications\Notification;
+use BackedEnum;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Pages\Page;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
-use Illuminate\Support\Arr;
 
-class PaymentSettingPage extends Page implements HasForms
+class PaymentSettingPage extends Page
 {
-    use InteractsWithActions;
-    use InteractsWithForms;
+    protected static ?string $navigationLabel = 'Paramètres';
 
-    protected static ?string $navigationLabel = "Paramètres";
-    protected static string|null|\BackedEnum $navigationIcon = Heroicon::Cog;
-    public ?array $data = [];
-    protected string $view = 'filament.admin.pages.payment-setting-page';
+    protected static ?string $title = 'Paramètres de répartition financière';
 
-    public function mount(): void
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::Cog;
+
+    public function content(Schema $schema): Schema
     {
+        $settings = app(PaymentSetting::class);
 
-        $this->form->fill(app(PaymentSetting::class)->toArray());
-        //dd($this->data);
-    }
+        $rates = [
+            'seller_rate' => ['label' => 'Part Vendeur', 'rate' => (float) $settings->seller_rate, 'color' => 'success'],
+            'chief_rate' => ['label' => 'Part Chef de zone', 'rate' => (float) $settings->chief_rate, 'color' => 'info'],
+            'zone_cashier_rate' => ['label' => 'Caisse Zone', 'rate' => (float) $settings->zone_cashier_rate, 'color' => 'primary'],
+            'central_rate' => ['label' => 'Caisse Centrale', 'rate' => (float) $settings->central_rate, 'color' => 'primary'],
+            'general_cashier_rate' => ['label' => 'Caisse Générale', 'rate' => (float) $settings->general_cashier_rate, 'color' => 'gray'],
+            'delivery_rate' => ['label' => 'Livraison', 'rate' => (float) $settings->delivery_rate, 'color' => 'warning'],
+        ];
 
-    public function saveForm(): Action
-    {
-        return Action::make('save')
-            ->color('danger')
-            ->action(function () {
-                dd($this->data);
-            });
-    }
-
-    public function form(Schema $schema): Schema
-    {
-        $paymentSetting = app(PaymentSetting::class);
+        $totalPercent = round(array_sum(array_column($rates, 'rate')) * 100, 2);
+        $isBalanced = abs($totalPercent - 100.0) < 0.01;
+        $simulationBase = 100_000;
 
         return $schema
-            ->statePath('data')
-            ->columns(2)
-            ->schema([
-                ...Arr::map($paymentSetting->toArray(), static fn($item, $key) => TextInput::make($key)
-                    ->numeric()
-                    ->readOnly()
-                    ->formatStateUsing(fn($state) => $state * 100)
-                    ->suffix("%")
-                    ->maxValue(100)),
+            ->components([
+                Section::make('Clé de répartition du bénéfice (lecture seule)')
+                    ->description('Ces taux sont verrouillés en lecture seule pour éviter toute modification accidentelle des règles comptables.')
+                    ->icon(Heroicon::ShieldCheck)
+                    ->columns(['default' => 1, 'sm' => 2, 'lg' => 3])
+                    ->schema([
+                        ...collect($rates)->map(fn (array $item, string $key): TextEntry => TextEntry::make("rate_{$key}")
+                            ->label($item['label'])
+                            ->state(number_format($item['rate'] * 100, 1, ',', ' ').' %')
+                            ->badge()
+                            ->color($item['color'])
+                            ->size(TextSize::Large)
+                            ->weight(FontWeight::Bold))->values()->all(),
+                        TextEntry::make('total_rate_check')
+                            ->label('Total des taux configurés')
+                            ->state(number_format($totalPercent, 1, ',', ' ').' %'.($isBalanced ? ' — Équilibré' : ' — Déséquilibré (doit égaler 100 %)'))
+                            ->badge()
+                            ->color($isBalanced ? 'success' : 'danger')
+                            ->columnSpanFull(),
+                    ]),
 
-                Action::make('save')
-                    ->disabled()
-                    ->action(function ($data) {
-
-                        $setting = app(PaymentSetting::class);
-                        foreach ($this->data as $key => $value) {
-                            $setting->{$key} = ((float) $value)/100;
-                        }
-                        $setting->save();
-                        Notification::make()
-                            ->title("Paramètres mis a jour")
-                            ->success()
-                            ->send();
-                        $this->refresh();
-                    })
-                    ->submit(null)
-
+                Section::make('Simulation de répartition (pour 100 000 FCFA de bénéfice net)')
+                    ->description('Aperçu concret du partage appliqué lors de la clôture mensuelle.')
+                    ->icon(Heroicon::Calculator)
+                    ->columns(['default' => 1, 'sm' => 2, 'lg' => 3])
+                    ->schema(
+                        collect($rates)->map(fn (array $item, string $key): TextEntry => TextEntry::make("sim_{$key}")
+                            ->label($item['label'].' ('.number_format($item['rate'] * 100, 1, ',', ' ').' %)')
+                            ->state(round($simulationBase * $item['rate'], 2))
+                            ->money(currency())
+                            ->weight(FontWeight::Bold)
+                            ->color($item['color']))->values()->all()
+                    ),
             ]);
     }
 }

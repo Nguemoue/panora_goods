@@ -2,7 +2,6 @@
 
 namespace App\Filament\Seller\Resources\Products\Infolists;
 
-use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -11,7 +10,6 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\FontWeight;
-use Filament\Support\Enums\Size;
 use Filament\Support\Enums\TextSize;
 
 class SellerProductInfolist
@@ -56,6 +54,7 @@ class SellerProductInfolist
 
                                 ImageEntry::make('images.path')
                                     ->label(__('panels.primary_preview'))
+                                    ->disk('public')
                                     ->circular()
                                     ->limit(1)
                                     ->columnSpan(1),
@@ -68,19 +67,18 @@ class SellerProductInfolist
                     ->schema([
                         RepeatableEntry::make('images')
                             ->label(__('panels.product_photos'))
-
                             ->schema([
                                 ImageEntry::make('path')
                                     ->hiddenLabel()
+                                    ->disk('public')
                                     ->imageWidth(200)
                                     ->imageHeight(200),
                                 TextEntry::make('type')
                                     ->badge(),
                             ])
-                            ->grid(2)
-                            ,
+                            ->grid(2),
 
-                        RepeatableEntry::make('product_specifications')
+                        RepeatableEntry::make('productSpecifications')
                             ->label(__('panels.technical_specifications'))
                             ->schema([
                                 TextEntry::make('specification.name')

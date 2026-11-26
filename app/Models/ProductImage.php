@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Services\ProductImageOptimizer;
 use Database\Factories\ProductImageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,23 @@ class ProductImage extends Model
     use HasFactory;
 
     protected $fillable = ['product_id', 'path', 'thumb_path', 'type', 'is_primary'];
+
+    protected static function booted(): void
+    {
+        static::saved(function (ProductImage $image): void {
+            if ($image->is_primary && $image->product_id) {
+                self::query()
+                    ->where('product_id', $image->product_id)
+                    ->whereKeyNot($image->id)
+                    ->where('is_primary', true)
+                    ->update(['is_primary' => false]);
+            }
+
+            if (filled($image->path) && ($image->wasRecentlyCreated || $image->wasChanged('path') || blank($image->thumb_path))) {
+                app(ProductImageOptimizer::class)->generateThumbnail($image);
+            }
+        });
+    }
 
     public function getUrlAttribute(): string
     {

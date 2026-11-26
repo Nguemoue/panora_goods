@@ -2,7 +2,6 @@
 
 namespace App\Filament\Seller\Resources\Sales;
 
-use App\Enums\ConfirmationStatusEnum;
 use App\Filament\Seller\Resources\Sales\Pages\CreateSale;
 use App\Filament\Seller\Resources\Sales\Pages\ListSales;
 use App\Filament\Seller\Resources\Sales\Pages\ViewSale;
@@ -21,8 +20,11 @@ use Illuminate\Database\Eloquent\Builder;
 class SaleResource extends Resource
 {
     protected static ?string $model = Sale::class;
+
     protected static string|BackedEnum|null $navigationIcon = 'heroicon-o-shopping-cart';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Transactions';
+
     protected static bool $hasTitleCaseModelLabel = false;
 
     public static function getModelLabel(): string
@@ -55,9 +57,35 @@ class SaleResource extends Resource
         return SellerSalesTable::configure($table);
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        $overdueCount = Sale::query()
+            ->where('seller_id', Filament::auth()->id())
+            ->overduePayment()
+            ->count();
+
+        return $overdueCount > 0 ? (string) $overdueCount : null;
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'danger';
+    }
+
+    public static function getNavigationBadgeTooltip(): ?string
+    {
+        return 'Paiements en retard à relancer';
+    }
+
+    public static function getGloballySearchableAttributes(): array
+    {
+        return ['tracking_code', 'customer_name'];
+    }
+
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->with(['product', 'client'])
             ->withSum(['approvedSalePayments as paid_amount'], 'amount')
             ->where('seller_id', Filament::auth()->id());
     }
@@ -65,7 +93,7 @@ class SaleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            SalePaymentRelationManager::class
+            SalePaymentRelationManager::class,
         ];
     }
 

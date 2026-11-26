@@ -3,12 +3,15 @@
 namespace App\Filament\Seller\Resources\Sales\Tables;
 
 use App\DownloadInvoicePdfAction;
+use App\Enums\PaymentStatusEnum;
+use App\Enums\SaleStatusEnum;
 use App\Models\Sale;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Symfony\Component\HttpFoundation\Response;
@@ -78,6 +81,7 @@ class SellerSalesTable
             ])
 
             ->defaultCurrency(currency())
+            ->defaultSort('created_at', 'desc')
             ->recordActions([
                 ActionGroup::make([
                     ViewAction::make(),
@@ -92,6 +96,19 @@ class SellerSalesTable
                         ->url(fn (Sale $record): string => self::whatsAppTrackingUrl($record))
                         ->openUrlInNewTab()
                         ->visible(fn (Sale $record): bool => filled($record->client?->phone_number)),
+                    Action::make('remind_payment_whatsapp')
+                        ->label('Relancer paiement WhatsApp')
+                        ->icon('heroicon-o-bell-alert')
+                        ->color('warning')
+                        ->url(function (Sale $record): string {
+                            $phone = preg_replace('/\D+/', '', (string) $record->client?->phone_number);
+                            $remaining = format_xaf($record->getRemainingAmount());
+                            $message = "Bonjour {$record->customer_name}, rappel concernant votre commande {$record->tracking_code} ({$record->product?->name}). Solde restant : {$remaining}. Suivi : ".self::trackingUrl($record);
+
+                            return "https://wa.me/{$phone}?text=".urlencode($message);
+                        })
+                        ->openUrlInNewTab()
+                        ->visible(fn (Sale $record): bool => filled($record->client?->phone_number) && $record->getRemainingAmount() > 0),
                     Action::make('download_invoice')
                         ->label(__('sales.invoice'))
                         ->icon('heroicon-o-document-arrow-down')
@@ -100,6 +117,12 @@ class SellerSalesTable
 
             ])
             ->filters([
+                SelectFilter::make('status')
+                    ->label('Statut livraison')
+                    ->options(SaleStatusEnum::class),
+                SelectFilter::make('payment_status')
+                    ->label('Statut paiement')
+                    ->options(PaymentStatusEnum::class),
                 Filter::make('overdue_payments')
                     ->label(__('sales.overdue_payments'))
                     ->toggle()

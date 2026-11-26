@@ -1,14 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Admin\Resources\Users\Schemas;
 
 use App\Enums\UserRoleEnum;
+use App\Models\User;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Validation\Rules\Password;
 
 class UserForm
 {
@@ -42,14 +46,26 @@ class UserForm
                         TextInput::make('password')
                             ->label(__('panels.secure_password'))
                             ->password()
-                            ->dehydrated(fn($state) => filled($state))
-                            ->required(fn(string $operation): bool => $operation === 'create')
+                            ->dehydrated(fn ($state): bool => filled($state))
+                            ->required(fn (string $operation): bool => $operation === 'create')
+                            ->rule(Password::min(8))
                             ->maxLength(255)
-                            ->placeholder('••••••••'),
+                            ->placeholder('••••••••')
+                            ->helperText('Minimum 8 caractères.'),
                         TextInput::make('reference_number')
                             ->label(__('panels.reference_number'))
-                            ->unique(),
-                        FileUpload::make('photo')->image()->disk('public')
+                            ->default(fn (string $operation): ?string => $operation === 'create' ? User::generateUniqueReferenceNumber() : null)
+                            ->unique(ignoreRecord: true)
+                            ->maxLength(50),
+                        FileUpload::make('photo')
+                            ->label(__('users.profile_photo'))
+                            ->image()
+                            ->imageEditor()
+                            ->imageEditorAspectRatios(['1:1', null])
+                            ->circleCropper()
+                            ->disk('public')
+                            ->directory('avatars')
+                            ->visibility('public'),
                     ])->columnSpanFull(),
 
                 Section::make(__('panels.access_status'))
@@ -66,7 +82,11 @@ class UserForm
                             ->label(__('panels.assigned_role'))
                             ->options(UserRoleEnum::class)
                             ->required()
-                            ->helperText(__('panels.panel_access_helper')),
+                            ->disabled(fn (?User $record): bool => $record !== null && $record->id === auth()->id())
+                            ->dehydrated()
+                            ->helperText(fn (?User $record): string => $record !== null && $record->id === auth()->id()
+                                ? 'Vous ne pouvez pas modifier votre propre rôle.'
+                                : __('panels.panel_access_helper')),
                         Select::make('status')
                             ->label(__('panels.account_status'))
                             ->options([
@@ -74,7 +94,12 @@ class UserForm
                                 'inactive' => __('panels.inactive_locked'),
                             ])
                             ->default('active')
-                            ->required(),
+                            ->required()
+                            ->disabled(fn (?User $record): bool => $record !== null && $record->id === auth()->id())
+                            ->dehydrated()
+                            ->helperText(fn (?User $record): ?string => $record !== null && $record->id === auth()->id()
+                                ? 'Vous ne pouvez pas désactiver votre propre compte.'
+                                : null),
                     ])->columnSpanFull(),
             ]);
     }

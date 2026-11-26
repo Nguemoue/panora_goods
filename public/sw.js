@@ -8,7 +8,7 @@
  *  - Stale-While-Revalidate (bounded FIFO): Product images (/storage/*, /images/*).
  */
 
-const CACHE_VERSION = 'v1';
+const CACHE_VERSION = 'v2';
 const CACHES = Object.freeze({
     STATIC: `panoragoods-static-${CACHE_VERSION}`,
     PAGES: `panoragoods-pages-${CACHE_VERSION}`,

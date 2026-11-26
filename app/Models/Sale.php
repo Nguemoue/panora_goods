@@ -111,6 +111,12 @@ class Sale extends Model
             ->where('confirmation_status', ConfirmationStatusEnum::APPROVED);
     }
 
+    public function pendingSalePayments(): HasMany
+    {
+        return $this->hasMany(SalePayment::class)
+            ->where('confirmation_status', ConfirmationStatusEnum::PENDING);
+    }
+
     public function isOneTimePayment(): bool
     {
         return $this->payment_type === PaymentTypeEnum::ONE_TIME;
@@ -125,15 +131,34 @@ class Sale extends Model
         return (float) $this->approvedSalePayments()->sum('amount');
     }
 
+    public function getPendingPaymentsAmount(): float
+    {
+        return (float) $this->pendingSalePayments()->sum('amount');
+    }
+
     public function getRemainingAmount(): float
     {
         return max(0, (float) $this->sale_price - $this->getApprovedPaidAmount());
     }
 
+    public function getAvailablePaymentAmount(): float
+    {
+        return max(0, (float) $this->sale_price - $this->getApprovedPaidAmount() - $this->getPendingPaymentsAmount());
+    }
+
+    public function canBeDeleted(): bool
+    {
+        if ($this->status === SaleStatusEnum::DELIVERED) {
+            return false;
+        }
+
+        return ! $this->approvedSalePayments()->exists();
+    }
+
     protected function sellerProfit(): Attribute
     {
         return Attribute::make(
-            get: fn($value, array $attributes) => app(PaymentSetting::class)->seller_rate * $attributes['profit'],
+            get: fn ($value, array $attributes) => app(PaymentSetting::class)->seller_rate * $attributes['profit'],
         );
     }
 }

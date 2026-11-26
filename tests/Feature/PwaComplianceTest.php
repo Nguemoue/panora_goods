@@ -10,12 +10,16 @@ it('ships a complete standards-compliant web app manifest and all referenced ico
 
     $manifest = json_decode((string) file_get_contents($manifestPath), true, 512, JSON_THROW_ON_ERROR);
 
-    expect($manifest['name'])->toContain('PanoraGoods')
+    expect($manifest['id'])->toBe('/')
+        ->and($manifest['name'])->toContain('PanoraGoods')
         ->and($manifest['short_name'])->toBe('PanoraGoods')
         ->and($manifest['display'])->toBe('standalone')
+        ->and($manifest['scope'])->toBe('/')
         ->and($manifest['start_url'])->not->toBeEmpty()
         ->and($manifest['theme_color'])->toBe('#004b91')
         ->and($manifest['background_color'])->toBe('#f8fafc')
+        ->and($manifest['prefer_related_applications'])->toBeFalse()
+        ->and($manifest['launch_handler']['client_mode'])->toBe('navigate-existing')
         ->and($manifest['icons'])->toBeArray()->not->toBeEmpty()
         ->and($manifest['shortcuts'])->toBeArray()->not->toBeEmpty();
 
@@ -26,7 +30,18 @@ it('ships a complete standards-compliant web app manifest and all referenced ico
     foreach ($manifest['icons'] as $icon) {
         $iconFile = public_path(ltrim((string) $icon['src'], '/'));
         expect(file_exists($iconFile))->toBeTrue("Missing PWA icon: {$icon['src']}");
+
+        if ($icon['type'] === 'image/png' && preg_match('/^(\d+)x(\d+)$/', (string) $icon['sizes'], $matches) === 1) {
+            [$width, $height] = getimagesize($iconFile);
+            expect($width)->toBe((int) $matches[1])
+                ->and($height)->toBe((int) $matches[2]);
+        }
     }
+
+    // Verify transparent e-commerce SVG logo has no background rect
+    $logoSvg = (string) file_get_contents(public_path('images/logo-mark.svg'));
+    expect($logoSvg)->toContain('fill="none"')
+        ->and($logoSvg)->not->toContain('<rect');
 });
 
 it('ships a service worker that safely bypasses livewire and filament panels', function () {
