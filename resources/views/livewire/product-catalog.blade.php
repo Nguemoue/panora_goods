@@ -1,11 +1,11 @@
-<section id="catalog-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 scroll-mt-20">
+<section id="catalog-section" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 scroll-mt-20">
     {{-- Enhanced Search & Filter Command Bar --}}
-    <div class="rounded-2xl bg-white border border-slate-200/80 p-4 sm:p-5 shadow-xs mb-6 space-y-4">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-end">
+    <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5 shadow-xs mb-6 space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-3 items-end">
             {{-- Search Input --}}
-            <div class="lg:col-span-6">
+            <div class="sm:col-span-2 lg:col-span-6">
                 <flux:field>
-                    <flux:label class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    <flux:label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                         Recherche rapide
                     </flux:label>
                     <flux:input
@@ -21,7 +21,7 @@
             {{-- Dynamic Brands from Database --}}
             <div class="lg:col-span-3">
                 <flux:field>
-                    <flux:label class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    <flux:label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                         Marque
                     </flux:label>
                     <flux:select wire:model.live="brand" placeholder="Toutes les marques" aria-label="Filtrer par marque">
@@ -38,7 +38,7 @@
             {{-- Sort Order --}}
             <div class="lg:col-span-3">
                 <flux:field>
-                    <flux:label class="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    <flux:label class="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
                         Trier par
                     </flux:label>
                     <flux:select wire:model.live="sort" aria-label="Trier les produits">
@@ -51,7 +51,7 @@
         </div>
 
         {{-- Category Filter Pills --}}
-        <div class="pt-3.5 border-t border-slate-100 flex items-center gap-2 overflow-x-auto pb-1">
+        <div class="pt-3.5 border-t border-slate-100 dark:border-slate-800 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
             <flux:button
                 wire:click="selectCategory(null)"
                 size="sm"
@@ -77,14 +77,14 @@
 
         {{-- Active Filter Chips (Clearable Individually) --}}
         @if($this->hasActiveFilters)
-            <div class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2">
-                <span class="text-[11px] font-semibold text-slate-400">Filtres actifs :</span>
+            <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-wrap items-center gap-2">
+                <span class="text-[11px] font-semibold text-slate-400 dark:text-slate-500">Filtres actifs :</span>
 
                 @if($search !== '')
                     <button
                         type="button"
                         wire:click="$set('search', '')"
-                        class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 border border-blue-200 px-2.5 py-1 text-xs font-medium text-primary hover:bg-blue-100 transition-colors cursor-pointer"
+                        class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 dark:bg-sky-500/15 border border-blue-200 dark:border-sky-500/30 px-2.5 py-1 text-xs font-medium text-primary dark:text-sky-300 hover:bg-blue-100 dark:hover:bg-sky-500/25 transition-colors cursor-pointer"
                     >
                         <span>Recherche : « {{ $search }} »</span>
                         <flux:icon.x-mark variant="micro" class="size-3.5" />
@@ -95,7 +95,7 @@
                     <button
                         type="button"
                         wire:click="selectCategory(null)"
-                        class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 border border-blue-200 px-2.5 py-1 text-xs font-medium text-primary hover:bg-blue-100 transition-colors cursor-pointer"
+                        class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 dark:bg-sky-500/15 border border-blue-200 dark:border-sky-500/30 px-2.5 py-1 text-xs font-medium text-primary dark:text-sky-300 hover:bg-blue-100 dark:hover:bg-sky-500/25 transition-colors cursor-pointer"
                     >
                         <span>Catégorie : {{ $this->selectedCategory->name }}</span>
                         <flux:icon.x-mark variant="micro" class="size-3.5" />
@@ -106,7 +106,7 @@
                     <button
                         type="button"
                         wire:click="$set('brand', null)"
-                        class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 border border-blue-200 px-2.5 py-1 text-xs font-medium text-primary hover:bg-blue-100 transition-colors cursor-pointer"
+                        class="inline-flex items-center gap-1.5 rounded-full bg-blue-50 dark:bg-sky-500/15 border border-blue-200 dark:border-sky-500/30 px-2.5 py-1 text-xs font-medium text-primary dark:text-sky-300 hover:bg-blue-100 dark:hover:bg-sky-500/25 transition-colors cursor-pointer"
                     >
                         <span>Marque : {{ $this->selectedBrand->name }}</span>
                         <flux:icon.x-mark variant="micro" class="size-3.5" />
@@ -118,7 +118,7 @@
                     variant="ghost"
                     size="xs"
                     icon="arrow-path"
-                    class="ml-auto text-rose-600 hover:text-rose-700"
+                    class="ml-auto text-rose-600 dark:text-rose-400 hover:text-rose-700"
                 >
                     Tout réinitialiser
                 </flux:button>
@@ -129,7 +129,7 @@
     {{-- Section Heading + Results Meta --}}
     <div class="flex flex-wrap items-center justify-between gap-3 mb-5">
         <div>
-            <flux:heading size="lg" class="!font-extrabold text-slate-950">
+            <flux:heading size="lg" class="!font-extrabold text-slate-950 dark:text-white">
                 @if($this->selectedCategory)
                     {{ $this->selectedCategory->name }}
                 @elseif($this->selectedBrand)
@@ -138,9 +138,9 @@
                     Catalogue PanoraGoods
                 @endif
             </flux:heading>
-            <flux:text class="text-xs sm:text-sm text-slate-500 mt-0.5">
+            <flux:text class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
                 @if($search !== '')
-                    Résultats pour « <span class="font-semibold text-slate-800">{{ $search }}</span> » —
+                    Résultats pour « <span class="font-semibold text-slate-800 dark:text-slate-200">{{ $search }}</span> » —
                 @endif
                 {{ $products->total() }} {{ $products->total() > 1 ? 'produits disponibles' : 'produit disponible' }}
             </flux:text>
@@ -150,7 +150,7 @@
         <div
             wire:loading.flex
             wire:target="search,category,brand,sort,selectCategory,resetFilters,previousPage,nextPage,gotoPage"
-            class="items-center gap-2 rounded-full bg-blue-50 border border-blue-200/80 px-3 py-1 text-xs font-medium text-primary"
+            class="items-center gap-2 rounded-full bg-blue-50 dark:bg-sky-500/15 border border-blue-200/80 dark:border-sky-500/30 px-3 py-1 text-xs font-medium text-primary dark:text-sky-300"
         >
             <flux:icon.loading class="size-3.5" />
             <span>Actualisation du catalogue…</span>
@@ -162,7 +162,7 @@
         wire:loading.grid
         wire:loading.delay.short
         wire:target="search,category,brand,sort,selectCategory,resetFilters,previousPage,nextPage,gotoPage"
-        class="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5"
+        class="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5"
     >
         @for($i = 0; $i < 8; $i++)
             <x-frontend.product-card-skeleton />
@@ -175,7 +175,7 @@
         wire:target="search,category,brand,sort,selectCategory,resetFilters,previousPage,nextPage,gotoPage"
     >
         @if($products->isNotEmpty())
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
                 @foreach($products as $index => $product)
                     <div wire:key="product-card-{{ $product->id }}">
                         <x-frontend.product-card
@@ -189,17 +189,17 @@
 
             {{-- Modern Flux UI Pagination --}}
             @if($products->hasPages())
-                <div class="catalog-pagination mt-8 rounded-2xl bg-white border border-slate-200/80 px-4 py-3.5 shadow-2xs">
+                <div class="catalog-pagination mt-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 px-4 py-3.5 shadow-2xs">
                     <flux:pagination :paginator="$products" scroll-to="#catalog-section" />
                 </div>
             @endif
         @else
-            <div class="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 bg-white p-12 text-center">
-                <div class="flex size-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400 mb-4">
+            <div class="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-10 sm:p-12 text-center">
+                <div class="flex size-14 items-center justify-center rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-400 mb-4">
                     <flux:icon.magnifying-glass class="size-7" />
                 </div>
                 <flux:heading size="lg">Aucun produit trouvé</flux:heading>
-                <flux:text class="mt-1 max-w-md text-slate-500">
+                <flux:text class="mt-1 max-w-md text-slate-500 dark:text-slate-400">
                     Essayez de modifier votre recherche ou de réinitialiser les filtres pour découvrir tous nos modèles disponibles.
                 </flux:text>
                 <div class="mt-5">

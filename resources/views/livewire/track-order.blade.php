@@ -1,19 +1,19 @@
 @section('title', __('frontend.nav.track_order'))
 
-<div class="max-w-4xl mx-auto py-4 space-y-6">
+<div class="max-w-4xl mx-auto space-y-6">
     {{-- Search Header Card --}}
-    <div class="rounded-2xl bg-white border border-slate-200/90 shadow-xs overflow-hidden">
-        <div class="p-6 sm:p-8">
+    <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs overflow-hidden">
+        <div class="p-5 sm:p-8">
             <div class="flex items-start gap-3.5 mb-6">
-                <div class="size-12 rounded-2xl bg-blue-50 text-primary flex items-center justify-center shrink-0">
+                <div class="size-12 rounded-2xl bg-blue-50 dark:bg-sky-500/15 text-primary dark:text-sky-400 flex items-center justify-center shrink-0">
                     <flux:icon.truck class="size-6" />
                 </div>
                 <div>
                     <flux:badge size="sm" color="blue" class="mb-2">Suivi en temps réel</flux:badge>
-                    <flux:heading size="xl" class="!font-extrabold text-slate-950">
+                    <flux:heading size="xl" class="!font-extrabold text-slate-950 dark:text-white">
                         {{ __('frontend.track.title') }}
                     </flux:heading>
-                    <flux:text class="text-sm text-slate-500 mt-1">
+                    <flux:text class="text-sm text-slate-500 dark:text-slate-400 mt-1">
                         {{ __('frontend.track.subtitle') }}
                     </flux:text>
                 </div>
@@ -64,7 +64,7 @@
 
         {{-- Tracking Results --}}
         @if($searched)
-            <div wire:loading.remove.delay.short wire:target="track" class="border-t border-slate-200 p-6 sm:p-8 bg-slate-50/40">
+            <div wire:loading.remove.delay.short wire:target="track" class="border-t border-slate-200 dark:border-slate-800 p-5 sm:p-8 bg-slate-50/40 dark:bg-slate-950/40">
                 @if($sale)
                     @php
                         $paidAmount = $sale->getApprovedPaidAmount();
@@ -85,7 +85,7 @@
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                             <div>
                                 <div class="flex flex-wrap items-center gap-2.5">
-                                    <h2 class="font-display text-xl font-extrabold text-slate-950">
+                                    <h2 class="font-display text-xl font-extrabold text-slate-950 dark:text-white">
                                         {{ __('frontend.track.order_title', ['code' => $sale->tracking_code]) }}
                                     </h2>
                                     <flux:badge size="sm" color="{{ $isCancelled ? 'rose' : ($progress === 100 ? 'emerald' : 'blue') }}">
@@ -97,8 +97,8 @@
                                         </flux:badge>
                                     @endif
                                 </div>
-                                <p class="text-xs text-slate-500 mt-1">
-                                    Client : <strong class="text-slate-800">{{ $sale->customer_name }}</strong>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                    Client : <strong class="text-slate-800 dark:text-slate-200">{{ $sale->customer_name }}</strong>
                                     · Créée le {{ $sale->created_at->format('d/m/Y à H:i') }}
                                 </p>
                             </div>
@@ -127,22 +127,22 @@
                         </div>
 
                         {{-- Delivery Stepper Timeline --}}
-                        <div class="rounded-2xl bg-white border border-slate-200/80 p-5">
-                            <div class="flex items-center justify-between text-xs font-bold text-slate-700 mb-3">
+                        <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 sm:p-5">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-200 mb-3">
                                 <span>{{ __('frontend.track.progress') }}</span>
-                                <span class="tabular-nums {{ $isCancelled ? 'text-rose-600' : 'text-primary' }}">
+                                <span class="tabular-nums {{ $isCancelled ? 'text-rose-600' : 'text-primary dark:text-sky-400' }}">
                                     {{ $isCancelled ? 'Commande annulée' : "{$progress}%" }}
                                 </span>
                             </div>
 
-                            <div class="overflow-hidden rounded-full bg-slate-200 h-2.5 mb-4">
+                            <div class="overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800 h-2.5 mb-4">
                                 <div
                                     class="h-full rounded-full transition-all duration-500 {{ $isCancelled ? 'bg-rose-500' : ($progress === 100 ? 'bg-emerald-500' : 'bg-primary') }}"
                                     style="width: {{ $progress }}%"
                                 ></div>
                             </div>
 
-                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3 text-xs">
                                 @foreach([
                                     ['step' => 25, 'label' => __('frontend.track.status.pending'), 'icon' => 'clock'],
                                     ['step' => 50, 'label' => __('frontend.track.status.processing'), 'icon' => 'cog-6-tooth'],
@@ -150,7 +150,7 @@
                                     ['step' => 100, 'label' => __('frontend.track.status.delivered'), 'icon' => 'check-circle'],
                                 ] as $stage)
                                     @php($reached = ! $isCancelled && $progress >= $stage['step'])
-                                    <div class="flex items-center gap-2 rounded-xl px-3 py-2 border {{ $reached ? 'bg-blue-50/70 border-blue-200 text-primary font-semibold' : 'bg-slate-50 border-slate-100 text-slate-400' }}">
+                                    <div class="flex items-center gap-2 rounded-xl px-3 py-2 border {{ $reached ? 'bg-blue-50/70 dark:bg-sky-500/15 border-blue-200 dark:border-sky-500/30 text-primary dark:text-sky-300 font-semibold' : 'bg-slate-50 dark:bg-slate-800/60 border-slate-100 dark:border-slate-800 text-slate-400' }}">
                                         <flux:icon :name="$stage['icon']" variant="micro" class="shrink-0" />
                                         <span class="truncate">{{ $stage['label'] }}</span>
                                     </div>
@@ -160,39 +160,39 @@
 
                         {{-- Financial Summary Cards --}}
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div class="rounded-2xl bg-white border border-slate-200/80 p-4">
-                                <p class="text-xs font-medium text-slate-500">Montant total</p>
-                                <p class="font-display text-xl font-extrabold text-slate-950 mt-1">
+                            <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4">
+                                <p class="text-xs font-medium text-slate-500 dark:text-slate-400">Montant total</p>
+                                <p class="font-display text-xl font-extrabold text-slate-950 dark:text-white mt-1">
                                     {{ format_xaf($sale->sale_price) }}
                                 </p>
                                 @if($sale->payment_type)
-                                    <p class="text-[11px] text-slate-400 mt-1">
+                                    <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
                                         Mode : {{ $sale->payment_type->getLabel() }}
                                     </p>
                                 @endif
                             </div>
 
-                            <div class="rounded-2xl bg-white border border-emerald-200/80 p-4">
-                                <p class="text-xs font-medium text-emerald-700">Montant payé (validé)</p>
-                                <p class="font-display text-xl font-extrabold text-emerald-700 mt-1">
+                            <div class="rounded-2xl bg-white dark:bg-slate-900 border border-emerald-200/80 dark:border-emerald-500/30 p-4">
+                                <p class="text-xs font-medium text-emerald-700 dark:text-emerald-400">Montant payé (validé)</p>
+                                <p class="font-display text-xl font-extrabold text-emerald-700 dark:text-emerald-400 mt-1">
                                     {{ format_xaf($paidAmount) }}
                                 </p>
-                                <p class="text-[11px] text-slate-400 mt-1">
+                                <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-1">
                                     {{ $sale->salePayments->count() }} {{ $sale->salePayments->count() > 1 ? 'versements enregistrés' : 'versement enregistré' }}
                                 </p>
                             </div>
 
-                            <div class="rounded-2xl bg-white border {{ $remainingAmount > 0 ? 'border-amber-200' : 'border-slate-200/80' }} p-4">
-                                <p class="text-xs font-medium {{ $remainingAmount > 0 ? 'text-amber-700' : 'text-slate-500' }}">Reste à régler</p>
-                                <p class="font-display text-xl font-extrabold {{ $remainingAmount > 0 ? 'text-amber-700' : 'text-slate-950' }} mt-1">
+                            <div class="rounded-2xl bg-white dark:bg-slate-900 border {{ $remainingAmount > 0 ? 'border-amber-200 dark:border-amber-500/30' : 'border-slate-200/80 dark:border-slate-800' }} p-4">
+                                <p class="text-xs font-medium {{ $remainingAmount > 0 ? 'text-amber-700 dark:text-amber-400' : 'text-slate-500 dark:text-slate-400' }}">Reste à régler</p>
+                                <p class="font-display text-xl font-extrabold {{ $remainingAmount > 0 ? 'text-amber-700 dark:text-amber-400' : 'text-slate-950 dark:text-white' }} mt-1">
                                     {{ format_xaf($remainingAmount) }}
                                 </p>
                                 @if($sale->payment_date_limit && $remainingAmount > 0)
-                                    <p class="text-[11px] text-amber-600 mt-1">
+                                    <p class="text-[11px] text-amber-600 dark:text-amber-400 mt-1">
                                         Échéance : {{ $sale->payment_date_limit->format('d/m/Y') }}
                                     </p>
                                 @else
-                                    <p class="text-[11px] text-emerald-600 mt-1">
+                                    <p class="text-[11px] text-emerald-600 dark:text-emerald-400 mt-1">
                                         {{ $remainingAmount <= 0 ? 'Soldé intégralement' : 'En cours de règlement' }}
                                     </p>
                                 @endif
@@ -201,10 +201,9 @@
 
                         {{-- Product & Certified Seller Details --}}
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {{-- Product Card --}}
                             @if($sale->product)
-                                <div class="rounded-2xl bg-white border border-slate-200/80 p-4 flex items-center gap-4">
-                                    <a href="{{ route('products.show', $sale->product) }}" class="size-20 shrink-0 rounded-xl bg-slate-50 border border-slate-100 p-2 flex items-center justify-center">
+                                <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 flex items-center gap-4">
+                                    <a href="{{ route('products.show', $sale->product) }}" class="size-20 shrink-0 rounded-xl bg-white border border-slate-100 p-2 flex items-center justify-center">
                                         <img
                                             src="{{ $sale->product->primary_image_url }}"
                                             alt="{{ $sale->product->name }}"
@@ -212,35 +211,34 @@
                                         >
                                     </a>
                                     <div class="min-w-0 flex-1">
-                                        <span class="text-[11px] font-semibold uppercase text-slate-400">
+                                        <span class="text-[11px] font-semibold uppercase text-slate-400 dark:text-slate-500">
                                             {{ $sale->product->brand?->name ?? __('frontend.track.product') }}
                                         </span>
-                                        <a href="{{ route('products.show', $sale->product) }}" class="block text-sm font-bold text-slate-950 hover:text-primary line-clamp-2 mt-0.5">
+                                        <a href="{{ route('products.show', $sale->product) }}" class="block text-sm font-bold text-slate-950 dark:text-white hover:text-primary dark:hover:text-sky-400 line-clamp-2 mt-0.5">
                                             {{ $sale->product->name }}
                                         </a>
-                                        <p class="text-xs text-slate-500 mt-1">
-                                            {{ __('frontend.track.quantity') }} : <strong class="text-slate-800">{{ $sale->quantity }}</strong>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                            {{ __('frontend.track.quantity') }} : <strong class="text-slate-800 dark:text-slate-200">{{ $sale->quantity }}</strong>
                                         </p>
                                     </div>
                                 </div>
                             @endif
 
-                            {{-- Certified Seller Card with Reference Number --}}
                             @if($sale->seller)
-                                <div class="rounded-2xl bg-white border border-slate-200/80 p-4 flex items-center gap-4">
+                                <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 flex items-center gap-4">
                                     <img
                                         src="{{ $sale->seller->avatar_url }}"
                                         alt="{{ $sale->seller->name }}"
-                                        class="size-16 shrink-0 rounded-2xl object-cover border border-slate-200"
+                                        class="size-16 shrink-0 rounded-2xl object-cover border border-slate-200 dark:border-slate-700"
                                     >
                                     <div class="min-w-0 flex-1">
                                         <div class="flex items-center gap-1.5">
                                             <flux:badge size="sm" color="emerald" icon="check-badge">Conseiller assigné</flux:badge>
                                         </div>
-                                        <p class="text-sm font-bold text-slate-950 mt-1 truncate">{{ $sale->seller->name }}</p>
+                                        <p class="text-sm font-bold text-slate-950 dark:text-white mt-1 truncate">{{ $sale->seller->name }}</p>
                                         @if($sale->seller->reference_number)
-                                            <p class="text-xs text-slate-500 mt-0.5">
-                                                Réf. vendeur : <span class="font-mono font-semibold text-primary">{{ $sale->seller->reference_number }}</span>
+                                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                                                Réf. vendeur : <span class="font-mono font-semibold text-primary dark:text-sky-400">{{ $sale->seller->reference_number }}</span>
                                             </p>
                                         @endif
                                     </div>
@@ -249,12 +247,12 @@
                         </div>
 
                         {{-- Payment History Table --}}
-                        <div class="rounded-2xl bg-white border border-slate-200/80 overflow-hidden">
-                            <div class="px-5 py-3.5 border-b border-slate-100 flex items-center justify-between">
-                                <h3 class="text-sm font-bold text-slate-950">Historique des paiements</h3>
+                        <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 overflow-hidden">
+                            <div class="px-5 py-3.5 border-b border-slate-100 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+                                <h3 class="text-sm font-bold text-slate-950 dark:text-white">Historique des paiements</h3>
                                 @if($sale->seller?->reference_number)
-                                    <span class="text-xs text-slate-500">
-                                        Vendeur : <span class="font-mono font-semibold text-slate-700">{{ $sale->seller->reference_number }}</span>
+                                    <span class="text-xs text-slate-500 dark:text-slate-400">
+                                        Vendeur : <span class="font-mono font-semibold text-slate-700 dark:text-slate-300">{{ $sale->seller->reference_number }}</span>
                                     </span>
                                 @endif
                             </div>

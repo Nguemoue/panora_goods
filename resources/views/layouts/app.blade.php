@@ -28,7 +28,7 @@
     @fluxAppearance
     @stack('styles')
 </head>
-<body class="bg-slate-50 text-slate-950 font-sans antialiased flex flex-col min-h-screen">
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-slate-100 font-sans antialiased flex flex-col min-h-screen transition-colors duration-200">
 
 {{-- Global Synchronized Top Loader Bar --}}
 <div id="sync-progress-bar" class="sync-progress-bar" data-active="false" aria-hidden="true">
@@ -36,19 +36,28 @@
 </div>
 
 {{-- Top Bar (Contact + Espace Pro discret pour aérer la navbar principale) --}}
-<div class="bg-slate-950 text-slate-200 py-2 text-xs font-medium hidden md:block">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-        <div class="flex items-center gap-6">
-            <span class="flex items-center gap-1.5 opacity-90">
+<div class="bg-slate-950 dark:bg-black text-slate-200 py-2 text-xs font-medium hidden md:block border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center gap-4">
+        <div class="flex items-center gap-6 min-w-0">
+            <span class="flex items-center gap-1.5 opacity-90 shrink-0">
                 <flux:icon.phone variant="micro" class="text-secondary" />
                 {{ config('project_configuration.phone_number') }}
             </span>
-            <span class="flex items-center gap-1.5 opacity-90">
+            <span class="flex items-center gap-1.5 opacity-90 truncate">
                 <flux:icon.envelope variant="micro" class="text-secondary" />
                 {{ config('project_configuration.contact_email') }}
             </span>
         </div>
-        <div class="flex items-center gap-5">
+        <div class="flex items-center gap-4 shrink-0">
+            <button
+                type="button"
+                onclick="window.PanoraPwa && window.PanoraPwa.triggerManualInstall()"
+                class="inline-flex items-center gap-1.5 text-amber-300 hover:text-amber-200 transition-colors cursor-pointer"
+            >
+                <flux:icon.arrow-down-tray variant="micro" />
+                <span>Installer l'app</span>
+            </button>
+            <span class="text-slate-700" aria-hidden="true">|</span>
             <a href="{{ route('employee-verification') }}" class="inline-flex items-center gap-1.5 hover:text-white transition-colors {{ request()->routeIs('employee-verification') ? 'text-white font-semibold' : '' }}">
                 <flux:icon.shield-check variant="micro" class="text-emerald-400" />
                 <span>Vérifier un vendeur</span>
@@ -73,17 +82,17 @@
     $isContactActive = request()->routeIs('contact');
 @endphp
 
-{{-- Main Sticky Navbar (Aérée, lisible, hiérarchie claire) --}}
-<header class="bg-white/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/85 sticky top-0 z-40 border-b border-slate-200/80">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16 gap-6">
+{{-- Main Sticky Navbar (Responsive, Dark-Mode & Airy) --}}
+<header class="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md supports-[backdrop-filter]:bg-white/85 dark:supports-[backdrop-filter]:bg-slate-900/85 sticky top-0 z-40 border-b border-slate-200/80 dark:border-slate-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16 gap-2 sm:gap-4 lg:gap-6">
             {{-- Brand Logo --}}
             <a href="{{ route('home') }}" class="flex items-center shrink-0 group">
                 <x-frontend.brand-logo />
             </a>
 
-            {{-- Desktop Primary Navigation (5 liens courts & aérés) --}}
-            <nav class="hidden lg:flex items-center gap-2 xl:gap-3" aria-label="Navigation principale">
+            {{-- Desktop Primary Navigation --}}
+            <nav class="hidden lg:flex items-center gap-1.5 xl:gap-2.5" aria-label="Navigation principale">
                 <a
                     href="{{ route('home') }}"
                     @if($isHomeActive) aria-current="page" @endif
@@ -142,8 +151,24 @@
                 </a>
             </nav>
 
-            {{-- Right Conversion Actions: Panier + Contact + Mobile Trigger --}}
-            <div class="flex items-center gap-2.5 shrink-0">
+            {{-- Right Actions: Dark Mode Toggle + Panier + Contact + Mobile Trigger --}}
+            <div class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                {{-- Dark Mode Switcher (Flux Appearance) --}}
+                <div x-data class="inline-flex">
+                    <flux:tooltip content="Changer de thème (Clair / Sombre)">
+                        <flux:button
+                            x-on:click="$flux.dark = ! $flux.dark"
+                            variant="ghost"
+                            size="sm"
+                            square
+                            aria-label="Basculer le mode sombre"
+                        >
+                            <flux:icon.sun variant="mini" class="hidden dark:block text-amber-400" />
+                            <flux:icon.moon variant="mini" class="block dark:hidden text-slate-600" />
+                        </flux:button>
+                    </flux:tooltip>
+                </div>
+
                 <livewire:whats-app-cart />
 
                 <div class="hidden sm:block">
@@ -168,8 +193,8 @@
     </div>
 </header>
 
-{{-- Mobile Navigation Drawer (Flux Flyout Modal with Active Page State) --}}
-<flux:modal name="mobile-nav-drawer" variant="flyout" position="left" class="w-80">
+{{-- Mobile Navigation Drawer (Flux Flyout Modal with Active Page State & PWA Install) --}}
+<flux:modal name="mobile-nav-drawer" variant="flyout" position="left" class="w-80 max-w-[88vw]">
     <div class="flex h-full flex-col space-y-5">
         <div class="flex items-center pr-6">
             <x-frontend.brand-logo size="sm" />
@@ -194,11 +219,11 @@
             </flux:navlist.group>
 
             <flux:navlist.item href="{{ route('track.order') }}" icon="truck" :current="$isTrackActive">
-                {{ __('frontend.nav.track_order') }}
+                Suivi commande
             </flux:navlist.item>
 
             <flux:navlist.item href="{{ route('employee-verification') }}" icon="identification" :current="$isVerifyActive">
-                {{ __('frontend.nav.employee_verification') }}
+                Vérification vendeur
             </flux:navlist.item>
 
             <flux:navlist.item href="{{ route('testimonials') }}" icon="star" :current="$isTestimonialsActive">
@@ -210,7 +235,16 @@
             </flux:navlist.item>
         </flux:navlist>
 
-        <div class="pt-4 border-t border-slate-100">
+        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-2.5">
+            <flux:button
+                type="button"
+                onclick="window.PanoraPwa && window.PanoraPwa.triggerManualInstall()"
+                variant="outline"
+                icon="arrow-down-tray"
+                class="w-full"
+            >
+                Installer l'application
+            </flux:button>
             <flux:button
                 href="{{ route('contact') }}"
                 variant="primary"
@@ -223,7 +257,7 @@
 </flux:modal>
 
 {{-- Main Content --}}
-<main class="grow @hasSection('full_width') pb-16 @else pt-8 pb-16 @endif">
+<main class="grow @hasSection('full_width') pb-10 @else py-6 sm:py-8 lg:py-10 @endif">
     @hasSection('full_width')
         @yield('full_width')
     @else
@@ -237,40 +271,50 @@
 {{-- Global Product Comparator Dock & Modal --}}
 <livewire:product-comparator />
 
-{{-- Premium Minimalist Footer --}}
-<footer class="bg-white border-t border-slate-200 pt-12 pb-8 mt-auto">
+{{-- Premium Responsive & Dark-Mode Footer --}}
+<footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-12 pb-8 mt-auto">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-8">
             <div class="space-y-3">
                 <x-frontend.brand-logo size="sm" />
-                <p class="text-sm text-slate-500 leading-relaxed">{{ __('frontend.footer.description') }}</p>
+                <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{{ __('frontend.footer.description') }}</p>
             </div>
             <div class="space-y-3">
-                <h4 class="text-sm font-bold text-slate-950">{{ __('frontend.footer.help') }}</h4>
-                <ul class="space-y-2.5 text-sm text-slate-600">
-                    <li><a href="{{ route('track.order') }}" class="hover:text-primary transition-colors">{{ __('frontend.nav.track_order') }}</a></li>
-                    <li><a href="{{ route('employee-verification') }}" class="hover:text-primary transition-colors">{{ __('frontend.nav.employee_verification') }}</a></li>
-                    <li><a href="{{ route('testimonials') }}" class="hover:text-primary transition-colors">Témoignages</a></li>
-                    <li><a href="{{ route('contact') }}" class="hover:text-primary transition-colors">{{ __('frontend.nav.contact') }}</a></li>
+                <h4 class="text-sm font-bold text-slate-950 dark:text-white">{{ __('frontend.footer.help') }}</h4>
+                <ul class="space-y-2.5 text-sm text-slate-600 dark:text-slate-400">
+                    <li><a href="{{ route('track.order') }}" class="hover:text-primary dark:hover:text-sky-400 transition-colors">{{ __('frontend.nav.track_order') }}</a></li>
+                    <li><a href="{{ route('employee-verification') }}" class="hover:text-primary dark:hover:text-sky-400 transition-colors">{{ __('frontend.nav.employee_verification') }}</a></li>
+                    <li><a href="{{ route('testimonials') }}" class="hover:text-primary dark:hover:text-sky-400 transition-colors">Témoignages</a></li>
+                    <li><a href="{{ route('contact') }}" class="hover:text-primary dark:hover:text-sky-400 transition-colors">{{ __('frontend.nav.contact') }}</a></li>
                 </ul>
             </div>
             <div class="space-y-3">
-                <h4 class="text-sm font-bold text-slate-950">{{ __('frontend.footer.legal') }}</h4>
-                <ul class="space-y-2.5 text-sm text-slate-600">
-                    <li><a href="{{ route('legal.mentions') }}" target="_blank" class="hover:text-primary transition-colors">{{ __('frontend.footer.legal') }}</a></li>
+                <h4 class="text-sm font-bold text-slate-950 dark:text-white">Application & Légal</h4>
+                <ul class="space-y-2.5 text-sm text-slate-600 dark:text-slate-400">
+                    <li>
+                        <button
+                            type="button"
+                            onclick="window.PanoraPwa && window.PanoraPwa.triggerManualInstall()"
+                            class="inline-flex items-center gap-1.5 font-semibold text-primary dark:text-sky-400 hover:underline cursor-pointer"
+                        >
+                            <flux:icon.arrow-down-tray variant="micro" />
+                            <span>Télécharger l'application PWA</span>
+                        </button>
+                    </li>
+                    <li><a href="{{ route('legal.mentions') }}" target="_blank" class="hover:text-primary dark:hover:text-sky-400 transition-colors">{{ __('frontend.footer.legal') }}</a></li>
                 </ul>
             </div>
             <div class="space-y-3">
-                <h4 class="text-sm font-bold text-slate-950">{{ __('frontend.footer.contact') }}</h4>
-                <p class="text-sm text-slate-600 leading-relaxed">
+                <h4 class="text-sm font-bold text-slate-950 dark:text-white">{{ __('frontend.footer.contact') }}</h4>
+                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
                     {{ __('frontend.footer.location') }}<br>
-                    <span class="font-medium text-slate-800">{{ config('project_configuration.phone_number') }}</span>
+                    <span class="font-medium text-slate-800 dark:text-slate-200">{{ config('project_configuration.phone_number') }}</span>
                 </p>
                 <a
                     href="https://wa.me/{{ preg_replace('/[^\d]/', '', (string) config('project_configuration.whatsapp')) }}"
                     target="_blank"
                     rel="noopener"
-                    class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800"
+                    class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 hover:text-emerald-800"
                 >
                     <flux:icon.chat-bubble-left-ellipsis variant="micro" />
                     <span>Discuter sur WhatsApp</span>
@@ -278,14 +322,14 @@
             </div>
         </div>
 
-        <div class="border-t border-slate-100 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
+        <div class="border-t border-slate-100 dark:border-slate-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400 dark:text-slate-500">
             <p>© {{ date('Y') }} {{ config('app.name') }}. Tous droits réservés.</p>
             <p>Paiement sécurisé · Vendeurs certifiés par zone</p>
         </div>
     </div>
 </footer>
 
-{{-- PWA Network Status, Install Prompt & Update Banner --}}
+{{-- PWA Network Status, Install Prompt, Guide Modal & Update Banner --}}
 <x-frontend.pwa-status />
 
 <flux:toast position="bottom end" />

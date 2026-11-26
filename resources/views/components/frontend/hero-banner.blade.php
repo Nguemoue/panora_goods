@@ -124,7 +124,7 @@
                 <div class="pointer-events-none absolute -right-12 -top-12 size-64 rounded-full blur-3xl {{ $slide['accent'] }}"></div>
                 <div class="pointer-events-none absolute left-1/3 -bottom-16 size-56 rounded-full blur-3xl bg-blue-500/10"></div>
 
-                <div class="relative z-10 w-full px-5 sm:px-8 lg:px-10 py-4 flex items-center justify-between gap-6">
+                <div class="relative z-10 w-full px-4 sm:px-8 lg:px-10 pt-5 pb-10 sm:py-5 flex items-center justify-between gap-6">
                     {{-- Left Content --}}
                     <div class="max-w-2xl space-y-2.5 sm:space-y-3">
                         <div class="flex items-center gap-2">

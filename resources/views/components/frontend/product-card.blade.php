@@ -12,13 +12,13 @@
     $inStock = $product->stock_quantity > 0;
 @endphp
 
-<article class="product-card group relative flex flex-col overflow-hidden rounded-2xl bg-white border border-slate-200/80 hover:border-primary/35 shadow-xs">
+<article class="product-card group relative flex flex-col overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 hover:border-primary/35 dark:hover:border-sky-500/40 shadow-xs">
     {{-- Prominent Studio Image Stage --}}
-    <div class="product-image-stage relative aspect-square w-full overflow-hidden p-2.5 sm:p-3 border-b border-slate-100">
+    <div class="product-image-stage relative aspect-square w-full overflow-hidden p-2.5 sm:p-3 border-b border-slate-100 dark:border-slate-800">
         {{-- Top Badges --}}
-        <div class="absolute top-2.5 left-2.5 right-2.5 z-10 flex items-start justify-between gap-2 pointer-events-none">
+        <div class="absolute top-2 left-2 right-2 sm:top-2.5 sm:left-2.5 sm:right-2.5 z-10 flex items-start justify-between gap-1.5 pointer-events-none">
             @if($product->brand)
-                <flux:badge size="sm" color="zinc" class="backdrop-blur-md !bg-white/95 shadow-2xs">
+                <flux:badge size="sm" color="zinc" class="backdrop-blur-md !bg-white/95 !text-slate-800 shadow-2xs max-w-[55%] truncate">
                     {{ $product->brand->name }}
                 </flux:badge>
             @else
@@ -26,11 +26,11 @@
             @endif
 
             @if($inStock)
-                <flux:badge size="sm" color="emerald" class="!bg-emerald-50/95 backdrop-blur-md">
+                <flux:badge size="sm" color="emerald" class="!bg-emerald-50/95 !text-emerald-800 backdrop-blur-md shrink-0">
                     En stock
                 </flux:badge>
             @else
-                <flux:badge size="sm" color="rose" class="!bg-rose-50/95 backdrop-blur-md">
+                <flux:badge size="sm" color="rose" class="!bg-rose-50/95 !text-rose-800 backdrop-blur-md shrink-0">
                     Rupture
                 </flux:badge>
             @endif
@@ -57,13 +57,13 @@
         </a>
 
         {{-- Bottom-left Compare Quick Toggle --}}
-        <div class="absolute bottom-2.5 left-2.5 z-10">
+        <div class="absolute bottom-2 left-2 sm:bottom-2.5 sm:left-2.5 z-10">
             <flux:tooltip content="{{ $isComparing ? 'Retirer du comparateur' : 'Comparer ce produit' }}">
                 <button
                     type="button"
                     wire:click="toggleCompare({{ $product->id }})"
                     aria-label="Comparer {{ $product->name }}"
-                    class="size-8 rounded-full border shadow-xs flex items-center justify-center transition-all cursor-pointer {{ $isComparing ? 'bg-secondary border-secondary text-white' : 'bg-white/90 hover:bg-white border-slate-200 text-slate-600 hover:text-primary' }}"
+                    class="size-8 rounded-full border shadow-xs flex items-center justify-center transition-all cursor-pointer {{ $isComparing ? 'bg-secondary border-secondary text-white' : 'bg-white/95 hover:bg-white border-slate-200 text-slate-700 hover:text-primary' }}"
                 >
                     <flux:icon.scale variant="micro" class="size-4" />
                 </button>
@@ -72,7 +72,7 @@
 
         {{-- Photo Count Pill --}}
         @if($imageCount > 1)
-            <div class="absolute bottom-2.5 right-2.5 z-10 pointer-events-none inline-flex items-center gap-1 rounded-full bg-slate-900/75 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
+            <div class="absolute bottom-2 right-2 sm:bottom-2.5 sm:right-2.5 z-10 pointer-events-none inline-flex items-center gap-1 rounded-full bg-slate-900/75 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">
                 <flux:icon.photo variant="micro" class="size-3" />
                 <span>{{ $imageCount }}</span>
             </div>
@@ -80,15 +80,15 @@
     </div>
 
     {{-- Body --}}
-    <div class="flex flex-1 flex-col p-3.5 sm:p-4">
-        <div class="flex items-center justify-between gap-2 text-[11px] font-medium text-slate-400 mb-1">
+    <div class="flex flex-1 flex-col p-3 sm:p-4">
+        <div class="flex items-center justify-between gap-2 text-[11px] font-medium text-slate-400 dark:text-slate-500 mb-1">
             <span class="truncate">{{ $product->category?->name ?? 'Catalogue' }}</span>
             @if($product->reference_number)
-                <span class="font-mono text-[10px] text-slate-400 shrink-0">{{ $product->reference_number }}</span>
+                <span class="hidden sm:inline font-mono text-[10px] text-slate-400 dark:text-slate-500 shrink-0">{{ $product->reference_number }}</span>
             @endif
         </div>
 
-        <h3 class="text-sm sm:text-[15px] font-bold text-slate-900 leading-snug line-clamp-2 min-h-[2.5rem] group-hover:text-primary transition-colors">
+        <h3 class="text-xs sm:text-[15px] font-bold text-slate-900 dark:text-white leading-snug line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] group-hover:text-primary dark:group-hover:text-sky-400 transition-colors">
             <a href="{{ route('products.show', $product) }}" class="focus:outline-none">
                 {{ $product->name }}
             </a>
@@ -96,9 +96,9 @@
 
         {{-- Dynamic Specs Preview --}}
         @if($product->specifications->isNotEmpty())
-            <div class="mt-2.5 flex flex-wrap gap-1">
+            <div class="mt-2 flex flex-wrap gap-1">
                 @foreach($product->specifications->take(3) as $spec)
-                    <span class="inline-flex items-center rounded-md bg-slate-100/90 px-2 py-0.5 text-[10px] font-medium text-slate-600">
+                    <span class="inline-flex items-center rounded-md bg-slate-100 dark:bg-slate-800 px-1.5 sm:px-2 py-0.5 text-[10px] font-medium text-slate-600 dark:text-slate-300">
                         {{ $spec->pivot->value }}{{ $spec->measure ? ' '.$spec->measure : '' }}
                     </span>
                 @endforeach
@@ -106,9 +106,9 @@
         @endif
 
         {{-- Price & Full-Width Add to Cart CTA --}}
-        <div class="mt-auto pt-4 space-y-3">
+        <div class="mt-auto pt-3.5 sm:pt-4 space-y-2.5 sm:space-y-3">
             <div class="flex items-baseline justify-between gap-2">
-                <span class="text-lg sm:text-xl font-extrabold text-slate-950 tracking-tight">
+                <span class="text-base sm:text-xl font-extrabold text-slate-950 dark:text-white tracking-tight">
                     {{ format_xaf($product->selling_price) }}
                 </span>
             </div>
@@ -119,7 +119,7 @@
                 variant="primary"
                 size="sm"
                 icon="shopping-bag"
-                class="w-full !bg-primary hover:!bg-primary-hover text-xs font-semibold"
+                class="w-full !bg-primary hover:!bg-primary-hover text-[11px] sm:text-xs font-semibold"
             >
                 Ajouter au panier
             </flux:button>

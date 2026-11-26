@@ -189,18 +189,18 @@
                 </div>
 
                 {{-- Reassurance Strip under Gallery --}}
-                <div class="grid grid-cols-3 gap-2.5">
-                    <div class="rounded-xl bg-white border border-slate-200/80 p-3 flex items-center gap-2.5">
-                        <flux:icon.shield-check class="size-5 text-primary shrink-0" />
-                        <span class="text-xs font-semibold text-slate-700 leading-tight">Produit authentique vérifié</span>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div class="rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-3 flex items-center gap-2.5">
+                        <flux:icon.shield-check class="size-5 text-primary dark:text-sky-400 shrink-0" />
+                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 leading-tight">Produit authentique vérifié</span>
                     </div>
-                    <div class="rounded-xl bg-white border border-slate-200/80 p-3 flex items-center gap-2.5">
+                    <div class="rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-3 flex items-center gap-2.5">
                         <flux:icon.truck class="size-5 text-secondary shrink-0" />
-                        <span class="text-xs font-semibold text-slate-700 leading-tight">Livraison rapide par zone</span>
+                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 leading-tight">Livraison rapide par zone</span>
                     </div>
-                    <div class="rounded-xl bg-white border border-slate-200/80 p-3 flex items-center gap-2.5">
-                        <flux:icon.qr-code class="size-5 text-emerald-600 shrink-0" />
-                        <span class="text-xs font-semibold text-slate-700 leading-tight">Facture QR & suivi en ligne</span>
+                    <div class="rounded-xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-3 flex items-center gap-2.5">
+                        <flux:icon.qr-code class="size-5 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                        <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 leading-tight">Facture QR & suivi en ligne</span>
                     </div>
                 </div>
             </div>
@@ -217,18 +217,18 @@
                             <flux:badge color="blue" size="sm">{{ $product->category->name }}</flux:badge>
                         @endif
                         @if($product->reference_number || $product->product_code || $product->model_number)
-                            <span class="text-xs text-slate-400 font-mono ml-auto">
+                            <span class="text-xs text-slate-400 dark:text-slate-500 font-mono ml-auto">
                                 Réf : {{ $product->reference_number ?? $product->product_code ?? $product->model_number }}
                             </span>
                         @endif
                     </div>
 
-                    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-950 tracking-tight leading-tight">
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white tracking-tight leading-tight">
                         {{ $product->name }}
                     </h1>
 
                     @if($product->short_description)
-                        <p class="mt-2.5 text-sm text-slate-600 leading-relaxed">
+                        <p class="mt-2.5 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                             {{ $product->short_description }}
                         </p>
                     @endif
@@ -239,18 +239,18 @@
 
                 {{-- Key Highlights Quick Cards --}}
                 @if($product->specifications->isNotEmpty())
-                    <div class="rounded-2xl bg-white border border-slate-200/80 p-4 shadow-2xs">
-                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">
+                    <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-4 shadow-2xs">
+                        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-3">
                             Caractéristiques essentielles
                         </h2>
                         <dl class="grid grid-cols-2 gap-2.5">
                             @foreach($product->specifications->take(6) as $spec)
-                                <div class="rounded-xl bg-slate-50/90 border border-slate-100 p-3">
-                                    <dt class="text-[11px] font-medium text-slate-500">{{ $spec->name }}</dt>
-                                    <dd class="text-sm font-bold text-slate-900 mt-0.5">
+                                <div class="rounded-xl bg-slate-50/90 dark:bg-slate-800/70 border border-slate-100 dark:border-slate-700/80 p-3">
+                                    <dt class="text-[11px] font-medium text-slate-500 dark:text-slate-400">{{ $spec->name }}</dt>
+                                    <dd class="text-sm font-bold text-slate-900 dark:text-white mt-0.5">
                                         {{ $spec->pivot->value }}
                                         @if($spec->measure)
-                                            <span class="font-normal text-slate-500">{{ $spec->measure }}</span>
+                                            <span class="font-normal text-slate-500 dark:text-slate-400">{{ $spec->measure }}</span>
                                         @endif
                                     </dd>
                                 </div>
@@ -262,15 +262,15 @@
         </div>
 
         {{-- Detailed Information Tabs (Specs, Description, Full Photo Gallery) --}}
-        <section class="mt-12 rounded-2xl bg-white border border-slate-200/90 shadow-xs overflow-hidden">
-            <div class="border-b border-slate-200 px-4 sm:px-6 overflow-x-auto">
+        <section class="mt-10 sm:mt-12 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs overflow-hidden">
+            <div class="border-b border-slate-200 dark:border-slate-800 px-4 sm:px-6 overflow-x-auto scrollbar-none">
                 <nav class="-mb-px flex items-center gap-6" aria-label="Détails du produit">
                     @if($product->specifications->isNotEmpty())
                         <button
                             type="button"
                             @click="activeTab = 'specs-key'"
                             class="whitespace-nowrap border-b-2 py-4 text-sm font-semibold transition-colors cursor-pointer"
-                            :class="activeTab === 'specs-key' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-800'"
+                            :class="activeTab === 'specs-key' ? 'border-primary dark:border-sky-400 text-primary dark:text-sky-400' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'"
                         >
                             {{ __('frontend.product.full_specs') }} ({{ $product->specifications->count() }})
                         </button>
@@ -280,7 +280,7 @@
                         type="button"
                         @click="activeTab = 'description'"
                         class="whitespace-nowrap border-b-2 py-4 text-sm font-semibold transition-colors cursor-pointer"
-                        :class="activeTab === 'description' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-800'"
+                        :class="activeTab === 'description' ? 'border-primary dark:border-sky-400 text-primary dark:text-sky-400' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'"
                     >
                         Description complète
                     </button>
@@ -289,7 +289,7 @@
                         type="button"
                         @click="activeTab = 'all-photos'"
                         class="whitespace-nowrap border-b-2 py-4 text-sm font-semibold transition-colors cursor-pointer"
-                        :class="activeTab === 'all-photos' ? 'border-primary text-primary' : 'border-transparent text-slate-500 hover:text-slate-800'"
+                        :class="activeTab === 'all-photos' ? 'border-primary dark:border-sky-400 text-primary dark:text-sky-400' : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'"
                     >
                         Toutes les photos ({{ $galleryImages->count() }})
                     </button>
@@ -387,13 +387,13 @@
 
         {{-- Similar Products --}}
         @if($similarProducts->isNotEmpty())
-            <section class="mt-14 pt-8 border-t border-slate-200">
-                <div class="flex items-center justify-between mb-6">
+            <section class="mt-12 sm:mt-14 pt-8 border-t border-slate-200 dark:border-slate-800">
+                <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
                     <div>
-                        <flux:heading size="lg" class="!font-extrabold text-slate-950">
+                        <flux:heading size="lg" class="!font-extrabold text-slate-950 dark:text-white">
                             {{ __('frontend.product.similar_products') }}
                         </flux:heading>
-                        <flux:text class="text-xs sm:text-sm text-slate-500 mt-0.5">
+                        <flux:text class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
                             D'autres modèles dans la même catégorie
                         </flux:text>
                     </div>
@@ -407,13 +407,13 @@
                     </flux:button>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-5">
                     @foreach($similarProducts as $sim)
                         <a
                             href="{{ route('products.show', $sim) }}"
-                            class="product-card group flex flex-col rounded-2xl border border-slate-200/80 bg-white overflow-hidden shadow-xs hover:border-primary/35"
+                            class="product-card group flex flex-col rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden shadow-xs hover:border-primary/35 dark:hover:border-sky-500/40"
                         >
-                            <div class="product-image-stage aspect-square p-3 relative border-b border-slate-100">
+                            <div class="product-image-stage aspect-square p-3 relative border-b border-slate-100 dark:border-slate-800">
                                 <img
                                     src="{{ $sim->primary_image_url }}"
                                     alt="{{ $sim->name }}"
@@ -422,12 +422,12 @@
                                     class="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
                                 >
                             </div>
-                            <div class="p-4 flex flex-col flex-1">
-                                <span class="text-[11px] font-medium text-slate-400">{{ $sim->brand?->name ?? $sim->category?->name }}</span>
-                                <h3 class="text-sm font-bold text-slate-900 line-clamp-2 mt-0.5 mb-2 group-hover:text-primary transition-colors">
+                            <div class="p-3 sm:p-4 flex flex-col flex-1">
+                                <span class="text-[11px] font-medium text-slate-400 dark:text-slate-500">{{ $sim->brand?->name ?? $sim->category?->name }}</span>
+                                <h3 class="text-xs sm:text-sm font-bold text-slate-900 dark:text-white line-clamp-2 mt-0.5 mb-2 group-hover:text-primary dark:group-hover:text-sky-400 transition-colors">
                                     {{ $sim->name }}
                                 </h3>
-                                <p class="text-base font-extrabold text-slate-950 mt-auto">
+                                <p class="text-sm sm:text-base font-extrabold text-slate-950 dark:text-white mt-auto">
                                     {{ format_xaf($sim->selling_price) }}
                                 </p>
                             </div>

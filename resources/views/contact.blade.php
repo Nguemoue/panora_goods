@@ -13,19 +13,19 @@
         {{-- Header --}}
         <div class="max-w-2xl space-y-2.5">
             <flux:badge size="sm" color="blue">Support & Conseillers</flux:badge>
-            <h1 class="font-display text-3xl sm:text-4xl font-extrabold text-slate-950 tracking-tight">
+            <h1 class="font-display text-3xl sm:text-4xl font-extrabold text-slate-950 dark:text-white tracking-tight">
                 {{ __('frontend.contact.title') }}
             </h1>
-            <p class="text-sm sm:text-base text-slate-500 leading-relaxed">
+            <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 leading-relaxed">
                 {{ __('frontend.contact.subtitle') }}
             </p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
             {{-- Left Column (5 cols): Direct Channels & Office Info --}}
             <div class="lg:col-span-5 space-y-4">
                 {{-- Fast-Track WhatsApp Card --}}
-                <div class="rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white p-6 shadow-md space-y-3">
+                <div class="rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white p-5 sm:p-6 shadow-md space-y-3">
                     <div class="flex items-center gap-2.5">
                         <div class="size-10 rounded-xl bg-white/15 flex items-center justify-center shrink-0">
                             <flux:icon.chat-bubble-left-ellipsis class="size-5" />
@@ -51,44 +51,44 @@
                 </div>
 
                 {{-- Info Cards --}}
-                <div class="rounded-2xl bg-white border border-slate-200/80 divide-y divide-slate-100 shadow-xs overflow-hidden">
+                <div class="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 divide-y divide-slate-100 dark:divide-slate-800 shadow-xs overflow-hidden">
                     <div class="p-4 sm:p-5 flex items-start gap-3.5">
-                        <div class="size-10 rounded-xl bg-blue-50 text-primary flex items-center justify-center shrink-0">
+                        <div class="size-10 rounded-xl bg-blue-50 dark:bg-sky-500/15 text-primary dark:text-sky-400 flex items-center justify-center shrink-0">
                             <flux:icon.map-pin class="size-5" />
                         </div>
                         <div class="min-w-0">
-                            <h3 class="text-sm font-bold text-slate-950">{{ __('frontend.contact.our_office') }}</h3>
-                            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">{{ __('frontend.contact.office_address') }}</p>
+                            <h3 class="text-sm font-bold text-slate-950 dark:text-white">{{ __('frontend.contact.our_office') }}</h3>
+                            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">{{ __('frontend.contact.office_address') }}</p>
                         </div>
                     </div>
 
                     <div class="p-4 sm:p-5 flex items-start gap-3.5">
-                        <div class="size-10 rounded-xl bg-blue-50 text-primary flex items-center justify-center shrink-0">
+                        <div class="size-10 rounded-xl bg-blue-50 dark:bg-sky-500/15 text-primary dark:text-sky-400 flex items-center justify-center shrink-0">
                             <flux:icon.phone class="size-5" />
                         </div>
                         <div class="min-w-0">
-                            <h3 class="text-sm font-bold text-slate-950">{{ __('frontend.contact.phone') }}</h3>
-                            <p class="text-xs sm:text-sm font-semibold text-slate-700 mt-0.5">{{ config('project_configuration.phone_number') }}</p>
+                            <h3 class="text-sm font-bold text-slate-950 dark:text-white">{{ __('frontend.contact.phone') }}</h3>
+                            <p class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-200 mt-0.5">{{ config('project_configuration.phone_number') }}</p>
                         </div>
                     </div>
 
                     <div class="p-4 sm:p-5 flex items-start gap-3.5">
-                        <div class="size-10 rounded-xl bg-blue-50 text-primary flex items-center justify-center shrink-0">
+                        <div class="size-10 rounded-xl bg-blue-50 dark:bg-sky-500/15 text-primary dark:text-sky-400 flex items-center justify-center shrink-0">
                             <flux:icon.envelope class="size-5" />
                         </div>
                         <div class="min-w-0">
-                            <h3 class="text-sm font-bold text-slate-950">{{ __('frontend.contact.email') }}</h3>
-                            <p class="text-xs sm:text-sm text-slate-500 mt-0.5 break-all">{{ config('project_configuration.contact_email') }}</p>
+                            <h3 class="text-sm font-bold text-slate-950 dark:text-white">{{ __('frontend.contact.email') }}</h3>
+                            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5 break-all">{{ config('project_configuration.contact_email') }}</p>
                         </div>
                     </div>
 
                     <div class="p-4 sm:p-5 flex items-start gap-3.5">
-                        <div class="size-10 rounded-xl bg-amber-50 text-secondary flex items-center justify-center shrink-0">
+                        <div class="size-10 rounded-xl bg-amber-50 dark:bg-amber-500/15 text-secondary flex items-center justify-center shrink-0">
                             <flux:icon.clock class="size-5" />
                         </div>
                         <div class="min-w-0">
-                            <h3 class="text-sm font-bold text-slate-950">{{ __('frontend.contact.opening_hours') }}</h3>
-                            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">{{ __('frontend.contact.hours_detail') }}</p>
+                            <h3 class="text-sm font-bold text-slate-950 dark:text-white">{{ __('frontend.contact.opening_hours') }}</h3>
+                            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">{{ __('frontend.contact.hours_detail') }}</p>
                         </div>
                     </div>
                 </div>
@@ -96,12 +96,12 @@
 
             {{-- Right Column (7 cols): Flux UI Contact Form --}}
             <div class="lg:col-span-7">
-                <div class="rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-8 shadow-xs space-y-6">
+                <div class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 p-5 sm:p-8 shadow-xs space-y-6">
                     <div>
-                        <flux:heading size="lg" class="!font-extrabold text-slate-950">
+                        <flux:heading size="lg" class="!font-extrabold text-slate-950 dark:text-white">
                             Envoyez-nous un message
                         </flux:heading>
-                        <flux:text class="text-xs sm:text-sm text-slate-500 mt-0.5">
+                        <flux:text class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
                             Notre équipe vous répondra dans les plus brefs délais.
                         </flux:text>
                     </div>

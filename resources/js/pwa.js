@@ -79,6 +79,25 @@ class PwaManager {
         return outcome === 'accepted';
     }
 
+    async triggerManualInstall() {
+        if (this.isStandalone()) {
+            return 'installed';
+        }
+
+        if (this.deferredPrompt) {
+            const accepted = await this.promptInstall();
+            return accepted ? 'installed' : 'dismissed';
+        }
+
+        window.dispatchEvent(
+            new CustomEvent('pwa:open-guide', {
+                detail: { platform: this.isIosSafari() ? 'ios' : 'browser' },
+            })
+        );
+
+        return 'guide';
+    }
+
     applyUpdate() {
         if (this.waitingWorker) {
             this.waitingWorker.postMessage({ type: 'SKIP_WAITING' });

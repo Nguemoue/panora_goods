@@ -135,7 +135,7 @@
                         type="button"
                         @click="filter = '{{ $key }}'"
                         class="rounded-full px-4 py-1.5 text-xs font-semibold border transition-all cursor-pointer"
-                        :class="filter === '{{ $key }}' ? 'bg-primary text-white border-primary shadow-xs' : 'bg-white text-slate-600 border-slate-200 hover:border-primary/40 hover:text-primary'"
+                        :class="filter === '{{ $key }}' ? 'bg-primary text-white border-primary shadow-xs' : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700 hover:border-primary/40 hover:text-primary dark:hover:text-sky-400'"
                     >
                         {{ $label }}
                     </button>
@@ -148,12 +148,12 @@
         </div>
 
         {{-- Reviews Grid --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
             @foreach($reviews as $review)
                 <article
                     x-show="matches('{{ $review['city'] }}', '{{ $review['category'] }}')"
                     x-transition.opacity.duration.200ms
-                    class="bento-card flex flex-col justify-between rounded-2xl bg-white border border-slate-200/80 p-6 shadow-xs"
+                    class="bento-card flex flex-col justify-between rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 p-5 sm:p-6 shadow-xs"
                 >
                     <div>
                         <div class="flex items-center justify-between gap-2 mb-4">
@@ -165,14 +165,14 @@
                             <flux:badge size="sm" color="emerald" icon="check-badge">Achat vérifié</flux:badge>
                         </div>
 
-                        <p class="text-sm text-slate-700 leading-relaxed">
+                        <p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                             « {{ $review['quote'] }} »
                         </p>
                     </div>
 
-                    <div class="mt-6 pt-4 border-t border-slate-100 space-y-3">
-                        <div class="flex items-center justify-between text-[11px] text-slate-400">
-                            <span class="font-semibold text-primary">{{ $review['product'] }}</span>
+                    <div class="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 space-y-3">
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 dark:text-slate-500">
+                            <span class="font-semibold text-primary dark:text-sky-400">{{ $review['product'] }}</span>
                             <span>{{ $review['date'] }}</span>
                         </div>
 
@@ -181,8 +181,8 @@
                                 {{ $review['initials'] }}
                             </div>
                             <div class="min-w-0">
-                                <p class="text-sm font-bold text-slate-950 truncate">{{ $review['name'] }}</p>
-                                <p class="text-xs text-slate-500 truncate">{{ $review['city'] }} — {{ $review['zone'] }}</p>
+                                <p class="text-sm font-bold text-slate-950 dark:text-white truncate">{{ $review['name'] }}</p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 truncate">{{ $review['city'] }} — {{ $review['zone'] }}</p>
                             </div>
                         </div>
                     </div>
@@ -191,12 +191,12 @@
         </div>
 
         {{-- Bottom Conversion Callout --}}
-        <section class="rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xs">
+        <section class="rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-xs">
             <div class="max-w-xl">
-                <flux:heading size="lg" class="!font-extrabold text-slate-950">
+                <flux:heading size="lg" class="!font-extrabold text-slate-950 dark:text-white">
                     Prêt à commander votre prochain smartphone en toute sécurité ?
                 </flux:heading>
-                <flux:text class="text-sm text-slate-500 mt-1">
+                <flux:text class="text-sm text-slate-500 dark:text-slate-400 mt-1">
                     Parcourez nos modèles disponibles, comparez leurs fiches techniques et passez commande en 1 clic sur WhatsApp.
                 </flux:text>
             </div>

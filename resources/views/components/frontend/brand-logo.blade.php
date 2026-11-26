@@ -26,8 +26,8 @@
         class="{{ $iconClass }} shrink-0 drop-shadow-xs transition-transform duration-200 group-hover:scale-105"
     >
     @if($showWordmark)
-        <span class="font-display {{ $textClass }} font-extrabold tracking-tight text-slate-950 leading-none">
-            Panora<span class="text-primary">Goods</span>
+        <span class="font-display {{ $textClass }} font-extrabold tracking-tight text-slate-950 dark:text-white leading-none">
+            Panora<span class="text-primary dark:text-sky-400">Goods</span>
         </span>
     @endif
 </span>

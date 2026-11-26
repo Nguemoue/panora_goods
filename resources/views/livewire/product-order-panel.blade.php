@@ -1,13 +1,13 @@
 <div>
     {{-- Main Conversion Card (Desktop & Mobile inline) --}}
-    <div class="p-6 rounded-2xl bg-white border border-slate-200/90 shadow-xs mb-8 space-y-5">
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div class="p-5 sm:p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 shadow-xs mb-6 sm:mb-8 space-y-5">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 sm:gap-4">
             <div>
-                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1">
+                <p class="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500 mb-1">
                     {{ __('frontend.product.reference_price') }}
                 </p>
                 <div class="flex items-baseline gap-2.5">
-                    <span class="text-3xl sm:text-4xl font-black text-slate-950 tracking-tight">
+                    <span class="text-3xl sm:text-4xl font-black text-slate-950 dark:text-white tracking-tight">
                         {{ format_xaf($product->selling_price) }}
                     </span>
                 </div>
@@ -22,9 +22,9 @@
 
         {{-- Smart Zone Routing Selector --}}
         @if($this->zones->isNotEmpty())
-            <div class="rounded-xl bg-slate-50 border border-slate-200/80 p-3.5 space-y-2">
+            <div class="rounded-xl bg-slate-50 dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700 p-3.5 space-y-2">
                 <flux:field>
-                    <flux:label class="text-xs font-bold text-slate-700">
+                    <flux:label class="text-xs font-bold text-slate-700 dark:text-slate-200">
                         Sélectionnez votre zone pour contacter le conseiller le plus proche
                     </flux:label>
                     <flux:select wire:model.live="selectedZoneId" placeholder="Choisir votre zone">
@@ -38,8 +38,8 @@
                 </flux:field>
 
                 @if($this->resolvedContact['seller_name'])
-                    <div class="flex items-center gap-2 text-xs text-emerald-700 font-medium">
-                        <flux:icon.check-badge variant="micro" class="text-emerald-600 shrink-0" />
+                    <div class="flex items-center gap-2 text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+                        <flux:icon.check-badge variant="micro" class="text-emerald-600 dark:text-emerald-400 shrink-0" />
                         <span>Conseiller certifié pour cette zone : <strong>{{ $this->resolvedContact['seller_name'] }}</strong></span>
                     </div>
                 @endif
@@ -80,17 +80,17 @@
             </flux:tooltip>
         </div>
 
-        <p class="text-[11px] text-slate-400 text-center">
+        <p class="text-[11px] text-slate-400 dark:text-slate-500 text-center">
             {{ __('frontend.product.catalog_only') }}
         </p>
     </div>
 
     {{-- Sticky Mobile Conversion CTA Bar (md:hidden) --}}
-    <div class="sticky-mobile-cta md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-4 pt-3">
+    <div class="sticky-mobile-cta md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-4 pt-3">
         <div class="flex items-center justify-between gap-3">
             <div class="min-w-0">
-                <p class="text-[10px] font-semibold uppercase text-slate-400">Prix</p>
-                <p class="text-base font-black text-slate-950 truncate">
+                <p class="text-[10px] font-semibold uppercase text-slate-400 dark:text-slate-500">Prix</p>
+                <p class="text-base font-black text-slate-950 dark:text-white truncate">
                     {{ format_xaf($product->selling_price) }}
                 </p>
             </div>

@@ -2,7 +2,7 @@
     {{-- Floating Comparison Dock (shown when >= 1 product selected) --}}
     @if($this->products->isNotEmpty())
         <div
-            class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-2rem)] max-w-2xl rounded-2xl bg-slate-950/95 text-white backdrop-blur-md border border-white/10 shadow-2xl px-4 py-3"
+            class="fixed bottom-4 left-1/2 -translate-x-1/2 z-40 w-[calc(100%-1.5rem)] max-w-2xl rounded-2xl bg-slate-950/95 dark:bg-slate-900/95 text-white backdrop-blur-md border border-white/15 shadow-2xl px-3.5 sm:px-4 py-3"
             role="region"
             aria-label="Barre de comparaison de produits"
         >
