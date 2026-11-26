@@ -66,8 +66,29 @@ class Product extends Model
 
     public function getPrimaryImageUrlAttribute(): string
     {
+        if ($this->relationLoaded('images') && $this->images->isNotEmpty()) {
+            $primary = $this->images->firstWhere('is_primary', true) ?? $this->images->first();
+
+            return $primary?->url ?? asset('images/cart-placeholder.jpg');
+        }
+
         if ($this->relationLoaded('primaryImage')) {
             return $this->primaryImage?->url ?? asset('images/cart-placeholder.jpg');
+        }
+
+        return asset('images/cart-placeholder.jpg');
+    }
+
+    public function getPrimaryThumbUrlAttribute(): string
+    {
+        if ($this->relationLoaded('images') && $this->images->isNotEmpty()) {
+            $primary = $this->images->firstWhere('is_primary', true) ?? $this->images->first();
+
+            return $primary?->thumb_url ?? asset('images/cart-placeholder.jpg');
+        }
+
+        if ($this->relationLoaded('primaryImage')) {
+            return $this->primaryImage?->thumb_url ?? asset('images/cart-placeholder.jpg');
         }
 
         return asset('images/cart-placeholder.jpg');

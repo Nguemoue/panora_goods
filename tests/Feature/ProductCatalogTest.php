@@ -76,11 +76,11 @@ it('loads more products progressively with infinite scroll', function () {
     ]);
 
     livewire(ProductCatalog::class)
-        ->assertSet('loadedCount', 12)
-        ->assertSee('Affichage de 12 sur 15 produits')
-        ->assertSee('Charger plus de produits (3 restants)')
+        ->assertSet('loadedCount', 8)
+        ->assertSee('Affichage de 8 sur 15 produits')
+        ->assertSee('Charger plus de produits (7 restants)')
         ->call('loadMore')
-        ->assertSet('loadedCount', 24)
+        ->assertSet('loadedCount', 16)
         ->assertSee('Affichage de 15 sur 15 produits')
         ->assertSee('Tous les 15 produits sont affichés');
 });

@@ -271,8 +271,8 @@
     @endif
 </main>
 
-{{-- Global Product Comparator Dock & Modal --}}
-<livewire:product-comparator />
+{{-- Global Product Comparator Dock & Modal (Deferred in Livewire 4 for faster initial hydration) --}}
+<livewire:product-comparator defer />
 
 {{-- Premium Responsive & Dark-Mode Footer --}}
 <footer class="bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 pt-12 pb-8 mt-auto">

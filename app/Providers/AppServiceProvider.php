@@ -10,6 +10,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\Zone;
 use App\Services\CatalogCacheService;
+use App\Services\ProductImageOptimizer;
 use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
 
@@ -44,11 +45,14 @@ class AppServiceProvider extends ServiceProvider
         Product::deleted($flushProduct);
 
         $flushImage = static function (ProductImage $image): void {
+            app(ProductImageOptimizer::class)->generateThumbnail($image);
             app(CatalogCacheService::class)->flushProduct((int) $image->product_id);
         };
 
         ProductImage::saved($flushImage);
-        ProductImage::deleted($flushImage);
+        ProductImage::deleted(static function (ProductImage $image): void {
+            app(CatalogCacheService::class)->flushProduct((int) $image->product_id);
+        });
 
         $flushCatalog = static function (): void {
             app(CatalogCacheService::class)->flushCatalog();

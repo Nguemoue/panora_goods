@@ -165,8 +165,11 @@
                                 <img
                                     src="{{ $slide['image'] }}"
                                     alt="{{ $slide['product_name'] }}"
+                                    width="160"
+                                    height="160"
                                     @if($index === 0) fetchpriority="high" @else loading="lazy" @endif
                                     decoding="async"
+                                    onerror="this.onerror=null;this.src='{{ asset('images/cart-placeholder.jpg') }}';"
                                     class="h-full w-full object-contain transition-transform duration-300 group-hover:scale-108"
                                 >
                             </div>

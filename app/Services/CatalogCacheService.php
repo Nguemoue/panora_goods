@@ -22,6 +22,10 @@ class CatalogCacheService
 
     public const string KEY_FEATURED_PRODUCTS = 'catalog.v2.featured_product_ids';
 
+    public const string KEY_INITIAL_CATALOG_IDS = 'catalog.v2.initial_product_ids';
+
+    public const string KEY_ACTIVE_PRODUCTS_COUNT = 'catalog.v2.active_products_count';
+
     public const string KEY_ZONES = 'catalog.v2.zones';
 
     private const int TTL_SHORT = 300; // 5 minutes
@@ -90,6 +94,36 @@ class CatalogCacheService
     }
 
     /**
+     * @return array<int, int>
+     */
+    public function getInitialCatalogProductIds(int $limit = 8): array
+    {
+        /** @var array<int, int> $ids */
+        $ids = Cache::remember(
+            self::KEY_INITIAL_CATALOG_IDS.'.'.$limit,
+            self::TTL_SHORT,
+            fn (): array => Product::query()
+                ->where('status', 'active')
+                ->latest()
+                ->take($limit)
+                ->pluck('id')
+                ->map(fn (mixed $id): int => (int) $id)
+                ->all(),
+        );
+
+        return $ids;
+    }
+
+    public function getActiveProductsCount(): int
+    {
+        return (int) Cache::remember(
+            self::KEY_ACTIVE_PRODUCTS_COUNT,
+            self::TTL_SHORT,
+            fn (): int => Product::query()->where('status', 'active')->count(),
+        );
+    }
+
+    /**
      * @return Collection<int, Product>
      */
     public function getFeaturedProducts(int $limit = 3): Collection
@@ -112,7 +146,11 @@ class CatalogCacheService
         }
 
         $products = Product::query()
-            ->with(['brand', 'category', 'primaryImage', 'images'])
+            ->with([
+                'brand',
+                'category',
+                'images' => fn ($q) => $q->orderByDesc('is_primary')->orderBy('id'),
+            ])
             ->whereIn('id', $ids)
             ->get()
             ->keyBy('id');
@@ -168,7 +206,12 @@ class CatalogCacheService
         }
 
         $products = Product::query()
-            ->with(['brand', 'category', 'primaryImage', 'images', 'specifications'])
+            ->with([
+                'brand',
+                'category',
+                'images' => fn ($q) => $q->orderByDesc('is_primary')->orderBy('id'),
+                'specifications',
+            ])
             ->whereIn('id', $ids)
             ->get()
             ->keyBy('id');
@@ -185,6 +228,8 @@ class CatalogCacheService
         Cache::forget(self::KEY_CATEGORIES_WITH_COUNT);
         Cache::forget(self::KEY_BRANDS);
         Cache::forget(self::KEY_FEATURED_PRODUCTS.'.3');
+        Cache::forget(self::KEY_INITIAL_CATALOG_IDS.'.8');
+        Cache::forget(self::KEY_ACTIVE_PRODUCTS_COUNT);
     }
 
     public function flushProduct(int $productId): void
@@ -192,6 +237,8 @@ class CatalogCacheService
         Cache::forget(self::KEY_CATEGORIES_WITH_COUNT);
         Cache::forget(self::KEY_BRANDS);
         Cache::forget(self::KEY_FEATURED_PRODUCTS.'.3');
+        Cache::forget(self::KEY_INITIAL_CATALOG_IDS.'.8');
+        Cache::forget(self::KEY_ACTIVE_PRODUCTS_COUNT);
         Cache::forget("catalog.v2.similar_product_ids.{$productId}.4");
     }
 

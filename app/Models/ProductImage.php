@@ -1,30 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use Database\Factories\ProductImageFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 class ProductImage extends Model
 {
-    /** @use HasFactory<\Database\Factories\ProductImageFactory> */
+    /** @use HasFactory<ProductImageFactory> */
     use HasFactory;
 
-    protected $fillable = ['product_id', 'path', 'type', 'is_primary'];
-
+    protected $fillable = ['product_id', 'path', 'thumb_path', 'type', 'is_primary'];
 
     public function getUrlAttribute(): string
     {
-        if (!Storage::disk('public')->exists($this->path)) {
+        if (blank($this->path)) {
             return asset('images/cart-placeholder.jpg');
         }
-        return  asset('storage/' . $this->path);
+
+        return asset('storage/'.ltrim((string) $this->path, '/'));
     }
+
+    public function getThumbUrlAttribute(): string
+    {
+        if (filled($this->thumb_path)) {
+            return asset('storage/'.ltrim((string) $this->thumb_path, '/'));
+        }
+
+        return $this->url;
+    }
+
     public function product(): BelongsTo
     {
-
         return $this->belongsTo(Product::class);
     }
 }

@@ -6,8 +6,9 @@
 
 @php
     $orderedImages = $product->images->sortByDesc('is_primary')->values();
-    $primaryUrl = $orderedImages->first()?->url ?? $product->primary_image_url;
-    $secondaryUrl = $orderedImages->count() > 1 ? $orderedImages->get(1)?->url : null;
+    $primaryUrl = $orderedImages->first()?->thumb_url ?? $product->primary_thumb_url;
+    $secondaryUrl = $orderedImages->count() > 1 ? $orderedImages->get(1)?->thumb_url : null;
+    $placeholderUrl = asset('images/cart-placeholder.jpg');
     $imageCount = $orderedImages->count();
     $inStock = $product->stock_quantity > 0;
 @endphp
@@ -40,8 +41,11 @@
             <img
                 src="{{ $primaryUrl }}"
                 alt="{{ $product->name }}"
+                width="400"
+                height="400"
                 @if($eager) fetchpriority="high" @else loading="lazy" @endif
                 decoding="async"
+                onerror="this.onerror=null;this.src='{{ $placeholderUrl }}';"
                 class="h-full w-full object-contain transition-all duration-500 ease-out {{ $secondaryUrl ? 'group-hover:opacity-0 group-hover:scale-105' : 'group-hover:scale-105' }}"
             >
 
@@ -49,8 +53,11 @@
                 <img
                     src="{{ $secondaryUrl }}"
                     alt="{{ $product->name }} — vue alternative"
+                    width="400"
+                    height="400"
                     loading="lazy"
                     decoding="async"
+                    onerror="this.onerror=null;this.src='{{ $placeholderUrl }}';"
                     class="absolute inset-0 h-full w-full object-contain opacity-0 scale-100 transition-all duration-500 ease-out group-hover:opacity-100 group-hover:scale-105"
                 >
             @endif

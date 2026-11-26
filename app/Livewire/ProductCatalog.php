@@ -18,7 +18,7 @@ use Livewire\Component;
 
 class ProductCatalog extends Component
 {
-    public const int PER_PAGE = 12;
+    public const int PER_PAGE = 8;
 
     #[Url(as: 'q', except: '')]
     public string $search = '';
@@ -147,43 +147,70 @@ class ProductCatalog extends Component
 
     public function render(): View
     {
-        $baseQuery = Product::query()->where('status', 'active');
+        $cacheService = app(CatalogCacheService::class);
+        $eagerRelations = [
+            'category',
+            'brand',
+            'images' => fn ($q) => $q->orderByDesc('is_primary')->orderBy('id'),
+            'specifications',
+        ];
 
-        if ($this->search !== '') {
-            $term = trim($this->search);
-            $baseQuery->where(function (Builder $q) use ($term): void {
-                $q->where('name', 'like', "%{$term}%")
-                    ->orWhere('selling_price', 'like', "%{$term}%")
-                    ->orWhere('reference_number', 'like', "%{$term}%")
-                    ->orWhere('product_code', 'like', "%{$term}%")
-                    ->orWhere('model_number', 'like', "%{$term}%")
-                    ->orWhere('short_description', 'like', "%{$term}%")
-                    ->orWhereHas('brand', fn (Builder $b) => $b->where('name', 'like', "%{$term}%"))
-                    ->orWhereHas('category', fn (Builder $c) => $c->where('name', 'like', "%{$term}%"))
-                    ->orWhereHas('specifications', fn (Builder $s) => $s->where('product_specification.value', 'like', "%{$term}%"));
-            });
+        // Fast cached path for default initial homepage render (zero COUNT/ORDER scan)
+        if (! $this->hasActiveFilters && $this->loadedCount === self::PER_PAGE) {
+            $totalProducts = $cacheService->getActiveProductsCount();
+            $initialIds = $cacheService->getInitialCatalogProductIds(self::PER_PAGE);
+
+            $loaded = $initialIds === []
+                ? collect()
+                : Product::query()
+                    ->with($eagerRelations)
+                    ->whereIn('id', $initialIds)
+                    ->get()
+                    ->keyBy('id');
+
+            $products = collect($initialIds)
+                ->map(fn (int $id) => $loaded->get($id))
+                ->filter()
+                ->values();
+        } else {
+            $baseQuery = Product::query()->where('status', 'active');
+
+            if ($this->search !== '') {
+                $term = trim($this->search);
+                $baseQuery->where(function (Builder $q) use ($term): void {
+                    $q->where('name', 'like', "%{$term}%")
+                        ->orWhere('selling_price', 'like', "%{$term}%")
+                        ->orWhere('reference_number', 'like', "%{$term}%")
+                        ->orWhere('product_code', 'like', "%{$term}%")
+                        ->orWhere('model_number', 'like', "%{$term}%")
+                        ->orWhere('short_description', 'like', "%{$term}%")
+                        ->orWhereHas('brand', fn (Builder $b) => $b->where('name', 'like', "%{$term}%"))
+                        ->orWhereHas('category', fn (Builder $c) => $c->where('name', 'like', "%{$term}%"))
+                        ->orWhereHas('specifications', fn (Builder $s) => $s->where('product_specification.value', 'like', "%{$term}%"));
+                });
+            }
+
+            if ($this->category !== null) {
+                $baseQuery->where('category_id', $this->category);
+            }
+
+            if ($this->brand !== null) {
+                $baseQuery->where('brand_id', $this->brand);
+            }
+
+            $totalProducts = (clone $baseQuery)->count();
+
+            match ($this->sort) {
+                'price_asc' => $baseQuery->orderBy('selling_price', 'asc'),
+                'price_desc' => $baseQuery->orderBy('selling_price', 'desc'),
+                default => $baseQuery->latest(),
+            };
+
+            $products = $baseQuery
+                ->with($eagerRelations)
+                ->take($this->loadedCount)
+                ->get();
         }
-
-        if ($this->category !== null) {
-            $baseQuery->where('category_id', $this->category);
-        }
-
-        if ($this->brand !== null) {
-            $baseQuery->where('brand_id', $this->brand);
-        }
-
-        $totalProducts = (clone $baseQuery)->count();
-
-        match ($this->sort) {
-            'price_asc' => $baseQuery->orderBy('selling_price', 'asc'),
-            'price_desc' => $baseQuery->orderBy('selling_price', 'desc'),
-            default => $baseQuery->latest(),
-        };
-
-        $products = $baseQuery
-            ->with(['category', 'brand', 'primaryImage', 'images', 'specifications'])
-            ->take($this->loadedCount)
-            ->get();
 
         $hasMore = $products->count() < $totalProducts;
         $remainingCount = max(0, $totalProducts - $products->count());
