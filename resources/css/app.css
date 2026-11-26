@@ -37,9 +37,9 @@
 
 :root.dark {
     --color-body-bg: #020617;
-    --color-accent: #38bdf8;
+    --color-accent: #0284c7;
     --color-accent-content: #38bdf8;
-    --color-accent-foreground: #020617;
+    --color-accent-foreground: #ffffff;
 }
 
 /* ==========================================================================
@@ -239,6 +239,18 @@
 
     .scrollbar-none::-webkit-scrollbar {
         display: none;
+    }
+}
+
+@keyframes pg-indeterminate {
+    0% {
+        transform: translateX(-100%);
+    }
+    50% {
+        transform: translateX(65%);
+    }
+    100% {
+        transform: translateX(220%);
     }
 }
 

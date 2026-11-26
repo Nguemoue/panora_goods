@@ -15,11 +15,10 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Url;
 use Livewire\Component;
-use Livewire\WithPagination;
 
 class ProductCatalog extends Component
 {
-    use WithPagination;
+    public const int PER_PAGE = 12;
 
     #[Url(as: 'q', except: '')]
     public string $search = '';
@@ -33,7 +32,7 @@ class ProductCatalog extends Component
     #[Url(as: 'sort', except: 'latest')]
     public string $sort = 'latest';
 
-    public int $perPage = 12;
+    public int $loadedCount = self::PER_PAGE;
 
     /** @var array<int, int> */
     public array $compareIds = [];
@@ -45,34 +44,39 @@ class ProductCatalog extends Component
 
     public function updatedSearch(): void
     {
-        $this->resetPage();
+        $this->loadedCount = self::PER_PAGE;
     }
 
     public function updatedCategory(): void
     {
-        $this->resetPage();
+        $this->loadedCount = self::PER_PAGE;
     }
 
     public function updatedBrand(): void
     {
-        $this->resetPage();
+        $this->loadedCount = self::PER_PAGE;
     }
 
     public function updatedSort(): void
     {
-        $this->resetPage();
+        $this->loadedCount = self::PER_PAGE;
     }
 
     public function selectCategory(?int $categoryId): void
     {
         $this->category = $categoryId;
-        $this->resetPage();
+        $this->loadedCount = self::PER_PAGE;
     }
 
     public function resetFilters(): void
     {
         $this->reset(['search', 'category', 'brand', 'sort']);
-        $this->resetPage();
+        $this->loadedCount = self::PER_PAGE;
+    }
+
+    public function loadMore(): void
+    {
+        $this->loadedCount += self::PER_PAGE;
     }
 
     public function addToCart(int $productId): void
@@ -143,13 +147,11 @@ class ProductCatalog extends Component
 
     public function render(): View
     {
-        $query = Product::query()
-            ->with(['category', 'brand', 'primaryImage', 'images', 'specifications'])
-            ->where('status', 'active');
+        $baseQuery = Product::query()->where('status', 'active');
 
         if ($this->search !== '') {
             $term = trim($this->search);
-            $query->where(function (Builder $q) use ($term): void {
+            $baseQuery->where(function (Builder $q) use ($term): void {
                 $q->where('name', 'like', "%{$term}%")
                     ->orWhere('selling_price', 'like', "%{$term}%")
                     ->orWhere('reference_number', 'like', "%{$term}%")
@@ -163,23 +165,34 @@ class ProductCatalog extends Component
         }
 
         if ($this->category !== null) {
-            $query->where('category_id', $this->category);
+            $baseQuery->where('category_id', $this->category);
         }
 
         if ($this->brand !== null) {
-            $query->where('brand_id', $this->brand);
+            $baseQuery->where('brand_id', $this->brand);
         }
 
+        $totalProducts = (clone $baseQuery)->count();
+
         match ($this->sort) {
-            'price_asc' => $query->orderBy('selling_price', 'asc'),
-            'price_desc' => $query->orderBy('selling_price', 'desc'),
-            default => $query->latest(),
+            'price_asc' => $baseQuery->orderBy('selling_price', 'asc'),
+            'price_desc' => $baseQuery->orderBy('selling_price', 'desc'),
+            default => $baseQuery->latest(),
         };
 
-        $products = $query->paginate($this->perPage);
+        $products = $baseQuery
+            ->with(['category', 'brand', 'primaryImage', 'images', 'specifications'])
+            ->take($this->loadedCount)
+            ->get();
+
+        $hasMore = $products->count() < $totalProducts;
+        $remainingCount = max(0, $totalProducts - $products->count());
 
         return view('livewire.product-catalog', [
             'products' => $products,
+            'totalProducts' => $totalProducts,
+            'hasMore' => $hasMore,
+            'remainingCount' => $remainingCount,
         ]);
     }
 }

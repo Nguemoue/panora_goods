@@ -1,6 +1,7 @@
 /**
  * PanoraGoods PWA Lifecycle Manager (Singleton / Observer Pattern)
- * Handles Service Worker registration, update notifications, offline status,
+ * Captures beforeinstallprompt IMMEDIATELY at module evaluation so it is never missed,
+ * handles Service Worker registration, update notifications, offline status,
  * and cross-platform install prompts (Android/Desktop + iOS Safari guidance).
  */
 
@@ -12,6 +13,25 @@ class PwaManager {
         this.deferredPrompt = null;
         this.waitingWorker = null;
         this.initialized = false;
+
+        // Bind beforeinstallprompt immediately (can fire before DOMContentLoaded)
+        window.addEventListener('beforeinstallprompt', (event) => {
+            event.preventDefault();
+            this.deferredPrompt = event;
+
+            if (!this.isStandalone() && !this.isDismissedRecently()) {
+                window.dispatchEvent(
+                    new CustomEvent('pwa:install-available', {
+                        detail: { platform: 'native' },
+                    })
+                );
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            this.deferredPrompt = null;
+            window.dispatchEvent(new CustomEvent('pwa:installed'));
+        });
     }
 
     init() {
@@ -21,8 +41,24 @@ class PwaManager {
         this.initialized = true;
 
         this.bindNetworkObservers();
-        this.bindInstallPrompt();
         this.registerServiceWorker();
+
+        // If native prompt already arrived before Alpine mounted, re-emit so UI catches it
+        if (this.deferredPrompt && !this.isStandalone() && !this.isDismissedRecently()) {
+            window.dispatchEvent(
+                new CustomEvent('pwa:install-available', {
+                    detail: { platform: 'native' },
+                })
+            );
+        } else if (this.isIosSafari() && !this.isDismissedRecently()) {
+            setTimeout(() => {
+                window.dispatchEvent(
+                    new CustomEvent('pwa:install-available', {
+                        detail: { platform: 'ios' },
+                    })
+                );
+            }, 3500);
+        }
     }
 
     isStandalone() {
@@ -66,9 +102,11 @@ class PwaManager {
             return false;
         }
 
-        this.deferredPrompt.prompt();
-        const { outcome } = await this.deferredPrompt.userChoice;
+        const promptEvent = this.deferredPrompt;
         this.deferredPrompt = null;
+        promptEvent.prompt();
+
+        const { outcome } = await promptEvent.userChoice;
 
         if (outcome === 'accepted') {
             window.dispatchEvent(new CustomEvent('pwa:installed'));
@@ -115,36 +153,6 @@ class PwaManager {
 
         window.addEventListener('online', notify);
         window.addEventListener('offline', notify);
-    }
-
-    bindInstallPrompt() {
-        window.addEventListener('beforeinstallprompt', (event) => {
-            event.preventDefault();
-            this.deferredPrompt = event;
-
-            if (!this.isStandalone() && !this.isDismissedRecently()) {
-                window.dispatchEvent(
-                    new CustomEvent('pwa:install-available', {
-                        detail: { platform: 'native' },
-                    })
-                );
-            }
-        });
-
-        window.addEventListener('appinstalled', () => {
-            this.deferredPrompt = null;
-            window.dispatchEvent(new CustomEvent('pwa:installed'));
-        });
-
-        if (this.isIosSafari() && !this.isDismissedRecently()) {
-            setTimeout(() => {
-                window.dispatchEvent(
-                    new CustomEvent('pwa:install-available', {
-                        detail: { platform: 'ios' },
-                    })
-                );
-            }, 3500);
-        }
     }
 
     registerServiceWorker() {
@@ -202,4 +210,8 @@ class PwaManager {
 const pwaManager = new PwaManager();
 window.PanoraPwa = pwaManager;
 
-document.addEventListener('DOMContentLoaded', () => pwaManager.init());
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => pwaManager.init());
+} else {
+    pwaManager.init();
+}

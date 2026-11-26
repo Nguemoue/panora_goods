@@ -56,7 +56,7 @@
                 wire:click="selectCategory(null)"
                 size="sm"
                 :variant="$category === null ? 'primary' : 'outline'"
-                class="shrink-0 !rounded-full {{ $category === null ? '!bg-primary !border-primary' : '' }}"
+                class="shrink-0 !rounded-full {{ $category === null ? '!bg-primary !border-primary !text-white' : '' }}"
             >
                 Toutes les catégories
             </flux:button>
@@ -67,7 +67,7 @@
                     wire:click="selectCategory({{ $cat->id }})"
                     size="sm"
                     :variant="$category === $cat->id ? 'primary' : 'outline'"
-                    class="shrink-0 !rounded-full {{ $category === $cat->id ? '!bg-primary !border-primary' : '' }}"
+                    class="shrink-0 !rounded-full {{ $category === $cat->id ? '!bg-primary !border-primary !text-white' : '' }}"
                 >
                     <span>{{ $cat->name }}</span>
                     <span class="ml-1 text-[10px] opacity-75">({{ $cat->products_count }})</span>
@@ -142,14 +142,14 @@
                 @if($search !== '')
                     Résultats pour « <span class="font-semibold text-slate-800 dark:text-slate-200">{{ $search }}</span> » —
                 @endif
-                {{ $products->total() }} {{ $products->total() > 1 ? 'produits disponibles' : 'produit disponible' }}
+                Affichage de {{ $products->count() }} sur {{ $totalProducts }} {{ $totalProducts > 1 ? 'produits' : 'produit' }}
             </flux:text>
         </div>
 
         {{-- Inline Synchronized Status Pill during Catalog Filtering --}}
         <div
             wire:loading.flex
-            wire:target="search,category,brand,sort,selectCategory,resetFilters,previousPage,nextPage,gotoPage"
+            wire:target="search,category,brand,sort,selectCategory,resetFilters"
             class="items-center gap-2 rounded-full bg-blue-50 dark:bg-sky-500/15 border border-blue-200/80 dark:border-sky-500/30 px-3 py-1 text-xs font-medium text-primary dark:text-sky-300"
         >
             <flux:icon.loading class="size-3.5" />
@@ -157,11 +157,11 @@
         </div>
     </div>
 
-    {{-- Synchronized Skeleton Loader Grid (Anti-Flicker 150ms delay, CLS = 0) --}}
+    {{-- Synchronized Skeleton Loader Grid (when changing filters/search) --}}
     <div
         wire:loading.grid
         wire:loading.delay.short
-        wire:target="search,category,brand,sort,selectCategory,resetFilters,previousPage,nextPage,gotoPage"
+        wire:target="search,category,brand,sort,selectCategory,resetFilters"
         class="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5"
     >
         @for($i = 0; $i < 8; $i++)
@@ -172,7 +172,7 @@
     {{-- Real Product Grid --}}
     <div
         wire:loading.remove.delay.short
-        wire:target="search,category,brand,sort,selectCategory,resetFilters,previousPage,nextPage,gotoPage"
+        wire:target="search,category,brand,sort,selectCategory,resetFilters"
     >
         @if($products->isNotEmpty())
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5">
@@ -187,10 +187,56 @@
                 @endforeach
             </div>
 
-            {{-- Modern Flux UI Pagination --}}
-            @if($products->hasPages())
-                <div class="catalog-pagination mt-8 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 px-4 py-3.5 shadow-2xs">
-                    <flux:pagination :paginator="$products" scroll-to="#catalog-section" />
+            {{-- Synchronized Infinite Scroll Append Skeletons (shown while loadMore() runs) --}}
+            <div
+                wire:loading.grid
+                wire:target="loadMore"
+                class="grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5 mt-3 sm:mt-5"
+            >
+                @for($i = 0; $i < 4; $i++)
+                    <x-frontend.product-card-skeleton />
+                @endfor
+            </div>
+
+            {{-- Infinite Scroll Sentinel & Load More Controls --}}
+            @if($hasMore)
+                <div
+                    wire:key="infinite-sentinel-{{ $loadedCount }}"
+                    x-data="{
+                        triggered: false,
+                        init() {
+                            const observer = new IntersectionObserver((entries) => {
+                                if (entries[0].isIntersecting && !this.triggered) {
+                                    this.triggered = true;
+                                    $wire.loadMore();
+                                }
+                            }, { rootMargin: '260px' });
+                            observer.observe($el);
+                        }
+                    }"
+                    class="mt-8 flex flex-col items-center justify-center gap-3 py-2"
+                >
+                    <div wire:loading.flex wire:target="loadMore" class="items-center gap-2.5 rounded-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 px-4 py-2 text-xs font-semibold text-primary dark:text-sky-400 shadow-xs">
+                        <flux:icon.loading class="size-4" />
+                        <span>Chargement des produits suivants…</span>
+                    </div>
+
+                    <div wire:loading.remove wire:target="loadMore">
+                        <flux:button
+                            wire:click="loadMore"
+                            variant="outline"
+                            size="sm"
+                            icon="chevron-down"
+                        >
+                            Charger plus de produits ({{ $remainingCount }} {{ $remainingCount > 1 ? 'restants' : 'restant' }})
+                        </flux:button>
+                    </div>
+                </div>
+            @elseif($totalProducts > \App\Livewire\ProductCatalog::PER_PAGE)
+                <div class="mt-8 flex items-center justify-center gap-3 text-xs font-medium text-slate-400 dark:text-slate-500">
+                    <span class="h-px w-12 bg-slate-200 dark:bg-slate-800"></span>
+                    <span>Tous les {{ $totalProducts }} produits sont affichés</span>
+                    <span class="h-px w-12 bg-slate-200 dark:bg-slate-800"></span>
                 </div>
             @endif
         @else
@@ -203,7 +249,7 @@
                     Essayez de modifier votre recherche ou de réinitialiser les filtres pour découvrir tous nos modèles disponibles.
                 </flux:text>
                 <div class="mt-5">
-                    <flux:button wire:click="resetFilters" variant="primary" icon="arrow-path">
+                    <flux:button wire:click="resetFilters" variant="primary" icon="arrow-path" class="!bg-primary hover:!bg-primary-hover !text-white">
                         Afficher tout le catalogue
                     </flux:button>
                 </div>

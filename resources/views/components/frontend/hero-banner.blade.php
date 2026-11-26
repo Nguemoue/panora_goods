@@ -146,7 +146,7 @@
                         </p>
 
                         <div class="flex flex-wrap items-center gap-2.5 pt-1">
-                            <flux:button href="{{ $slide['cta_href'] }}" variant="primary" size="sm" icon-trailing="arrow-right" class="!bg-secondary hover:!bg-secondary-hover !border-0 shadow-md">
+                            <flux:button href="{{ $slide['cta_href'] }}" variant="primary" size="sm" icon-trailing="arrow-right" class="!bg-secondary hover:!bg-secondary-hover !text-white !border-0 shadow-md">
                                 {{ $slide['cta_label'] }}
                             </flux:button>
                             <flux:button href="{{ $slide['secondary_href'] }}" variant="ghost" size="sm" class="!text-white hover:!bg-white/15">

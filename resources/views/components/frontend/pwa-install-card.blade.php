@@ -34,7 +34,7 @@
                 >
                 <div class="space-y-1.5">
                     <div class="flex flex-wrap items-center gap-2">
-                        <flux:badge size="sm" color="amber" variant="solid">Application Web (PWA)</flux:badge>
+                        <flux:badge size="sm" color="amber" variant="solid">Application Mobile & Desktop</flux:badge>
                         <span class="text-xs text-blue-200 font-medium">Android · iOS · Windows · macOS</span>
                     </div>
                     <h2 class="font-display text-xl sm:text-2xl font-extrabold tracking-tight">
@@ -52,7 +52,7 @@
                         @click="handleInstall()"
                         variant="primary"
                         icon="arrow-down-tray"
-                        class="!bg-secondary hover:!bg-secondary-hover !border-0 shadow-md w-full sm:w-auto"
+                        class="!bg-secondary hover:!bg-secondary-hover !text-white !border-0 shadow-md w-full sm:w-auto"
                     >
                         Télécharger l'application
                     </flux:button>

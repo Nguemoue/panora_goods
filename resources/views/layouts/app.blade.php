@@ -30,6 +30,9 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-950 text-slate-950 dark:text-slate-100 font-sans antialiased flex flex-col min-h-screen transition-colors duration-200">
 
+{{-- Initial Branded Splash Preloader (once per session) --}}
+<x-frontend.splash-loader />
+
 {{-- Global Synchronized Top Loader Bar --}}
 <div id="sync-progress-bar" class="sync-progress-bar" data-active="false" aria-hidden="true">
     <div class="sync-progress-bar__fill"></div>
@@ -176,7 +179,7 @@
                         href="{{ route('contact') }}"
                         variant="primary"
                         size="sm"
-                        class="{{ $isContactActive ? '!bg-secondary hover:!bg-secondary-hover ring-2 ring-secondary/30' : '!bg-primary hover:!bg-primary-hover' }}"
+                        class="!text-white {{ $isContactActive ? '!bg-secondary hover:!bg-secondary-hover ring-2 ring-secondary/30' : '!bg-primary hover:!bg-primary-hover' }}"
                     >
                         {{ __('frontend.nav.contact') }}
                     </flux:button>
@@ -298,7 +301,7 @@
                             class="inline-flex items-center gap-1.5 font-semibold text-primary dark:text-sky-400 hover:underline cursor-pointer"
                         >
                             <flux:icon.arrow-down-tray variant="micro" />
-                            <span>Télécharger l'application PWA</span>
+                            <span>Télécharger l'application</span>
                         </button>
                     </li>
                     <li><a href="{{ route('legal.mentions') }}" target="_blank" class="hover:text-primary dark:hover:text-sky-400 transition-colors">{{ __('frontend.footer.legal') }}</a></li>

@@ -139,7 +139,7 @@
                         rel="noopener"
                         variant="primary"
                         icon="chat-bubble-left-ellipsis"
-                        class="w-full !bg-emerald-600 hover:!bg-emerald-700 !border-emerald-600 shadow-md"
+                        class="w-full !bg-emerald-600 hover:!bg-emerald-700 !border-emerald-600 !text-white shadow-md"
                     >
                         Commander sur WhatsApp
                     </flux:button>

@@ -54,7 +54,7 @@
                 rel="noopener"
                 variant="primary"
                 icon="chat-bubble-left-ellipsis"
-                class="flex-1 !bg-emerald-600 hover:!bg-emerald-700 !border-emerald-600 shadow-sm"
+                class="flex-1 !bg-emerald-600 hover:!bg-emerald-700 !border-emerald-600 !text-white shadow-sm"
             >
                 {{ __('frontend.product.request_quote') }}
             </flux:button>
@@ -63,7 +63,7 @@
                 wire:click="addToCart"
                 variant="primary"
                 icon="shopping-bag"
-                class="!bg-primary hover:!bg-primary-hover"
+                class="!bg-primary hover:!bg-primary-hover !text-white"
             >
                 Ajouter au panier
             </flux:button>
@@ -73,7 +73,7 @@
                     wire:click="toggleCompare"
                     :variant="$isComparing ? 'primary' : 'outline'"
                     icon="scale"
-                    class="{{ $isComparing ? '!bg-secondary hover:!bg-secondary-hover !border-secondary' : '' }}"
+                    class="{{ $isComparing ? '!bg-secondary hover:!bg-secondary-hover !border-secondary !text-white' : '' }}"
                 >
                     {{ $isComparing ? 'Comparé' : 'Comparer' }}
                 </flux:button>
@@ -111,7 +111,7 @@
                     variant="primary"
                     size="sm"
                     icon="chat-bubble-left-ellipsis"
-                    class="!bg-emerald-600 hover:!bg-emerald-700 !border-emerald-600"
+                    class="!bg-emerald-600 hover:!bg-emerald-700 !border-emerald-600 !text-white"
                 >
                     WhatsApp
                 </flux:button>

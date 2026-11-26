@@ -63,7 +63,7 @@ it('filters products by search, category, brand and sort order', function () {
         ->assertSeeInOrder(['Chargeur MagSafe', 'iPhone 16 Pro Max']);
 });
 
-it('paginates active products with flux pagination', function () {
+it('loads more products progressively with infinite scroll', function () {
     $category = Category::factory()->create();
     $brand = Brand::factory()->create();
     $supplier = Supplier::factory()->create();
@@ -76,5 +76,11 @@ it('paginates active products with flux pagination', function () {
     ]);
 
     livewire(ProductCatalog::class)
-        ->assertSeeHtml('data-flux-pagination');
+        ->assertSet('loadedCount', 12)
+        ->assertSee('Affichage de 12 sur 15 produits')
+        ->assertSee('Charger plus de produits (3 restants)')
+        ->call('loadMore')
+        ->assertSet('loadedCount', 24)
+        ->assertSee('Affichage de 15 sur 15 produits')
+        ->assertSee('Tous les 15 produits sont affichés');
 });

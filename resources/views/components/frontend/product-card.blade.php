@@ -119,7 +119,7 @@
                 variant="primary"
                 size="sm"
                 icon="shopping-bag"
-                class="w-full !bg-primary hover:!bg-primary-hover text-[11px] sm:text-xs font-semibold"
+                class="w-full !bg-primary hover:!bg-primary-hover !text-white text-[11px] sm:text-xs font-semibold"
             >
                 Ajouter au panier
             </flux:button>

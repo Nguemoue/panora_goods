@@ -42,7 +42,7 @@
                     </flux:button>
 
                     <flux:modal.trigger name="product-comparator">
-                        <flux:button variant="primary" size="sm" icon="scale" class="!bg-secondary hover:!bg-secondary-hover !border-0">
+                        <flux:button variant="primary" size="sm" icon="scale" class="!bg-secondary hover:!bg-secondary-hover !text-white !border-0">
                             Comparer
                         </flux:button>
                     </flux:modal.trigger>
@@ -145,7 +145,7 @@
                                             variant="primary"
                                             size="sm"
                                             icon="shopping-bag"
-                                            class="w-full !bg-primary hover:!bg-primary-hover"
+                                            class="w-full !bg-primary hover:!bg-primary-hover !text-white"
                                         >
                                             Ajouter au panier
                                         </flux:button>
