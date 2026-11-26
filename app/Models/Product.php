@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ProductCodeGenerator;
 use Database\Factories\ProductFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,9 +22,10 @@ class Product extends Model
     public static function booted()
     {
         static::creating(function (Product $product) {
-            $product->product_code = resolve(\App\Services\ProductCodeGenerator::class)->generate($product->name);
+            $product->product_code = resolve(ProductCodeGenerator::class)->generate($product->name);
         });
     }
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
@@ -65,7 +67,7 @@ class Product extends Model
     public function getPrimaryImageUrlAttribute(): string
     {
         if ($this->relationLoaded('primaryImage')) {
-            return $this->primaryImage->url;
+            return $this->primaryImage?->url ?? asset('images/cart-placeholder.jpg');
         }
 
         return asset('images/cart-placeholder.jpg');
@@ -83,20 +85,26 @@ class Product extends Model
         return $this->hasMany(Sale::class);
     }
 
-    public function getWhatsAppLink(): string
+    public function getWhatsAppLink(?string $phone = null, ?string $zoneName = null): string
     {
-        $phone = config('project_configuration.whatsapp');
+        $rawPhone = $phone ?: (string) config('project_configuration.whatsapp');
+        $cleanPhone = preg_replace('/[^\d+]/', '', $rawPhone) ?: $rawPhone;
 
         $productUrl = route('products.show', $this);
 
         $specifications = $this->specifications
-            ->map(function ($specification) {
-                return "- {$specification->name} : {$specification->pivot->value}";
+            ->map(function ($specification): string {
+                $measure = $specification->measure ? " {$specification->measure}" : '';
+
+                return "- {$specification->name} : {$specification->pivot->value}{$measure}";
             })
             ->implode("\n");
 
-        // Construction du message
+        $zoneLine = $zoneName ? "\nZone de livraison :\n{$zoneName}\n" : '';
+
         $message = <<<TEXT
+Bonjour PanoraGoods, je souhaite passer commande :
+
 Lien du produit :
 {$productUrl}
 
@@ -110,12 +118,12 @@ Prix :
 {$this->selling_price} FCFA
 
 Référence :
-{$this->reference_number}
+{$this->reference_number}{$zoneLine}
 
 Spécifications :
 {$specifications}
 TEXT;
 
-        return 'https://wa.me/'.$phone.'?text='.urlencode($message);
+        return 'https://wa.me/'.ltrim($cleanPhone, '+').'?text='.urlencode($message);
     }
 }

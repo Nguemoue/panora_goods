@@ -16,7 +16,7 @@ class ProductsTable
             ->columns([
                 TextColumn::make('name')
                     ->label(__('validation.attributes.name'))
-                    ->description(fn($record)=>$record->product_code)
+                    ->description(fn ($record) => $record->product_code)
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('category.name')
@@ -47,6 +47,7 @@ class ProductsTable
                     }),
             ])
             ->defaultCurrency(currency())
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])

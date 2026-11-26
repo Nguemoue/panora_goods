@@ -1,2 +1,3 @@
 import './bootstrap';
-import './product-gallery';
+import './sync-loader';
+import './pwa';

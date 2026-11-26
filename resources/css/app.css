@@ -1,38 +1,214 @@
 @import 'tailwindcss';
-@import "flowbite/src/themes/default.css";
+@import '../../vendor/livewire/flux/dist/flux.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
 @source '../**/*.js';
-@source "../../node_modules/flowbite";
 
-@plugin "daisyui";
-@plugin "flowbite/plugin";
+@custom-variant dark (&:where(.dark, .dark *));
 
-
+/* ==========================================================================
+   Design Tokens — PanoraGoods Design System
+   ========================================================================== */
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-display: 'Plus Jakarta Sans', 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-    --color-primary: #004b91; /* Phone CRM Blue */
+    /* Brand Palette */
+    --color-primary: #004b91;
     --color-primary-hover: #003668;
-    --color-secondary: #f58634; /* Phone CRM Orange */
+    --color-secondary: #f58634;
     --color-secondary-hover: #d46d24;
-    --color-body-bg: #f4f4f4;
+    --color-body-bg: #f8fafc;
+
+    /* Flux UI Accent Mapping */
+    --color-accent: #004b91;
+    --color-accent-content: #004b91;
+    --color-accent-foreground: #ffffff;
+
+    /* Motion Tokens */
+    --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ==========================================================================
+   Base Layer
+   ========================================================================== */
 @layer base {
-    .btn {
-        @apply inline-block font-normal text-center align-middle cursor-pointer select-none border border-transparent py-1.5 px-3 text-sm rounded transition-colors duration-150 ease-in-out;
+    html {
+        scroll-behavior: smooth;
+        font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     }
+
+    body {
+        font-family: var(--font-sans);
+        background-color: var(--color-body-bg);
+        color: #0f172a;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .font-display {
+        font-family: var(--font-display);
+        letter-spacing: -0.02em;
+    }
+
+    .nav-link {
+        @apply relative inline-flex items-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium text-slate-600 transition-all duration-150 hover:bg-slate-100 hover:text-slate-950;
+    }
+
+    .nav-link-active {
+        @apply bg-blue-50/90 text-primary font-semibold hover:bg-blue-100/80 hover:text-primary;
+    }
+
+    .nav-link-active::after {
+        content: '';
+        position: absolute;
+        left: 0.75rem;
+        right: 0.75rem;
+        bottom: -0.78rem;
+        height: 2.5px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    }
+
+    .btn {
+        @apply inline-flex items-center justify-center font-medium text-center align-middle cursor-pointer select-none border border-transparent py-2 px-4 text-sm rounded-lg transition-colors duration-150 ease-in-out;
+    }
+
     .btn-primary {
         @apply bg-primary text-white hover:bg-primary-hover;
     }
+
     .btn-outline-primary {
         @apply border-primary text-primary hover:bg-primary hover:text-white;
     }
+
     .card {
-        @apply relative flex flex-col min-w-0 break-words bg-white border border-gray-200 rounded;
+        @apply relative flex flex-col min-w-0 break-words bg-white border border-slate-200/80 rounded-2xl;
+    }
+}
+
+/* ==========================================================================
+   Components Layer — Senior Frontend Patterns
+   ========================================================================== */
+@layer components {
+    /* 1. Global Synchronized Top Loader Bar */
+    .sync-progress-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        z-index: 9999;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 180ms var(--ease-smooth);
+        background: transparent;
+    }
+
+    .sync-progress-bar[data-active='true'] {
+        opacity: 1;
+    }
+
+    .sync-progress-bar__fill {
+        height: 100%;
+        width: var(--sync-progress, 0%);
+        background: linear-gradient(90deg, var(--color-primary), #2563eb, var(--color-secondary));
+        box-shadow: 0 0 10px rgba(37, 99, 235, 0.45);
+        transition: width 220ms var(--ease-spring);
+        border-top-right-radius: 999px;
+        border-bottom-right-radius: 999px;
+    }
+
+    /* 2. Hero Banner 16:3 Glotelho / Apple Style */
+    .hero-banner-16-3 {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.25rem;
+        aspect-ratio: 16 / 8;
+    }
+
+    @media (min-width: 640px) {
+        .hero-banner-16-3 {
+            aspect-ratio: 16 / 4.5;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .hero-banner-16-3 {
+            aspect-ratio: 16 / 3;
+            max-height: 290px;
+        }
+    }
+
+    /* 3. Elevated Product Card with Prominent Image Showcase */
+    .product-card {
+        position: relative;
+        transition: transform 240ms var(--ease-spring), box-shadow 260ms var(--ease-smooth), border-color 220ms var(--ease-smooth);
+    }
+
+    .product-card:hover {
+        transform: translateY(-3px);
+        box-shadow:
+            0 16px 32px -12px rgba(15, 23, 42, 0.12),
+            0 4px 12px -4px rgba(0, 75, 145, 0.06);
+    }
+
+    .product-image-stage {
+        background: radial-gradient(circle at 50% 45%, #ffffff 0%, #f8fafc 75%, #f1f5f9 100%);
+    }
+
+    /* 4. Bento Grid Highlight Cards */
+    .bento-card {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.125rem;
+        transition: transform 260ms var(--ease-spring), box-shadow 260ms var(--ease-smooth), border-color 220ms var(--ease-smooth);
+    }
+
+    .bento-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px -12px rgba(15, 23, 42, 0.12);
+    }
+
+    /* 5. Mobile Sticky Conversion Bar */
+    .sticky-mobile-cta {
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+        box-shadow: 0 -8px 28px -6px rgba(15, 23, 42, 0.12);
+    }
+
+    /* 6. Flux Pagination Polish */
+    .catalog-pagination [data-flux-pagination] {
+        @apply border-t-0 pt-0;
+    }
+}
+
+/* ==========================================================================
+   Utilities & Reduced Motion Accessibility
+   ========================================================================== */
+@layer utilities {
+    .safe-bottom {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .product-card,
+    .bento-card {
+        transform: none !important;
+        transition: none !important;
     }
 }

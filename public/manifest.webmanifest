@@ -1,0 +1,78 @@
+{
+    "id": "/",
+    "name": "PanoraGoods — Smartphones & High-Tech",
+    "short_name": "PanoraGoods",
+    "description": "Catalogue High-Tech, commande WhatsApp par zone, vérification de vendeurs et suivi de livraison en temps réel.",
+    "lang": "fr",
+    "dir": "ltr",
+    "start_url": "/?source=pwa",
+    "scope": "/",
+    "display": "standalone",
+    "display_override": ["standalone", "minimal-ui"],
+    "orientation": "portrait-primary",
+    "background_color": "#f8fafc",
+    "theme_color": "#004b91",
+    "categories": ["shopping", "electronics", "business"],
+    "icons": [
+        {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/icons/maskable-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/icons/maskable-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/images/logo-mark.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Catalogue produits",
+            "short_name": "Catalogue",
+            "description": "Parcourir les smartphones et accessoires disponibles",
+            "url": "/#catalog-section",
+            "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
+        },
+        {
+            "name": "Suivre une commande",
+            "short_name": "Suivi",
+            "description": "Vérifier l'état de livraison et les paiements d'une commande",
+            "url": "/track-order",
+            "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
+        },
+        {
+            "name": "Vérifier un vendeur",
+            "short_name": "Vérification",
+            "description": "Contrôler le matricule d'un conseiller PanoraGoods",
+            "url": "/employee-verification",
+            "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
+        },
+        {
+            "name": "Nous contacter",
+            "short_name": "Contact",
+            "description": "Contacter l'équipe PanoraGoods ou écrire sur WhatsApp",
+            "url": "/contact",
+            "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" }]
+        }
+    ]
+}

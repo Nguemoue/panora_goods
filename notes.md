@@ -23,4 +23,5 @@ son image principale, son nom , sa marque et ses caracteristique bien aligne. da
 on pourra selectionner les categories par defaut toutes seront selectionner
 
 
-[ ]
+[ ] dans le panel admin, quand on liste les produits, afficher du plus recent au plus ancients
+[ ] avoir un banner un peu comme un 16/3 comme sur glothelo qui ne prend pas toute la taille de l'ecran en haut comme de bas.

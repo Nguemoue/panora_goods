@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+    <defs>
+        <linearGradient id="pg-bg" x1="48" y1="32" x2="464" y2="480" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#0b63b8"/>
+            <stop offset="55%" stop-color="#004b91"/>
+            <stop offset="100%" stop-color="#002b54"/>
+        </linearGradient>
+        <linearGradient id="pg-orange" x1="310" y1="110" x2="410" y2="210" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#ffb15e"/>
+            <stop offset="100%" stop-color="#f58634"/>
+        </linearGradient>
+    </defs>
+
+    <!-- Squircle Base -->
+    <rect x="24" y="24" width="464" height="464" rx="116" fill="url(#pg-bg)"/>
+
+    <!-- Subtle Inner Rim Highlight -->
+    <rect x="34" y="34" width="444" height="444" rx="106" stroke="#ffffff" stroke-opacity="0.14" stroke-width="4"/>
+
+    <!-- Minimalist Smartphone Frame + Geometric P Monogram -->
+    <rect x="148" y="108" width="216" height="296" rx="44" stroke="#ffffff" stroke-width="24"/>
+
+    <!-- Top Dynamic Notch / Speaker Pill -->
+    <rect x="218" y="142" width="76" height="14" rx="7" fill="#ffffff" fill-opacity="0.9"/>
+
+    <!-- Geometric "P" Signal Inside Screen -->
+    <path d="M210 342V210H268C294.51 210 316 231.49 316 258C316 284.51 294.51 306 268 306H236" stroke="#ffffff" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <!-- PanoraGoods Orange Accent Dot (Connectivity / High-Tech Spark) -->
+    <circle cx="354" cy="148" r="34" fill="url(#pg-orange)"/>
+    <circle cx="354" cy="148" r="14" fill="#ffffff"/>
+</svg>

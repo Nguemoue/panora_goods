@@ -1,10 +1,11 @@
 <?php
 
+use App\Enums\UserRoleEnum;
 use App\Models\User;
 use Livewire\Component;
 
-new class extends Component {
-
+new class extends Component
+{
     public string $reference = '';
 
     public ?User $employee = null;
@@ -16,77 +17,76 @@ new class extends Component {
         $this->searched = true;
 
         $this->employee = User::query()
-            ->where('reference_number', $this->reference)
-            ->whereRole(\App\Enums\UserRoleEnum::SELLER)
+            ->with('zones')
+            ->where('reference_number', trim($this->reference))
+            ->whereRole(UserRoleEnum::SELLER)
             ->first();
     }
 };
 ?>
 
-<div class="max-w-4xl mx-auto p-6">
-
-    <div class="bg-white shadow rounded-md p-6 space-y-4">
-
-        <h2 class="text-2xl font-bold">
-            Recherche Employé
-        </h2>
-
-        <div class="flex gap-3">
-
-            <input
-                type="text"
-                wire:model="reference"
-                placeholder="Entrez le numéro de référence"
-                class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-            >
-            <button
-                wire:click="search"
-                class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700"
-            >
-                <span class="in-data-loading:hidden">Recherche</span>
-                <span class="not-in-data-loading:hidden">Recherche...</span>
-            </button>
-
+<div class="max-w-2xl mx-auto py-4">
+    <div class="rounded-2xl bg-white border border-slate-200/90 shadow-xs p-6 sm:p-8 space-y-6">
+        <div class="flex items-start gap-3.5">
+            <div class="size-11 rounded-xl bg-blue-50 text-primary flex items-center justify-center shrink-0">
+                <flux:icon.identification class="size-6" />
+            </div>
+            <div>
+                <flux:heading size="xl" class="!font-extrabold text-slate-950">
+                    Vérification d'Employé
+                </flux:heading>
+                <flux:text class="text-sm text-slate-500 mt-1">
+                    Entrez le numéro de référence d'un conseiller pour vérifier son identité et ses zones officielles.
+                </flux:text>
+            </div>
         </div>
 
+        <form wire:submit.prevent="search" class="flex flex-col sm:flex-row gap-3">
+            <div class="flex-1">
+                <flux:input
+                    wire:model="reference"
+                    icon="identification"
+                    placeholder="Entrez le numéro de référence"
+                    class="font-mono"
+                />
+            </div>
+            <flux:button type="submit" variant="primary" icon="magnifying-glass" class="!bg-primary hover:!bg-primary-hover shrink-0">
+                Rechercher
+            </flux:button>
+        </form>
 
         @if($this->employee)
-
-            <div class="border rounded-xl p-5 bg-gray-50 space-y-3">
-
-                <h3 class="text-xl font-semibold text-green-700">
-                    Employé trouvé
-                </h3>
-
-                <div>
-                    <img src="{{ $this->employee->avatar_url }}" alt="Avatar de {{ $this->employee->name }}" class="w-16 h-16 rounded-full object-cover"/>
-                </div>
-                <div>
-                    <span class="font-bold">Nom :</span>
-                    {{ $this->employee->name }}
+            <div class="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-5 space-y-4">
+                <div class="flex items-center justify-between gap-3">
+                    <flux:badge color="emerald" size="sm" icon="check-badge">
+                        Employé Certifié PanoraGoods
+                    </flux:badge>
+                    <span class="font-mono text-xs font-semibold text-slate-500">
+                        {{ $this->employee->reference_number }}
+                    </span>
                 </div>
 
-                <div>
-                    <span class="font-bold">Secteur(s) :</span>
-                    {{ $this->employee->zones->pluck('name')->join(', ') }}
+                <div class="flex items-center gap-4">
+                    <img
+                        src="{{ $this->employee->avatar_url }}"
+                        alt="Avatar de {{ $this->employee->name }}"
+                        class="size-16 rounded-2xl object-cover border-2 border-white shadow-sm shrink-0"
+                    >
+                    <div class="min-w-0 space-y-1">
+                        <h3 class="font-display text-lg font-extrabold text-slate-950">
+                            {{ $this->employee->name }}
+                        </h3>
+                        <p class="text-xs text-slate-600">
+                            <span class="font-semibold">Secteur(s) :</span>
+                            {{ $this->employee->zones->pluck('name')->join(', ') ?: 'Non assigné' }}
+                        </p>
+                    </div>
                 </div>
-
-                <div>
-                    <span class="font-bold">Référence :</span>
-                    {{ $this->employee->reference_number }}
-                </div>
-
             </div>
-
         @elseif($this->searched)
-
-            <div class="bg-red-100 text-red-700 p-4 rounded-lg">
-                Aucun employé trouvé avec cette référence.
-            </div>
-
+            <flux:callout variant="danger" icon="exclamation-triangle" heading="Aucun employé trouvé">
+                Aucun conseiller actif ne correspond à cette référence. Vérifiez le numéro saisi ou contactez notre service client.
+            </flux:callout>
         @endif
-
-
     </div>
-
 </div>

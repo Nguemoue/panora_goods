@@ -14,10 +14,12 @@
     ],
     "sail": false,
     "skills": [
+        "infer-conventions",
         "laravel-best-practices",
+        "testing-best-practices",
+        "fluxui-development",
         "livewire-development",
-        "pest-testing",
         "tailwindcss-development",
-        "Filament PHP v5 Development"
+        "filament-development"
     ]
 }
